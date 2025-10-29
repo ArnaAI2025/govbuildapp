@@ -1,0 +1,32 @@
+# Native & build files
+android/
+ios/
+build/
+dist/
+
+# Node and package files
+node_modules/
+.expo/
+.expo-shared/
+
+# Version control and coverage
+coverage/
+.env
+package-lock.json
+yarn.lock
+.java-version
+
+# Assets
+assets/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Expo/config
+app.config.js
+app.config.ts
+metro.config.js
+
+# Logs
+*.log

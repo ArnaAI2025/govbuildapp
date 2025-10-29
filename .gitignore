@@ -1,0 +1,87 @@
+# Learn more: https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# ----------------------
+# Dependencies
+# ----------------------
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ----------------------
+# Expo
+# ----------------------
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# ----------------------
+# Metro
+# ----------------------
+.metro-health-check*
+*.jsbundle
+
+# ----------------------
+# Native (React Native, Android, iOS)
+# ----------------------
+
+# iOS
+ios/build/
+ios/Pods/
+ios/.xcode.env.local
+ios/.xcconfig.env.local
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.orig.*
+*.mobileprovision
+*.p8
+*.p12
+*.pem
+*.key
+.DS_Store
+DerivedData/
+xcuserdata/
+
+# Android
+android/.gradle/
+android/.cxx/
+android/local.properties
+android/build/
+android/app/build/
+android/app/release/
+android/app/src/main/res/drawable-*/
+*.iml
+*.keystore
+.idea/
+
+# ----------------------
+# Environment Files
+# ----------------------
+.env
+.env*.local
+
+# ----------------------
+# TypeScript
+# ----------------------
+*.tsbuildinfo
+
+# ----------------------
+# Fastlane
+# ----------------------
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+
+# ----------------------
+# Misc
+# ----------------------
+*.hprof

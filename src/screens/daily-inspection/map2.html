@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ArcGIS API for JavaScript Tutorials: Add a point, line, and polygon</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+    <script>
+      require([
+        'esri/config',
+        'esri/Map',
+        'esri/views/MapView',
+        'esri/Graphic',
+        'esri/layers/GraphicsLayer',
+        'esri/rest/route',
+        'esri/rest/support/RouteParameters',
+        'esri/rest/support/FeatureSet',
+      ], function (
+        esriConfig,
+        Map,
+        MapView,
+        Graphic,
+        GraphicsLayer,
+        route,
+        RouteParameters,
+        FeatureSet
+      ) {
+        const routeUrl =
+          'https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World';
+
+        const map = new Map({
+          basemap: 'streets-navigation-vector', //Basemap layer service
+        });
+
+        const view = new MapView({
+          map: map,
+          center: startLongLat, //Longitude, latitude
+          zoom: 13,
+          container: 'viewDiv',
+          popup: {
+            dockEnabled: false,
+            dockOptions: {
+              breakpoint: false,
+            },
+          },
+        });
+
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+
+        const start = {
+          //Create a point
+          type: 'point',
+          longitude: startLongLat[0],
+          latitude: startLongLat[1],
+        };
+
+        const simpleMarkerSymbol = {
+          type: 'simple-marker',
+          style: 'path',
+          outline: { width: 0, color: [248, 1, 1, 1] },
+          path: 'M24 4c-7.73 0-14 6.27-14 14 0 10.5 14 26 14 26s14-15.5 14-26c0-7.73-6.27-14-14-14zm0 19c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z',
+          angle: -360,
+          size: 24,
+          color: [251, 67, 67, 1],
+        };
+
+        const startPoint = new Graphic({
+          geometry: start,
+          symbol: simpleMarkerSymbol,
+          popupTemplate: {
+            title: 'Case',
+            content: `<p><b>${caseNumber.number} </b></br>` + `${caseNumber.address}</p>`,
+          },
+        });
+
+        view.graphics.add(startPoint);
+
+        const endPoint = new Graphic({
+          geometry: end,
+          symbol: simpleMarkerSymbol,
+        });
+
+        view.graphics.add(endPoint);
+
+        route
+          .solve(routeUrl, routeParams)
+          .then(function (data) {
+            data.routeResults.forEach(function (result) {
+              result.route.symbol = {
+                type: 'simple-line',
+                color: [5, 150, 255],
+                width: 3,
+              };
+              view.graphics.add(result.route);
+            });
+
+            // Display directions
+            if (data.routeResults.length > 0) {
+              const directions = document.createElement('ol');
+              directions.classList = 'esri-widget esri-widget--panel esri-directions__scroller';
+              directions.style.marginTop = '0';
+              directions.style.padding = '15px 15px 15px 30px';
+              const features = data.routeResults[0].directions.features;
+
+              // Show each direction
+              features.forEach(function (result, i) {
+                const direction = document.createElement('li');
+                direction.innerHTML =
+                  result.attributes.text + ' (' + result.attributes.length.toFixed(2) + ' miles)';
+                directions.appendChild(direction);
+              });
+
+              view.ui.empty('top-right');
+              view.ui.add(directions, 'top-right');
+            }
+          })
+
+          .catch(function (error) {});
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>

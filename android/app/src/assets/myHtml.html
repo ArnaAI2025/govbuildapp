@@ -1,0 +1,51 @@
+<html>
+<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.2">
+<link rel='stylesheet' href='bootstrap.min.css'>
+<link rel='stylesheet' href='formio.full.min.css'>
+<script src='jquery.min.js'></script>
+<script src='jquery.slim.min.js'></script>
+<script src='bootstrap.bundle.min.js'></script>
+<script src='formio.full.min.js'></script>
+    <script type='text/javascript'>
+
+    </script>
+
+</head>
+
+<body >
+        <div id='formio'></div>
+
+        <script type='text/javascript'>
+
+
+
+
+
+
+                if (window.ReactNativeWebView.injectedObjectJson()) {
+
+                     customValue = JSON.parse(window.ReactNativeWebView.injectedObjectJson()).customValue;
+
+                    //   for (let i = 0; i < customValue.length; i++) {
+                    //     alert(customValue.length)
+                    //     customValue[i].style.display = "none";
+                    // }
+                     eval(customValue);
+                    document.getElementById('customValueDisplay').innerHTML += customValue;
+                }
+
+
+
+
+        </script>
+
+
+
+
+</body>
+</html>
+
+

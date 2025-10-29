@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <!-- <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://cdn.form.io/formiojs/formio.full.min.css'>
+    <script src='https://cdn.form.io/formiojs/formio.full.min.js'></script>
+     -->
+
+    <!-- <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/formiojs@latest/dist/formio.full.min.css'>
+    <script src='https://unpkg.com/formiojs@latest/dist/formio.full.min.js'></script> -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.5" />
+    <link rel="stylesheet" href="bootstrap.css" />
+    <link rel="stylesheet" href="font-awesome.min.css" />
+
+    <link rel="stylesheet" href="formio.full.css" />
+    <link rel="stylesheet" href="flatpickr.min.css" />
+
+    <script src="formio.full.js"></script>
+    <script src="flatpickr.min.js"></script>
+
+    <script type="text/javascript">
+      // window.onload = function() {
+      //   const json = '{"display":"form","settings":{"pdf":{"id":"1ec0f8ee-6685-5d98-a847-26f67b67d6f0","src":"https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"}},"components":[{"label":"Owner name","tableView":true,"key":"ownerName","type":"textfield","input":true},{"label":"Tenant name","tableView":true,"key":"tenantName","type":"textfield","input":true},{"label":"Description","autoExpand":false,"tableView":true,"key":"description","type":"textarea","input":true},{"label":"Upload photo","tableView":false,"image":true,"webcam":true,"fileTypes":[{"label":"","value":""}],"key":"uploadPhoto","type":"file","input":true},{"label":"Form letter details","attrs":[{"attr":"","value":""}],"refreshOnChange":false,"key":"formLetterDetails","type":"htmlelement","input":false,"tableView":false},{"type":"button","label":"Submit","key":"submit","disableOnInvalid":true,"input":true,"tableView":false}]}'
+      //   Formio.createForm(document.getElementById('formio'),
+      //   {"display":"form","settings":{"pdf":{"id":"1ec0f8ee-6685-5d98-a847-26f67b67d6f0","src":"https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"}},"components":[{"label":"Owner name","tableView":true,"key":"ownerName","type":"textfield","input":true},{"label":"Tenant name","tableView":true,"key":"tenantName","type":"textfield","input":true},{"label":"Description","autoExpand":false,"tableView":true,"key":"description","type":"textarea","input":true},{"label":"Upload photo","tableView":false,"image":true,"webcam":true,"fileTypes":[{"label":"","value":""}],"key":"uploadPhoto","type":"file","input":true},{"label":"Form letter details","attrs":[{"attr":"","value":""}],"refreshOnChange":false,"key":"formLetterDetails","type":"htmlelement","input":false,"tableView":false},{"type":"button","label":"Submit","key":"submit","disableOnInvalid":true,"input":true,"tableView":false}]}
+      //   );
+      //   // Formio.createForm(document.getElementById('formio'), "" + json);
+      // };
+    </script>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+      #formio {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 800px;
+        width: 100%;
+      }
+      .formio-component {
+        margin-bottom: 1.5rem;
+      }
+      .formio-component label {
+        font-weight: 600;
+        color: #333;
+      }
+      .formio-component-file .text-danger {
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+      .btn-primary,
+      .btn-secondary {
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+      }
+      .formio-component-columns .formio-component {
+        margin-bottom: 0;
+      }
+      .formio-component-columns .btn {
+        margin-right: 10px;
+      }
+      @media (max-width: 576px) {
+        #formio {
+          padding: 15px;
+        }
+        .btn-primary,
+        .btn-secondary {
+          width: 100%;
+          margin-bottom: 10px;
+          margin-right: 0;
+        }
+        .formio-component-columns .formio-component {
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body onload="myFunction()">
+    <div id="formio"></div>
+    <script type="text/javascript">
+      function myFunction() {
+        var element = document.getElementsByClassName("formio-component-file");
+        for (let i = 0; i < element.length; i++) {
+          element[i].style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

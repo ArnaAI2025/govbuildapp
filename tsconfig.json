@@ -1,0 +1,13 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-native", //Ensures JSX syntax works with React Native.
+    "allowJs": true, //Allows JavaScript files alongside TypeScript (in case you mix).
+    "esModuleInterop": true, //For compatibility with CommonJS imports like DeviceInfo
+    "skipLibCheck": true, //Prevents type conflicts from installed packages.
+    "moduleResolution": "node", //Helps TypeScript resolve node modules.
+    "types": ["react", "react-native"] //Explicitly adds types for React Native, React, and Jest.
+  },
+  "exclude": ["node_modules", "babel.config.js"]
+}

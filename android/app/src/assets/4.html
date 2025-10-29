@@ -1,0 +1,35 @@
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- <link rel='stylesheet' href='bootstrap.css'> -->
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <!-- <link rel='stylesheet' href='font-awesome.min.css'>-->
+    <link rel="stylesheet" href="formio.full.min.css" />
+
+    <!-- <link rel='stylesheet' href='formio.full.css'> -->
+    <!-- <link rel='stylesheet' href='flatpickr.min.css'> -->
+
+    <!-- <script src='formio.full.js'></script>
+    <script src='flatpickr.min.js'></script> -->
+    <script src="jquery.min.js"></script>
+    <script src="jquery.slim.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="formio.full.min.js"></script>
+
+    <script type="text/javascript"></script>
+  </head>
+  <body onload="myFunction()">
+    <div id="formio"></div>
+    <script type="text/javascript">
+      function myFunction() {
+        var element = document.getElementsByClassName("formio-component-file");
+        alert(JSON.stringify(document));
+        for (let i = 0; i < element.length; i++) {
+          element[i].style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

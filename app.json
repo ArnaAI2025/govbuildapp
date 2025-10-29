@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "GovBuiltMobile",
+    "slug": "GovBuiltMobile",
+    "version": "1.0.0",
+    "jsEngine": "hermes",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.name.AppOffline",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "We use Face ID to authenticate you securely and quickly.",
+        "NSCameraUsageDescription": "We need access to your camera to let you upload images",
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library to let you upload images"
+      }
+    },
+    "android": {
+      "package": "com.appoffline",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+        }
+      ]
+    ]
+  }
+}
