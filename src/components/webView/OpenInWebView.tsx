@@ -21,6 +21,7 @@ import { WebViewState } from '../../utils/interfaces/IComponent';
 import { isTokenTimeOut, TokenRefreshGlobal } from '../../session/TokenRefresh';
 import { ToastService } from '../common/GlobalSnackbar';
 import { goBack } from '../../navigation/Index';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type OpenInWebViewScreenProps = NativeStackScreenProps<RootStackParamList, 'OpenInWebView'>;
 
@@ -46,6 +47,7 @@ const checkConnectionQuality = async (): Promise<boolean> => {
     console.log('Connection duration:', duration);
     return duration > CONNECTIVITY_THRESHOLD;
   } catch (error) {
+    recordCrashlyticsError('Network check error:',error);
     console.error('Network check error:', error);
     return true; // Assume low connectivity on error
   }
@@ -168,6 +170,7 @@ const OpenInWebView: React.FC<OpenInWebViewScreenProps> = ({ navigation, route }
         isWebViewLoading: true,
       }));
     } catch (error) {
+      recordCrashlyticsError('Initialization error:',error);
       console.error('Initialization error:', error);
       setState((prev) => ({ ...prev, isLoadingAPI: false, showError: true }));
       Alert.alert('Error', 'Failed to load content. Please try again.');
@@ -261,6 +264,7 @@ const OpenInWebView: React.FC<OpenInWebViewScreenProps> = ({ navigation, route }
         }
       }
     } catch (error) {
+      recordCrashlyticsError('Token refresh failed:', error);
       console.error('Token refresh failed:', error);
       // Alert.alert("Session Expired", "Please log in again.", [
       //   { text: "OK", onPress: () => navigation.navigate("LoginScreen") },

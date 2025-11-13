@@ -23,6 +23,7 @@ import { DatePickerInput } from '../../../../components/common/DatePickerInput';
 import PublishButton from '../../../../components/common/PublishButton';
 import { TextInput } from 'react-native-paper';
 import CustomGooglePlacesInput from '../../../../components/common/CustomGooglePlacesInput';
+import { recordCrashlyticsError } from '../../../../services/CrashlyticsService';
 
 type AddContactsScreenProps = NativeStackScreenProps<RootStackParamList, 'AddContact'>;
 const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) => {
@@ -167,6 +168,7 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
         isNetworkAvailable,
       );
     } catch (error) {
+      recordCrashlyticsError('Error saving responsible party:',error);
       console.error('Error saving responsible party:', error);
     }
   };

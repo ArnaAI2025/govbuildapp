@@ -6,6 +6,7 @@ import { syncSubmissionData } from '../form-submission/formSubmissionSync';
 import { deleteFormListData, updateFormListIfExist } from '../form-submission/formSubmissionDAO';
 import { syncFileExtensionData } from '../sub-screens/attached-docs/attachedDocsSync';
 import { updateDailyInspectionListIfExist } from './otherSectionDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 // # Sync logic (optional, for syncing with server)
 export const getOtherScreenData = async () => {
   console.log('Fetch selection list starts');
@@ -16,6 +17,7 @@ export const getOtherScreenData = async () => {
     syncFormListForOffline();
     console.log('fetch selection methods completed');
   } catch (error) {
+    recordCrashlyticsError('fetch selection list db error:', error);
     console.log('fetch selection list db error:', error);
   }
 };
@@ -53,6 +55,7 @@ const getSubmissionDataAPI = async () => {
       console.warn('API call successful but no valid data returned.');
     }
   } catch (error) {
+    recordCrashlyticsError('Error in getSubmissionDataAPI:', error);
     // Catch and log any errors encountered
     console.error('Error in getSubmissionDataAPI:', error);
   }
@@ -90,6 +93,7 @@ const syncFormListForOffline = async () => {
           break;
         }
       } catch (paginationError) {
+        recordCrashlyticsError(`Error fetching page ${page}:`, paginationError);
         console.error(`Error fetching page ${page}:`, paginationError);
         break;
       }
@@ -108,6 +112,7 @@ const syncFormListForOffline = async () => {
       console.warn('No data fetched from the API.');
     }
   } catch (error) {
+    recordCrashlyticsError('Error in addFormListAPICall:', error);
     console.error('Error in addFormListAPICall:', error);
   }
 };
@@ -150,6 +155,7 @@ const syncDailyInspectionData = async () => {
       console.warn('API call successful, but no valid data returned.');
     }
   } catch (error) {
+    recordCrashlyticsError('Error in DailyInspectionDataAPI:', error);
     // Log any errors encountered during the process
     console.error('Error in DailyInspectionDataAPI:', error);
   }

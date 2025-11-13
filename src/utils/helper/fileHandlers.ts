@@ -12,6 +12,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { fileExtensionDataAPI } from '../../components/common/OpenDocPickerDialog';
 import { GETAPI_FOR_DOWNLOAD } from '../../services/ApiClient';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export async function openPhotosPicker(comment: any, FileUploadApi: any) {
   // Set the permission dialog active flag to true
@@ -160,6 +161,7 @@ export const downloadFile = async (
           ToastService.show('File downloaded successfully', COLORS.SUCCESS_GREEN);
         })
         .error((error) => {
+          recordCrashlyticsError('Download failed:', error);
           console.error('Download failed:', error);
           Alert.alert('Error', 'An error occurred while downloading the file');
         });
@@ -194,6 +196,7 @@ export const downloadFile = async (
       await task;
     }
   } catch (error: any) {
+    recordCrashlyticsError('Download error:', error);
     console.error('Download error:', error);
     Alert.alert('Error', error?.message || 'An error occurred while downloading the file');
   } finally {
@@ -209,6 +212,7 @@ export async function checkFileDomain(fileurl: string | string[]) {
 
     return fileurl.includes('http') ? fileurl : `${url}/${fileurl}`;
   } catch (error) {
+    recordCrashlyticsError('Error fetching base URL:', error);
     console.error('Error fetching base URL:', error);
     return null;
   }
@@ -322,6 +326,7 @@ export const downloadDailyInspectionReportFile = async (url: string) => {
       }
     });
   } catch (error) {
+    recordCrashlyticsError('download permission request error', error);
     console.log('download permission request error', error);
     return null;
   }

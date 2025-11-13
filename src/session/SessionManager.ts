@@ -1,6 +1,7 @@
 import { MMKV } from 'react-native-mmkv';
 import { SESSION_STORAGE } from '../constants/sessionStrings';
 import { createJSONStorage } from 'zustand/middleware';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
 
 // Create MMKV instance
 export const storage = new MMKV();
@@ -91,6 +92,7 @@ export const saveOfflineUtcDate = (utcDate: string) => {
     storage.set(SESSION_STORAGE.OFFLINE_UTC_DATE, utcDate);
     console.log('Offline UTC time stored:', utcDate);
   } catch (error) {
+    recordCrashlyticsError('Error storing offline UTC time:', error);
     console.error('Error storing offline UTC time:', error);
   }
 };
@@ -106,6 +108,7 @@ export const setWasOnline = (isOnline: boolean) => {
     storage.set(SESSION_STORAGE.WAS_ONLINE, isOnline);
     console.log('Stored wasOnline in MMKV:', isOnline);
   } catch (error) {
+    recordCrashlyticsError('Error storing wasOnline:', error);
     console.error('Error storing wasOnline:', error);
   }
 };

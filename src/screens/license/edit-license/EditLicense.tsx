@@ -12,36 +12,50 @@ import {
   fetchLicenseSubtype,
   fetchTeamMember,
   postLicenseDetails,
-} from '../LicenseService';
-import { TEXTS } from '../../../constants/strings';
-import { ToastService } from '../../../components/common/GlobalSnackbar';
-import { COLORS } from '../../../theme/colors';
-import { LICENSE_OFFLINE_TITLES, LICENSE_TABS, PAYMENT_ITEMS } from '../../../constants/data';
-import { styles } from './editLicenseStyles';
-import IMAGES from '../../../theme/images';
-import { convertDate, formatAllTypesDate, normalizeBool } from '../../../utils/helper/helpers';
-import ScreenWrapper from '../../../components/common/ScreenWrapper';
-import Loader from '../../../components/common/Loader';
-import RenderItemChevronStatus from '../../../components/common/ChevronStatus';
-import FloatingInput from '../../../components/common/FloatingInput';
-import CustomDropdown from '../../../components/common/CustomDropdown';
-import CustomMultiSelectDropdown from '../../../components/common/MultiSelectDropdown';
-import PublishButton from '../../../components/common/PublishButton';
-import { useLicenseStore } from '../../../store/useLicenseStore';
-import { LicenseData } from '../../../utils/interfaces/zustand/ILicense';
-import { DatePickerInput } from '../../../components/common/DatePickerInput';
-import { AlertMessageSection } from '../../../components/common/AlertMessageSection';
-import { goBack } from '../../../navigation/Index';
-import { LicenseSubScreensItemView } from '../../sub-screens/LicenseSubScreensItemView';
-import { CustomConfirmationDialog } from '../../../components/dialogs/CustomConfirmationDialog';
-import Checkbox from 'expo-checkbox';
-import { TeamMember } from '../../../utils/interfaces/ICase';
-import useAuthStore from '../../../store/useAuthStore';
-import CustomGooglePlacesInput from '../../../components/common/CustomGooglePlacesInput';
-import { emailRegex } from '../../../utils/validations';
-import { saveNavigationState } from '../../../session/SessionManager';
-type EditLicenseScreenProps = NativeStackScreenProps<RootStackParamList, 'EditLicenseScreen'>;
-const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, navigation }) => {
+} from "../LicenseService";
+import { TEXTS } from "../../../constants/strings";
+import { ToastService } from "../../../components/common/GlobalSnackbar";
+import { COLORS } from "../../../theme/colors";
+import {
+  LICENSE_OFFLINE_TITLES,
+  LICENSE_TABS,
+  PAYMENT_ITEMS,
+} from "../../../constants/data";
+import { styles } from "./editLicenseStyles";
+import IMAGES from "../../../theme/images";
+import {
+  convertDate,
+  formatAllTypesDate,
+  normalizeBool,
+} from "../../../utils/helper/helpers";
+import ScreenWrapper from "../../../components/common/ScreenWrapper";
+import Loader from "../../../components/common/Loader";
+import RenderItemChevronStatus from "../../../components/common/ChevronStatus";
+import FloatingInput from "../../../components/common/FloatingInput";
+import CustomDropdown from "../../../components/common/CustomDropdown";
+import CustomMultiSelectDropdown from "../../../components/common/MultiSelectDropdown";
+import PublishButton from "../../../components/common/PublishButton";
+import { useLicenseStore } from "../../../store/useLicenseStore";
+import { LicenseData } from "../../../utils/interfaces/zustand/ILicense";
+import { DatePickerInput } from "../../../components/common/DatePickerInput";
+import { AlertMessageSection } from "../../../components/common/AlertMessageSection";
+import { goBack } from "../../../navigation/Index";
+import { LicenseSubScreensItemView } from "../../sub-screens/LicenseSubScreensItemView";
+import { CustomConfirmationDialog } from "../../../components/dialogs/CustomConfirmationDialog";
+import { TeamMember } from "../../../utils/interfaces/ICase";
+import useAuthStore from "../../../store/useAuthStore";
+import CustomGooglePlacesInput from "../../../components/common/CustomGooglePlacesInput";
+import { emailRegex } from "../../../utils/validations";
+import { saveNavigationState } from "../../../session/SessionManager";
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
+type EditLicenseScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "EditLicenseScreen"
+>;
+const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({
+  route,
+  navigation,
+}) => {
   const { authData } = useAuthStore.getState();
   const userId = authData?.adminRole?.teamMember?.userId || '';
   const contentItemId = route?.params?.contentItemId;
@@ -53,7 +67,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
   const scrollRef = useRef<ScrollView>(null);
   const lastNavigatedScreen = useRef<string | null>(null);
   const [selectedTeamMembers, setSelectedTeamMembers] = useState<any>([]);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [, setTeamMembers] = useState<TeamMember[]>([]);
   const [inputHeight, setInputHeight] = useState(80);
   const [subTypeFromTypeId, setSubTypeFromTypeId] = useState([]);
   const [requireEmailAddress, setRequireEmailAddress] = useState('');
@@ -118,6 +132,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
             }, 200);
           });
         } catch (error) {
+          recordCrashlyticsError('Error fetching edit license data:',error)
           console.error('Error fetching data:', error);
           setAlertPopup({
             title: 'Error',
@@ -138,6 +153,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
         try {
           await fetchDropdownDetails();
         } catch (error) {
+          recordCrashlyticsError('Error fetching dropdown data:',error)
           console.error('Error fetching dropdown data:', error);
           setAlertPopup({
             title: 'Error',
@@ -159,6 +175,15 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
         isNetworkAvailable,
       );
       const license = licenseDetail?.data;
+      // const licenseTypeFieldSettingResponse =
+      //   await fetchLicenseTypeFieldSetting(
+      //     license?.licenseTypeId,
+      //     isNetworkAvailable
+      //   );
+      // console.log(
+      //   "licenseTypeFieldSettingResponse---->>>>>",
+      //   licenseTypeFieldSettingResponse
+      // );
       setLicenseEditData({
         ...license,
         licenseUniqNumber: license?.licenseNumber ?? '',
@@ -226,6 +251,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
       setAlertPopup(license?.lstComments || licenseDetail?.lstComments);
       checkInspectionSchedule(license?.statusId, license?.selectedInspectionLicenseStatus);
     } catch (error) {
+      recordCrashlyticsError('Error fetching license details:',error)
       console.error('Error fetching license details:', error);
       setAlertPopup({
         title: 'Error',
@@ -630,6 +656,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('ERROR POST LICENSE RESPONSE --->',error)
       console.log('ERROR POST LICENSE RESPONSE --->', error);
     }
   };
@@ -708,6 +735,7 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching license number:',error)
       console.error('Error fetching license number:', error);
     }
   };
@@ -1003,53 +1031,6 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
                 hintText="The expiration date of the license."
                 containerStyle={{ marginTop: 5 }}
               />
-
-              {!isNetworkAvailable && (
-                <>
-                  <CustomMultiSelectDropdown
-                    data={teamMembers?.map((item) => ({
-                      item: `${item?.firstName} ${item?.lastName}`,
-                      id: item?.userId,
-                    }))}
-                    labelField="item"
-                    valueField="id"
-                    value={selectedTeamMembers}
-                    // onChange={setSelectedTeamMembers}
-                    onChange={(item) => {
-                      setSelectedTeamMembers(item);
-                      console.log('item?.length < 0----->>>>', item?.length, item?.length < 0);
-                      setFieldErrors((prev) => ({
-                        ...prev,
-                        assigneeTeamMember: item?.length < 0,
-                      }));
-                    }}
-                    label={TEXTS.license.teamMember}
-                    placeholder={TEXTS.license.teamMemberPlaceholder}
-                    zIndexPriority={1}
-                    hintText="The Assigned Users of the form."
-                    containerStyle={styles.inputFieldStyle}
-                    error={fieldErrors.assigneeTeamMember}
-                  />
-                  <View style={styles.assignedView}>
-                    <Checkbox
-                      value={licenseEditData?.isAllowAssigned}
-                      onValueChange={(newValue) => {
-                        setLicenseEditData({
-                          ...licenseEditData,
-                          isAllowAssigned: newValue,
-                        });
-                      }}
-                      style={styles.checkBox}
-                      color={licenseEditData?.isAllowAssigned ? COLORS.APP_COLOR : undefined}
-                    />
-                    <View style={styles.flexStyle}>
-                      <Text style={[styles.titleStyle, { marginLeft: 5 }]}>
-                        {TEXTS.license.allowAssigned}{' '}
-                      </Text>
-                    </View>
-                  </View>
-                </>
-              )}
 
               <View style={[{ marginTop: 15 }]}>
                 <Text style={[styles.floatingLabel]}>{'Additional Info'}</Text>

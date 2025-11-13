@@ -19,6 +19,7 @@ import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { normalizeBool, sortByKey } from '../../../utils/helper/helpers';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import PublishButton from '../../../components/common/PublishButton';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type AttachedDocsUpdateAndAddProps = NativeStackScreenProps<
   RootStackParamList,
@@ -186,6 +187,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
           );
           return { success: result, fileName: docData.fileName };
         } catch (error) {
+          recordCrashlyticsError(`Error uploading file ${docData.fileName}:`,error);
           console.error(`Error uploading file ${docData.fileName}:`, error);
           return { success: false, fileName: docData.fileName, error };
         }
@@ -207,6 +209,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
         navigation.goBack();
       }
     } catch (error) {
+      recordCrashlyticsError('Error in handleSubmit:',error);
       console.error('Error in handleSubmit:', error);
       ToastService.show('An unexpected error occurred during upload', COLORS.ERROR);
     } finally {

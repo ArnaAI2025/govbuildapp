@@ -149,7 +149,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
         ...DEFAULT_ADVANCED_FILTERS,
         isMyLicenseOnly: hardReset ? false : state.filters.isMyLicenseOnly,
       },
-      filterCount: state.filterCount,
+      filterCount: 0,
       pageNo: 1,
       licenseData: [],
       licenseIds: [],

@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TAB, TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -30,6 +31,7 @@ export const insertSyncHistoryData = async (
     );
     console.log('Insert new history data successfully');
   } catch (error) {
+    recordCrashlyticsError('Error inserting sync history data:', error);
     console.error('Error inserting sync history data:', error);
   }
 };
@@ -64,6 +66,7 @@ export const updateSyncHistory = async (
       console.log('Update history data successfully');
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating sync history:', error);
     console.error('Error updating sync history:', error);
   }
 };
@@ -74,6 +77,7 @@ export const getSyncHistory = async () => {
     const row = db.getAllAsync('SELECT * FROM ' + TABLES.SYNC_HISTORY);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error in getSyncHistory', error);
     console.log('Error in getSyncHistory', error);
   }
 };

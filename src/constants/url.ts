@@ -1,21 +1,25 @@
 import { Platform } from 'react-native';
+import Config from 'react-native-config';
 
-export const TENANT_BASE_URL: string = 'http://govbuilt.com/'; // for live
-//export const TENANT_BASE_URL: string = "http://govbuilt.us/"; // for testing
+// export const TENANT_BASE_URL = Config.LIVE_BASE_URL; // for live
+export const TENANT_BASE_URL = Config.LIVE_BASE_URL; // for testing
 
-export const APP_VERSION: number = 54;
-export const TOKEN_FOR_APP_VERSION = 'VeqirX7YNTNWKcJeC7jbZCd5TClbC5ciIy07kOMGFGt2krcbAY'; // for Live
-//export const TOKEN_FOR_APP_VERSION = 'bbe3822f-7861-47af-9ff3-0bd67fe4f7d7' // for testing
+export const SEQURE_BASE_URL = Config.SEQURE_LIVE_BASE_URL; //https url
+
+export const APP_VERSION: number = 60;
+
+export const TOKEN_FOR_APP_VERSION = Config.LIVE_TOKEN_FOR_APP_VERSION; // for Live
+// export const TOKEN_FOR_APP_VERSION = Config.STAGING_TOKEN_FOR_APP_VERSION; // for testing
 
 export const URL = {
   // AUTH Releted API's
   AUTH_LOGIN: `${TENANT_BASE_URL}connect/token`,
   TENANT_BASE_URL,
-  GET_TENANT_LIST: `${TENANT_BASE_URL}api/GraphQL?query=query%20MyQuery%20%7B%0A%20%20offlineAppTenants%20%7B%0A%20%20%20%20authenticationCallbackPathAndroid%0A%20%20%20%20authenticationCallbackPathiOS%0A%20%20%20%20authenticationDisplayName%0A%20%20%20%20authenticationTenantId%0A%20%20%20%20isAzureActiveDirectoryEnabled%0A%20%20%20%20authenticationAppId%0A%20%20%20%20uRL%20%7B%0A%20%20%20%20%20%20text%0A%20%20%20%20%20%20url%0A%20%20%20%20%7D%0A%20%20%20%20isActive%0A%20%20%20%20displayText%0A%20%20%20%20clientID%0A%20%20%20%20contentItemId%0A%20%20%20%20clientSecret%0A%20%20%7D%0A%7D%0A`,
-  GET_TENANT_LIST_SECURE: `https://govbuilt.com/api/GraphQL?query=query%20MyQuery%20%7B%0A%20%20offlineAppTenants%20%7B%0A%20%20%20%20authenticationCallbackPathAndroid%0A%20%20%20%20authenticationCallbackPathiOS%0A%20%20%20%20authenticationDisplayName%0A%20%20%20%20authenticationTenantId%0A%20%20%20%20isAzureActiveDirectoryEnabled%0A%20%20%20%20authenticationAppId%0A%20%20%20%20uRL%20%7B%0A%20%20%20%20%20%20text%0A%20%20%20%20%20%20url%0A%20%20%20%20%7D%0A%20%20%20%20isActive%0A%20%20%20%20displayText%0A%20%20%20%20clientID%0A%20%20%20%20contentItemId%0A%20%20%20%20clientSecret%0A%20%20%7D%0A%7D%0A`,
-  GET_MOBILE_APP_VERSION: `${TENANT_BASE_URL}/queries/GetMobileAppVersion?parameters={"CurrentVersion":${APP_VERSION}}&token=${TOKEN_FOR_APP_VERSION}`,
+  GET_TENANT_LIST: `${TENANT_BASE_URL}${Config.GET_TENANT_LIST}`,
+  GET_TENANT_LIST_SECURE: Config.GET_SECURE_TENANT_LIST,
+  GET_MOBILE_APP_VERSION: `${TENANT_BASE_URL}/api/queries/GetMobileAppVersion?parameters={"CurrentVersion":${APP_VERSION}}&token=${TOKEN_FOR_APP_VERSION}`,
   GET_TOKEN: TENANT_BASE_URL + 'connect/token',
-  GET_SEQURE_TOKEN: 'https://govbuilt.com/connect/token', //need to global url
+  GET_SEQURE_TOKEN: `${SEQURE_BASE_URL}connect/token`,
   GET_ADMIN_ROLE: 'api/Case/GetAdminRole',
   GET_GLOBAL_CASE_SETTING: '/api/case/GetGlobalCaseSetting',
   WEB_URL: '/LoginAuto?',
@@ -125,6 +129,9 @@ export const URL = {
   LICENSE_DETAILS_API: '/api/License/GetLicenseDetails?ContentItemId=',
   UPDATE_LICENSE_DETAILS_API: '/api/License/AddUpdateLicenseDetails',
 
+  // GET LICENSE TYPE FIELD SETTING
+  GET_LICENSE_TYPE_FIELDS_SETTING: 'api/License/GetLicenseTypeFieldSetting?licenseTypeId=',
+
   //Task screen screen
   TASK_LIST: '/API/Case/GetAllCaseTasksByCaseId?caseId=',
 
@@ -230,20 +237,18 @@ export const URL = {
 };
 
 export const AUTH_CONFIG = {
-  client_id: '3a38cde2851147fe968818773e14eab2',
-  client_secret: 'ead133fa54bee3c081cc3c33a20767820a1464cd5f7e1ae1b8f9f522e209f31f',
-  grant_type: 'client_credentials',
-  scope: 'email',
+  client_id: Config.AUTH_CONFIG_CLIENT_ID,
+  client_secret: Config.AUTH_CONFIG_CLIENT_SECRET,
+  grant_type: Config.AUTH_CONFIG_GRANT_TYPE,
+  scope: Config.AUTH_CONFIG_SCOPE,
 };
 
-export const APP_STORE = 'https://apps.apple.com/us/app/govbullt-moblle-hub/Id1625285215';
-export const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.appoffline';
+export const APP_STORE = Config.APP_STORE_URL;
+export const PLAY_STORE = Config.PLAY_STORE_URL;
 
 //Google address api key
 export const GOOGLE_PLACE_API_KEY =
-  Platform.OS == 'ios'
-    ? 'AIzaSyDGydXfU4osoj-hVqrWNcas9boydldwYhY'
-    : 'AIzaSyBWinNwZUKTtClPSJnHfa7VUswgfy-4014';
+  Platform.OS == 'ios' ? Config.GOOGLE_MAPS_API_KEY_IOS : Config.GOOGLE_MAPS_API_KEY_ANDROID;
 
 // Web view
 export const TEST_URL = 'https://www.google.com/favicon.ico';

@@ -5,6 +5,7 @@ import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const ParcelService = {
   async fetchParcels(
@@ -39,6 +40,7 @@ export const ParcelService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching parcels', error);
       ToastService.show('Error fetching parcels', COLORS.ERROR);
       console.error('Error in fetchParcels:', error);
       return [];
@@ -65,6 +67,7 @@ export const ParcelService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching parcels details', error);
       ToastService.show('Error fetching parcels details', COLORS.ERROR);
       console.error('Error in fetchParcelDetails:', error);
       return [];
@@ -91,6 +94,7 @@ export const ParcelService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching case parcels', error);
       ToastService.show('Error fetching case parcels', COLORS.ERROR);
       console.error('Error in fetchCaseParcels:', error);
       return [];
@@ -116,6 +120,7 @@ export const ParcelService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching child parcels', error);
       ToastService.show('Error fetching child parcels', COLORS.ERROR);
       console.error('Error in fetchChildParcels:', error);
       return [];
@@ -142,6 +147,7 @@ export const ParcelService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching submission for parcel', error);
       ToastService.show('Error fetching submission for parcel', COLORS.ERROR);
       console.error('Error in fetchSubmissionParcels:', error);
       return [];

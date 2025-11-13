@@ -11,6 +11,7 @@ import { URL } from '../../constants/url';
 import { RootStackParamList } from '../../navigation/Types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { fetchCaseOrLicenseById } from '../../services/WebViewService';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type WebViewForFormProps = NativeStackScreenProps<RootStackParamList, 'WebViewForForm'>;
 
@@ -65,6 +66,7 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
   const handleWebViewMessage = () => {
     try {
     } catch (error) {
+      recordCrashlyticsError('Error parsing WebView message:', error);
       console.error('Error parsing WebView message:', error);
     }
   };
@@ -91,6 +93,7 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
         setError('No internet connection');
       }
     } catch (error) {
+      recordCrashlyticsError('Initialization error:', error);
       console.error('Initialization error:', error);
       setError('Failed to initialize. Please try again.');
     } finally {
@@ -138,6 +141,7 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
                 webViewRef.current?.injectJavaScript(offlineScript);
                 setLoading(false);
               } catch (error) {
+                recordCrashlyticsError('WebView onLoad error:', error);
                 console.error('WebView onLoad error:', error);
                 setError('Failed to load WebView');
               }
@@ -176,14 +180,17 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
                   setURL(newUrl);
                 }
               } catch (error) {
+                recordCrashlyticsError('Navigation state change error:',error);
                 console.error('Navigation state change error:', error);
               }
             }}
             onError={(event) => {
+              recordCrashlyticsError('WebView error:',error);
               console.error('WebView error:', event.nativeEvent);
               setError('Failed to load WebView');
             }}
             onHttpError={(event) => {
+              recordCrashlyticsError('WebView HTTP error:',event.nativeEvent);
               console.error('WebView HTTP error:', event.nativeEvent);
               if (event.nativeEvent.statusCode === 401) {
                 setError('Authentication failed. Please try again.');

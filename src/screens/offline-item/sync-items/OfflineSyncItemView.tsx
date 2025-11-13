@@ -36,6 +36,7 @@ import { syncServerToOfflineDatabase } from '../../../services/SyncService';
 import { processForceSyncQueue } from '../OfflineSyncService';
 import { OfflineItemDeleteDialog } from '../../../components/dialogs/OfflineItemDeleteDialog';
 import { SyncType } from '../../../utils/syncUtils';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface ItemData {
   id: string;
@@ -179,6 +180,7 @@ const OfflineSyncItemView: React.FC<OfflineSyncItemViewProps> = ({
         }
       }
     } catch (err) {
+      recordCrashlyticsError('Error performing action:',err)
       console.error('Error performing action:', err);
       setSubMenuVisible(false);
       setModalVisible(false);
@@ -232,6 +234,7 @@ const OfflineSyncItemView: React.FC<OfflineSyncItemViewProps> = ({
         }
       }
     } catch (error) {
+      recordCrashlyticsError('Error handling edit:',error)
       console.error('Error handling edit:', error);
     }
   };

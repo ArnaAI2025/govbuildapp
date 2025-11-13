@@ -27,6 +27,7 @@ import { COLORS } from '../../theme/colors';
 import { getUserRole } from '../../session/SessionManager';
 import { useOrientation } from '../../utils/useOrientation';
 import { FONT_FAMILY } from '../../theme/fonts';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 interface CaseLicenseFilterDialogProps {
   visible: boolean;
@@ -92,6 +93,7 @@ const CaseLicenseFilterDialog: React.FC<CaseLicenseFilterDialogProps> = ({
         filterType: filterObject?.filterType ?? [],
       });
     } catch (error) {
+      recordCrashlyticsError('Error fetching filter options:',error);
       console.error('Error fetching filter options:', error);
     }
   }, []);
@@ -114,6 +116,7 @@ const CaseLicenseFilterDialog: React.FC<CaseLicenseFilterDialogProps> = ({
         caseStatus: { displayText: 'All Case Status', id: '' },
       }));
     } catch (error) {
+      recordCrashlyticsError('Error fetching case statuses:', error);
       console.error('Error fetching case statuses:', error);
     }
   }, []);

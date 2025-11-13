@@ -16,6 +16,7 @@ import { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FONT_FAMILY } from '../../../theme/fonts';
 import PublishButton from '../../../components/common/PublishButton';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 // Define interfaces for type safety
 interface InspectionItem {
@@ -82,6 +83,7 @@ const redirectToDefaultMap = (
           }
         }
       } catch (error) {
+        recordCrashlyticsError('Error parsing location:',error)
         console.error('Error parsing location:', error);
       }
     }

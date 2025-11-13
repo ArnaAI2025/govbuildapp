@@ -1,5 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import { fetchInspectionData } from './DailyInspectionDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export async function syncDailyInspections(): Promise<void> {
   try {
@@ -57,6 +58,7 @@ export async function syncDailyInspections(): Promise<void> {
     //   }
     // }
   } catch (error) {
+    recordCrashlyticsError('Error in syncDailyInspections:', error);
     console.error('Error in syncDailyInspections:', error);
   }
 }

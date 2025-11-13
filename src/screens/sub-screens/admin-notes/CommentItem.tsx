@@ -28,7 +28,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   isHighlighted,
 }) => {
   const { width } = useWindowDimensions();
-
+  userId;
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -179,7 +179,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
         </View>
         {/* Edit/Delete Buttons */}
-        {userId === item.author?.toLowerCase() &&
+        {/* Need to discuss with the dev team userId === item.author?.toLowerCase() && */}
+        {
           item.text !== TEXTS.subScreens.adminNotes.moderatorComment &&
           isNetworkAvailable && (
             <View style={[styles.buttonContainer, { opacity: isStatusReadOnly ? 0.4 : 1 }]}>

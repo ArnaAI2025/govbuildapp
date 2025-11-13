@@ -8,6 +8,7 @@ import {
   storeFormFiles,
   updateFormFileIfExist,
 } from '../../database/sub-screens/attached-items/attachedItemsDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // Define interfaces for type safety
 interface FileObject {
@@ -49,6 +50,7 @@ const ImageFileUploadPic = ({ visible, onClose, setLoading, config }: ImageFileU
         config.filePattern,
       );
     } catch (error) {
+      recordCrashlyticsError('Error during camera action:',error);
       console.error('Error during camera action:', error);
       Alert.alert('Error', 'Failed to open camera. Please try again.');
     } finally {
@@ -91,6 +93,7 @@ const ImageFileUploadPic = ({ visible, onClose, setLoading, config }: ImageFileU
           break;
       }
     } catch (error) {
+      recordCrashlyticsError('Error handling action:',error);
       console.error('Error handling action:', error);
       Alert.alert('Error', 'An error occurred while processing your request.');
     }
@@ -153,6 +156,7 @@ async function cameraOpen(
     }
     pageReload();
   } catch (error) {
+    recordCrashlyticsError('Camera error:',error);
     console.error('Camera error:', error);
     throw error;
   }
@@ -226,6 +230,7 @@ async function openDocPicker(
     if (DocumentPicker.isCancel(err)) {
       console.log('User cancelled the picker');
     } else {
+      recordCrashlyticsError('Document picker error:',err);
       console.error('Document picker error:', err);
       throw err;
     }
@@ -309,6 +314,7 @@ async function openGallery(
       pageReload();
     }
   } catch (err) {
+    recordCrashlyticsError('Gallery error:', err);
     console.error('Gallery error:', err);
     throw err;
   }

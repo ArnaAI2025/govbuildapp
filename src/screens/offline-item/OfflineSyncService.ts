@@ -25,6 +25,7 @@ import {
   processLicenseTask,
   processSettingsTask,
 } from '../../database/sync-offline-to-server/syncOfflineToServerSync';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const getCaseByCidData = async (
   contentItemId: string,
@@ -80,6 +81,7 @@ export const getCaseByCidData = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error fetching case/license ----->', error);
     console.error('Error fetching case/license ----->', error);
     throw error;
   }

@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { useUnifiedCaseStore } from '../../store/caseStore';
 import { getNewUTCDate, toSqlVal } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
@@ -93,6 +94,7 @@ export const storeCaseData = async (
     console.log('Case inserted');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error storing case data:', error);
     console.error('Error storing case data:', error);
     throw error;
   }
@@ -197,6 +199,7 @@ export const updateCaseData = async (
     }
     console.log('Case successfully updated.');
   } catch (error) {
+    recordCrashlyticsError('Error updating case data:--->', error);
     console.error('Error updating case data:--->', error);
     throw error;
   }
@@ -294,6 +297,7 @@ export const updateOnlyCaseData = async (
     console.log('Case updated (only)');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error updating case data:---------->', error);
     console.error('Error updating case data:---------->', error);
     throw error;
   }
@@ -395,6 +399,7 @@ export const updateFatchCaseData = async (
     console.log('Case updated (fetch)');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error updating case data:->', error);
     console.error('Error updating case data:->', error);
     throw error;
   }
@@ -428,6 +433,7 @@ export const updateCasePermission = async (
     console.log('Case permissions updated');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error updating case permissions:', error);
     console.error('Error updating case permissions:', error);
     throw error;
   }
@@ -441,6 +447,7 @@ export const fetchEditedCaseDataFromDB = async (): Promise<Case[]> => {
     )) as Case[];
     return result;
   } catch (error) {
+    recordCrashlyticsError('Error fetching edited cases:', error);
     console.error('Error fetching edited cases:', error);
     return [];
   }
@@ -459,6 +466,7 @@ export const deleteCaseFromDBById = async (contentItemId: string): Promise<void>
     console.log(`Case with id ${contentItemId} deleted`);
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error deleting case:', error);
     console.error('Error deleting case:', error);
     throw error;
   }
@@ -472,6 +480,7 @@ export const fetchCaseDataByCaseIdFromDb = async (caseId: string) => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case by ID:--->', error);
     console.error('Error fetching case by ID:--->', error);
     return null;
   }
@@ -482,6 +491,7 @@ export const fetchAllCasesFromDB = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.CASES} `);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case by ID:--->', error);
     console.error('Error fetching case by ID:--->', error);
     return null;
   }
@@ -495,6 +505,7 @@ export const caseToForceSyncByID = async (caseId: string) => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case by ID:', error);
     console.error('Error fetching case by ID:', error);
     return null;
   }
@@ -522,6 +533,8 @@ export const addCaseLicenseData = async (caseData, isCase) => {
       1, // isEdited
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error inserting case/license data in DB addCaseLicenseData:', error);
+
     console.log('Error inserting case/license data in DB addCaseLicenseData:', error);
   }
 };
@@ -545,6 +558,7 @@ export const deleteCaseFromDBIfNotFormTheApi = async (id: string) => {
     }
     console.log(`Case with ID ${id} deleted successfully.`);
   } catch (error) {
+    recordCrashlyticsError(`Error deleting case with ID ${id}:`, error);
     console.error(`Error deleting case with ID ${id}:`, error);
   }
 };
@@ -557,6 +571,7 @@ export const getOfflineCaseTypeSettingsById = async (id) => {
     ]);
     return result.length > 0 ? result[0] : null;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case type setting:', error);
     console.error('Error fetching case type setting:', error);
     return null;
   }
@@ -574,6 +589,7 @@ export const updateCaseTypeSettingsIfExists = async (data, caseId) => {
       await updateCaseTypeSettingsData(data, caseId);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating case type settings: ', error);
     console.error('Error updating case type settings: ', error);
   }
 };
@@ -763,6 +779,7 @@ export const storeCaseTypeSettingsData = async (data, caseId) => {
     console.log('Setting data added successfully');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error storing case type setting data:', error);
     console.error('Error storing case type setting data:', error?.message);
   }
 };
@@ -950,6 +967,7 @@ export const updateCaseTypeSettingsData = async (data, caseId) => {
     console.log('Case type setting updated successfully');
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error updating case type setting data:', error);
     console.error('Error updating case type setting data:', error?.message);
   }
 };

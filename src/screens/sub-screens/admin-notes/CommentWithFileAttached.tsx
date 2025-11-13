@@ -24,6 +24,7 @@ import IMAGES from '../../../theme/images';
 import { saveCommentWithDoc } from '../../../services/sub-screens-service/SubScreensCommonService';
 import { styles } from './adminNotesStyle';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type CommentWithFileAttachedProps = NativeStackScreenProps<
   RootStackParamList,
@@ -113,6 +114,7 @@ const CommentWithFileAttached: React.FC<CommentWithFileAttachedProps> = ({ route
         newCommentId: newCommentId,
       });
     } catch (error: any) {
+      recordCrashlyticsError('Error saving comment:', error);
       console.error('Error saving comment:', error);
       setLoading(false);
       ToastService.show(TEXTS.subScreens.commentWithFileAttached.savingError, COLORS.ERROR);

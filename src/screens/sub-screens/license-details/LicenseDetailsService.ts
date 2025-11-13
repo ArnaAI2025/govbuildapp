@@ -2,8 +2,10 @@ import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../../constants/strings';
 import { URL } from '../../../constants/url';
 import { fetchTeamMembers } from '../../../database/drop-down-list/dropDownlistDAO';
+import { getLicenseDetailsDataById } from '../../../database/sub-screens/subScreenDAO';
 import { goBack } from '../../../navigation/Index';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../../services/ApiClient';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { COLORS } from '../../../theme/colors';
 import { formatToTwoDecimals, sortByKey } from '../../../utils/helper/helpers';
@@ -20,8 +22,11 @@ export const LicenseDetailsService = {
         });
         return response?.data?.status ? response?.data?.data : [];
       } else {
+        const response = await getLicenseDetailsDataById(contentItemId);
+        return response;
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetchLicenseData:--->', error);
       console.error('Error fetching:--->', error);
       return [];
     }
@@ -31,6 +36,7 @@ export const LicenseDetailsService = {
     formData: any,
     contentItemId: string,
     ownerName?: string,
+    userId?: string,
     isNetworkAvailable?: boolean,
   ) {
     try {
@@ -58,14 +64,25 @@ export const LicenseDetailsService = {
         });
 
         if (response?.data?.status) {
+          const assignedUsers = Array.isArray(formData.assignTeamMembers)
+            ? formData.assignTeamMembers.filter(Boolean)
+            : formData.assignTeamMembers.split(',').filter(Boolean);
+
+          const userExists = assignedUsers.includes(userId);
           ToastService.show(TEXTS.subScreens.licenseDetails.saveSuccess, COLORS.SUCCESS_GREEN);
-          goBack();
+          if (userExists) {
+            goBack();
+          } else {
+            goBack();
+            goBack();
+          }
         } else {
           ToastService.show(response?.data?.message, COLORS.ERROR);
         }
         return response?.data;
       }
     } catch (error) {
+      recordCrashlyticsError('Error UPDATE_LICENSE_DETAILS_API:--->', error);
       console.error('Error fetching:--->', error);
     }
   },
@@ -83,6 +100,7 @@ export const LicenseDetailsService = {
         return sortByKey(result || [], 'firstName', 'lastName');
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
     }
@@ -99,6 +117,7 @@ export const LicenseDetailsService = {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error searching case owner:', error);
       console.error('Error searching case owner:', error);
       return [];
     }

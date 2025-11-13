@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { SelectionListData, TeamMemberData } from '../../utils/interfaces/offline/IOffllineCase';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
@@ -33,6 +34,7 @@ export const insertDepartmentMemberList = async (data: {
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error inserting department member:', error);
     console.error('Error inserting department member:', error);
     throw error;
   }
@@ -99,6 +101,7 @@ export const fetchBillingStatus = async (isCase: boolean): Promise<any[]> => {
       [isCase],
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching billing status:', error);
     console.error('Error fetching billing status:', error);
     throw error;
   }
@@ -109,6 +112,7 @@ export const fetchDepartmentMemberList = async (): Promise<any[]> => {
   try {
     return await db.getAllAsync(`SELECT * FROM ${TABLES.DEPARTMENT_MEMBER_LIST}`);
   } catch (error) {
+    recordCrashlyticsError('Error fetching department member list:', error);
     console.error('Error fetching department member list:', error);
     throw error;
   }
@@ -121,6 +125,7 @@ export const fetchCaseType = async (isCase: boolean): Promise<any[]> => {
       isCase,
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error fetching case type:', error);
     console.error('Error fetching case type:', error);
     throw error;
   }
@@ -131,6 +136,7 @@ export const fetchRenewalStatus = async (): Promise<any[]> => {
   try {
     return await db.getAllAsync(`SELECT * FROM ${TABLES.RENEWAL_STATUS} WHERE isCase = ?`, [false]);
   } catch (error) {
+    recordCrashlyticsError('Error fetching renewal status:', error);
     console.error('Error fetching renewal status:', error);
     throw error;
   }
@@ -144,6 +150,7 @@ export const fetchStatus = async (isCase: boolean): Promise<any[]> => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching status:', error);
     console.error('Error fetching status:', error);
     throw error;
   }
@@ -156,6 +163,7 @@ export const fetchSubCaseType = async (isCase: boolean): Promise<any[]> => {
       isCase,
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error fetching sub case type:', error);
     console.error('Error fetching sub case type:', error);
     throw error;
   }
@@ -169,6 +177,7 @@ export const fetchSubCaseTypeAndSet = async (
     const rows = await fetchSubCaseType(isCase);
     setData(rows);
   } catch (error) {
+    recordCrashlyticsError('Error fetching subtype data:', error);
     console.error('Error fetching subtype data:', error);
     throw error;
   }
@@ -181,6 +190,7 @@ export const fetchDocumentTypesFromDb = async (isCase: boolean): Promise<any[]> 
       isCase,
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error fetching document types:', error);
     console.error('Error fetching document types:', error);
     throw error;
   }
@@ -193,6 +203,7 @@ export const fetchUsers = async (setData?: (data: any[]) => void): Promise<any[]
     if (setData) setData(rows);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching users:', error);
     console.error('Error fetching users:', error);
     throw error;
   }
@@ -203,6 +214,7 @@ export const fetchTeamMembers = async (): Promise<any[]> => {
   try {
     return await db.getAllAsync(`SELECT * FROM ${TABLES.TEAM_MEMBER_TABLE_NAME}`);
   } catch (error) {
+    recordCrashlyticsError('Error fetching team members:', error);
     console.error('Error fetching team members:', error);
     throw error;
   }
@@ -213,6 +225,7 @@ export const fetchTags = async (isCase: boolean): Promise<any[]> => {
   try {
     return await db.getAllAsync(`SELECT * FROM ${TABLES.TAGS} WHERE isCase = ?`, [isCase]);
   } catch (error) {
+    recordCrashlyticsError('Error fetching tags:', error);
     console.error('Error fetching tags:', error);
     throw error;
   }
@@ -234,6 +247,7 @@ const updateIfId = async (
       await updateData(displayText, id, tableName);
     }
   } catch (error) {
+    recordCrashlyticsError(`Error updating or storing data in ${tableName}:`, error);
     console.error(`Error updating or storing data in ${tableName}:`, error);
     throw error;
   }
@@ -273,6 +287,7 @@ const updateIfIdTeam = async (
       );
     }
   } catch (error) {
+    recordCrashlyticsError('Error in updateIfIdTeam:', error);
     console.error('Error in updateIfIdTeam:', error);
     throw error;
   }
@@ -296,6 +311,7 @@ const updateTypeIfId = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError(`Error updating or storing data in ${tableName}:`, error);
     console.error(`Error updating or storing data in ${tableName}:`, error);
     throw error;
   }
@@ -315,6 +331,7 @@ const updateStatusIfId = async (data: SelectionListData, isCase: boolean): Promi
       }
     }
   } catch (error) {
+    recordCrashlyticsError(`Error updating status with ID ${data.id}:`, error);
     console.error(`Error updating status with ID ${data.id}:`, error);
     throw error;
   }
@@ -334,6 +351,7 @@ const storeData = async (
       isCase,
     ]);
   } catch (error) {
+    recordCrashlyticsError(`Error storing data in ${tableName}:`, error);
     console.error(`Error storing data in ${tableName}:`, error);
     throw error;
   }
@@ -353,6 +371,7 @@ const storeTypeData = async (
       [displayText, id, isCase, isMultipleLocation],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error storing type data in ${tableName}:`, error);
     console.error(`Error storing type data in ${tableName}:`, error);
     throw error;
   }
@@ -366,6 +385,7 @@ const storeStatusData = async (data: SelectionListData, isCase: boolean): Promis
       [data.displayText, data.id, isCase, data.isRemoveAllAssignedTeamMembers ?? false],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error storing status data in ${TABLES.STATUS_TABLE_NAME}:`, error);
     console.error(`Error storing status data in ${TABLES.STATUS_TABLE_NAME}:`, error);
     throw error;
   }
@@ -376,6 +396,7 @@ const updateData = async (displayText: string, id: string, tableName: string): P
   try {
     await db.runAsync(`UPDATE ${tableName} SET displayText = ? WHERE id = ?`, [displayText, id]);
   } catch (error) {
+    recordCrashlyticsError(`Error updating data in ${tableName}:`, error);
     console.error(`Error updating data in ${tableName}:`, error);
     throw error;
   }
@@ -394,6 +415,7 @@ const updateTypeData = async (
       [displayText, isMultipleLocation, id],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating data in ${tableName}:`, error);
     console.error(`Error updating data in ${tableName}:`, error);
     throw error;
   }
@@ -407,6 +429,7 @@ const updateStatusData = async (data: SelectionListData): Promise<void> => {
       [data.displayText, data.isRemoveAllAssignedTeamMembers ?? false, data.id],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating data in ${TABLES.STATUS_TABLE_NAME}:`, error);
     console.error(`Error updating data in ${TABLES.STATUS_TABLE_NAME}:`, error);
     throw error;
   }
@@ -426,6 +449,7 @@ export const updateFormFilterDataIfExists = async (displayText, id, tableName) =
       }
     }
   } catch (error) {
+    recordCrashlyticsError(`Error updating or storing data in ${tableName}:`, error);
     console.error(`Error updating or storing data in ${tableName}:`, error);
     throw error;
   }
@@ -443,6 +467,7 @@ const storeListData = async (displayText, id, tableName) => {
 
     await statement.executeAsync(displayText, id);
   } catch (error) {
+    recordCrashlyticsError(`Error storing list data in ${tableName}:`, error);
     console.error(`Error storing list data in ${tableName}:`, error);
   }
 };
@@ -454,6 +479,7 @@ const updateListData = async (displayText, id, tableName) => {
 
     await db.runAsync(query, [displayText, id]);
   } catch (error) {
+    recordCrashlyticsError(`Error updating list data in ${tableName}:`, error);
     console.error(`Error updating list data in ${tableName}:`, error);
   }
 };

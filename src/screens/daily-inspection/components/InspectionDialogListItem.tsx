@@ -8,6 +8,7 @@ import { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
 import globalStyles from '../../../theme/globalStyles';
 import { FONT_FAMILY } from '../../../theme/fonts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 // Define interfaces for type safety
 interface Location {
@@ -69,6 +70,7 @@ const InspectionDialogListItem: FC<InspectionDialogListItemProps> = ({
         </View>
       );
     } catch (error) {
+      recordCrashlyticsError('Error parsing location:', error)
       console.error('Error parsing location:', error);
       return <View />;
     }

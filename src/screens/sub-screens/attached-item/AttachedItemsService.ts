@@ -9,6 +9,7 @@ import {
 import { storeSubmissionToAttachTable } from '../../../database/sub-screens/subScreenDAO';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const fetchAttachedItems = async (
   contentItemId: string,
@@ -33,6 +34,7 @@ export const fetchAttachedItems = async (
       return ((await fetchAttachedItemsFromDB(contentItemId)) as AttachedItem[]) ?? [];
     }
   } catch (error) {
+    recordCrashlyticsError('Error fetching attached items:', error);
     console.error('Error fetching attached items:', error);
     return [];
   }
@@ -58,6 +60,7 @@ export const downloadForm = async (
       return false;
     }
   } catch (error) {
+    recordCrashlyticsError('Error downloading form:', error);
     console.error('Error downloading form:', error);
     return false;
   }
@@ -67,6 +70,7 @@ export const getOfflineDataById = async (contentItemId: string): Promise<any[]> 
   try {
     return (await fetchAttachedItemsBYId(contentItemId)) ?? [];
   } catch (error) {
+    recordCrashlyticsError('Error fetching offline data:', error);
     console.error('Error fetching offline data:', error);
     return [];
   }

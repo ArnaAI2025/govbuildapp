@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -31,6 +32,7 @@ export const updateDailyInspectionListIfExist = async (
       );
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating daily inspection list:', error);
     console.error('Error updating daily inspection list:', error);
   }
 };
@@ -77,6 +79,7 @@ const storeDailyInspectionData = async (
       data?.statusForeColor,
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing daily inspection data:', error);
     console.error('Error storing daily inspection data:', error);
     throw error;
   }
@@ -123,6 +126,7 @@ const updateDailyInspectionData = async (
       data?.contentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating daily inspection data:', error);
     console.error('Error updating daily inspection data:', error);
   }
 };
@@ -143,6 +147,7 @@ export const fetchDailyInspectionFromDB = async (teamMemberId: string) => {
     const row = await db.getAllAsync(query, ...params);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching daily inspection data:', error);
     console.error('Error fetching daily inspection data:', error);
   }
 };

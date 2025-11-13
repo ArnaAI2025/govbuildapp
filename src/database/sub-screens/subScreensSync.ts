@@ -13,12 +13,17 @@ import {
   syncContactItemWithDatabase,
   updateAttachedItems,
   updateInspectionRecord,
+  updateLicenseDetailsIfExist,
+  updateLicenseOwnerIfExist,
   updateLocationListIfExist,
 } from './subScreenDAO';
 import { updateContractorListIfExist, updatePaymentsIfIDExist } from '../sub-screens/subScreenDAO';
 import { contactService } from '../../screens/sub-screens/contact-contract/ContactAndContractService';
 import { updateAttachedDocsIfIDExist } from './attached-docs/attachedDocsDAO';
 import { InspectionData } from '../types/inpection';
+import { OwnerService } from '../../screens/sub-screens/owner/OwnerService';
+import { LicenseDetailsService } from '../../screens/sub-screens/license-details/LicenseDetailsService';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // Custom error class for sync operations
 class SyncError extends Error {
@@ -80,6 +85,7 @@ export const syncSubScreenData = async (contentItemId: string): Promise<void> =>
       await updateAttachedDocsIfIDExist(caseAttachedDocs, true, contentItemId);
     }
   } catch (error) {
+    recordCrashlyticsError('Error syncing admin notes:', error);
     throw new SyncError(
       `Error syncing admin notes: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -150,6 +156,7 @@ export const syncLicenseSubScreenData = async (contentItemId: string): Promise<v
       );
     }
   } catch (error) {
+    recordCrashlyticsError('Error syncing admin notes:', error);
     throw new SyncError(
       `Error syncing admin notes: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -169,6 +176,7 @@ export const fetchAdminAndPublicCommentsFromOffline = async (
     );
     return comments as AdminNote[];
   } catch (error) {
+    recordCrashlyticsError('Error fetching offline comments:', error);
     throw new SyncError(
       `Error fetching offline comments: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -205,6 +213,7 @@ export const syncAttachedItemWithDatabase = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating attached items:', error);
     console.error('Error updating attached items:', error);
     // Logging the error but not throwing it to avoid disrupting the flow
     return false;
@@ -220,6 +229,7 @@ export const fetchAttachedItemsBYId = async (attachId: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchAttachedItemsBYId :', error);
     console.log('Error fetching case data from DB fetchAttachedItemsBYId :', error);
   }
 };
@@ -233,6 +243,7 @@ export const fetchAttachedItemsFromDB = async (caseId: any) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchAttachedItemsFromDB :', error);
     console.log('Error fetching case data from DB fetchAttachedItemsFromDB :', error);
   }
 };
@@ -249,7 +260,37 @@ export const syncContractorWithDatabase = async (
       await updateContractorListIfExist(item, type === 'Case', contentItemId);
     }
   } catch (error: unknown) {
+    recordCrashlyticsError('Error in contractorDataAPICall for', error);
     console.error(`Error in contractorDataAPICall for ${type} ID ${contentItemId}:`, error);
+  }
+};
+
+export const syncLicenseOwnerWithDatabase = async (
+  contentItemId: string,
+  type: 'Case' | 'License',
+): Promise<void> => {
+  try {
+    const netState = await NetInfo.fetch();
+    const isNetworkAvailable: boolean = !!netState.isConnected;
+
+    const data = await OwnerService.fetchOwnerData(contentItemId, isNetworkAvailable);
+    await updateLicenseOwnerIfExist(data, 'License', contentItemId);
+  } catch (error: unknown) {
+    console.error(`Error in syncLicenseOwnerWithDatabase for ${type} ID ${contentItemId}:`, error);
+  }
+};
+
+export const syncLicenseDetailsDataWithDatabase = async (contentItemId: string): Promise<void> => {
+  try {
+    const netState = await NetInfo.fetch();
+    const isNetworkAvailable: boolean = !!netState.isConnected;
+    const data = await LicenseDetailsService.fetchLicenseData(contentItemId, isNetworkAvailable);
+    await updateLicenseDetailsIfExist(data, 'License', contentItemId);
+  } catch (error: unknown) {
+    console.error(
+      `Error in syncLicenseDetailsDataWithDatabase for License ID ${contentItemId}:`,
+      error,
+    );
   }
 };
 
@@ -269,6 +310,7 @@ export const syncPaymentsWithDatabase = async (
       try {
         await updatePaymentsIfIDExist(order, true, contentItemId);
       } catch (orderError) {
+        recordCrashlyticsError('Error updating payment for order', orderError);
         console.error(`Error updating payment for order ${order?.id || 'unknown'}:`, orderError);
       }
     }
@@ -293,6 +335,10 @@ export const syncInspectionWithDatabase = async (
         try {
           await upsertInspection(inspection);
         } catch (error) {
+          recordCrashlyticsError(
+            `Inspection update failed for inspection ID ${inspection?.id ?? 'unknown'}`,
+            error,
+          );
           console.error(
             `Inspection update failed for inspection ID ${inspection?.id ?? 'unknown'}`,
             error,
@@ -301,6 +347,7 @@ export const syncInspectionWithDatabase = async (
       }
     }
   } catch (err) {
+    recordCrashlyticsError('Failed to sync inspection data:', err);
     console.error('Failed to sync inspection data:', err);
   }
 };
@@ -322,6 +369,7 @@ export const syncLocationWithDatabase = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error in LocationDataAPI:---->>>', error);
     console.error('Error in LocationDataAPI:---->>>', error);
   }
 };
@@ -340,6 +388,7 @@ export const upsertInspection = async (data: InspectionData) => {
       await updateInspectionRecord(data);
     }
   } catch (error) {
+    recordCrashlyticsError('Failed to upsert inspection:', error);
     console.error('Failed to upsert inspection:', error);
   }
 };
@@ -355,6 +404,7 @@ export const fetchAdminPublicComment = async (commentId: string) => {
       return rows;
     }
   } catch (error) {
+    recordCrashlyticsError('Failed to fetch admin public comment:', error);
     console.error('Failed to fetch admin public comment:', error);
   }
 };
@@ -368,6 +418,7 @@ export const fetchAlertAdminNotes = async (caseLicenseId: string) => {
     );
     return _array;
   } catch (error) {
+    recordCrashlyticsError('Failed to fetch alert admin notes:', error);
     console.error('Failed to fetch alert admin notes:', error);
   }
 };

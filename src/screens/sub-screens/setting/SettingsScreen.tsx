@@ -24,6 +24,7 @@ import Loader from '../../../components/common/Loader';
 import PublishButton from '../../../components/common/PublishButton';
 import { TEXTS } from '../../../constants/strings';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 interface SettingsScreenProps
   extends NativeStackScreenProps<RootStackParamList, 'SettingsScreen'> {}
 
@@ -77,6 +78,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
         populateSettingsData(fetchedSettings);
       }
     } catch (error) {
+      recordCrashlyticsError('Initialization error:', error);
       console.error('Initialization error:', error);
     } finally {
       setIsLoading(false);
@@ -108,6 +110,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
         const results = await SettingsService.searchCaseOwner(query, isNetworkAvailable);
         setCaseOwnerSuggestions(results || []);
       } catch (error) {
+        recordCrashlyticsError('Case owner search error:',error);
         console.error('Case owner search error:', error);
       }
     }
@@ -296,7 +299,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
                       data={caseOwnerSuggestions}
                       value={caseOwnerSearch}
                       onChangeText={handleCaseOwnerSearch}
-                      placeholder="Search License Owner"
+                      placeholder="Search Case Owner"
                       placeholderTextColor={COLORS.BLACK}
                       clearButtonMode="while-editing"
                       flatListProps={{
@@ -346,7 +349,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
                     />
                   </View>
                 )}
-                <View style={{ zIndex: 1, marginTop: 20 }}>
+                <View style={{ zIndex: 1, marginTop: 31 }}>
                   <CustomMultiSelectDropdown
                     data={teamMembers?.map((item) => ({
                       item: `${item?.firstName} ${item?.lastName}`,
@@ -426,7 +429,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.TEXT_COLOR,
-    fontSize: fontSize(0.028),
+    fontSize: fontSize(0.026),
     marginBottom: 5,
   },
   hint: {

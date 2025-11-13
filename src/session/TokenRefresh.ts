@@ -4,6 +4,7 @@ import useAuthStore from '../store/useAuthStore';
 import { saveAccessToken } from './SessionManager';
 import { AxiosError } from 'axios';
 import NetInfo from '@react-native-community/netinfo';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
 
 let refreshPromise: Promise<boolean> | null = null;
 
@@ -47,8 +48,7 @@ export const isTokenTimeOut = async (): Promise<boolean> => {
 
     return !result;
   } catch (error) {
-    console.log('response?.rawResponseBody--->', error);
-
+    recordCrashlyticsError('Token refresh failed:', error);
     console.error('Token refresh failed:', error);
     refreshPromise = null;
     return true;
@@ -145,6 +145,7 @@ export const TokenRefreshGlobal = async (retryCount: number = 0): Promise<boolea
         useAuthStore.getState().logout();
         return false;
       } catch (error) {
+        recordCrashlyticsError('Token refresh error:', error);
         console.error('Token refresh error:', error);
         const axiosError = error as AxiosError;
 

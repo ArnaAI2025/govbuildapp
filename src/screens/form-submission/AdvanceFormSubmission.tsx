@@ -29,6 +29,7 @@ import FloatingInput from '../../components/common/FloatingInput';
 import IMAGES from '../../theme/images';
 import Loader from '../../components/common/Loader';
 import SwitchToggle from 'react-native-switch-toggle';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type AdvanceFormSubmissionProps = NativeStackScreenProps<
   RootStackParamList,
@@ -116,6 +117,7 @@ const AdvanceFormSubmission: React.FC<AdvanceFormSubmissionProps> = ({}) => {
           setHasMoreData(false);
         }
       } catch (error) {
+        recordCrashlyticsError('Failed to fetch submissions:',error)
         console.error('Failed to fetch submissions:', error);
       } finally {
         if (reset) {

@@ -7,6 +7,7 @@ import {
   fetchFormStatusData,
   fetchSubmissionData,
 } from '../../database/form-submission/formSubmissionDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const FormSubmissionService = {
   async fetchFormStatus() {
@@ -36,6 +37,7 @@ export const FormSubmissionService = {
       }
     } catch (error) {
       // setLoading(false);
+      recordCrashlyticsError('Error in fetchFormStatus:', error);
       console.error('Error in fetchFormStatus:', error);
       return [{ id: '', displayText: 'All Advanced Form Status' }];
     }
@@ -61,6 +63,7 @@ export const FormSubmissionService = {
         return localData || [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchSubmissions:', error);
       console.error('Error in fetchSubmissions:', error);
       return [];
     }

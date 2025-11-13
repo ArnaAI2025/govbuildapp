@@ -11,6 +11,7 @@ import {
   fetchCaseSettingsDataFromDB,
   syncCaseSettingsWithDatabase,
 } from '../../../database/sub-screens/subScreenDAO';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const SettingsService = {
   async fetchSettings(
@@ -30,6 +31,7 @@ export const SettingsService = {
         return settings || null;
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching settings:', error);
       console.error('Error fetching settings:', error);
       return null;
     }
@@ -53,6 +55,7 @@ export const SettingsService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
     }
@@ -69,6 +72,7 @@ export const SettingsService = {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error searching case owner:', error);
       console.error('Error searching case owner:', error);
       return [];
     }
@@ -138,6 +142,7 @@ export const SettingsService = {
     } catch (error) {
       setLoading(false);
       ToastService.show(`Error saving settings`, COLORS.SUCCESS_GREEN);
+      recordCrashlyticsError('Error saving settings:', error);
       console.error('Error saving settings:', error);
       return false;
     }

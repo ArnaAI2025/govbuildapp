@@ -61,6 +61,7 @@ import { IImageData } from '../../../utils/interfaces/ISubScreens';
 import PublishButton from '../../../components/common/PublishButton';
 import { useDailyInspectionStore } from '../../../store/useDailyInspectionStore';
 import { useFocusEffect } from '@react-navigation/native';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type InspectionScheduleProps = NativeStackScreenProps<RootStackParamList, 'InspectionSchedule'>;
 
@@ -170,6 +171,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
         await handleExistingInspection();
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching initial data:', error);
       console.error('Error fetching initial data:', error);
     } finally {
       setLoading(false);
@@ -432,6 +434,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
       setEndDateTime('');
       return;
     }
+
     if (preferredTime === '1') {
       const { bookedTeamMembers } = await InspectionService.verifyTeamMemberSchedule(
         getInspectionByIds(selectedTeamMembers),
@@ -533,6 +536,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
         setFileUploading(false);
       }
     } catch (error) {
+      recordCrashlyticsError('Error uploading file:', error);
       console.error('Error uploading file:', error);
       ToastService.show('Failed to upload file.', COLORS.ERROR);
     } finally {
@@ -1256,7 +1260,7 @@ const styles = StyleSheet.create({
   },
   icon: { width: iconSize(0.03), height: iconSize(0.03) },
   iconStyle: { width: iconSize(0.03), height: iconSize(0.03) },
-  radioContainer: { marginTop: 5, fontSize: 1 },
+  radioContainer: { marginTop: 5, fontSize: 1, justifyContent: 'center', alignSelf: 'center' },
   timeSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',

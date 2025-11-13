@@ -234,25 +234,23 @@ export const AttachedDocsItem: React.FC<AttachedDocsItemProps> = ({
             marginTop: isGridView ? 5 : 0,
           }}
         >
-          {isGridView && (
+          {normalizeBool(isGridView) && (
             <View style={styles.checkboxContainer}>
               <Checkbox
                 value={
-                  isOffline && rowData?.isShowonFE === 0
+                  normalizeBool(isOffline) && !normalizeBool(rowData?.isShowonFE)
                     ? false
-                    : isOffline && rowData?.isShowonFE === 1
+                    : normalizeBool(isOffline) && normalizeBool(rowData?.isShowonFE)
                       ? true
-                      : rowData?.isShowonFE
+                      : normalizeBool(rowData?.isShowonFE)
                 }
                 color={rowData?.isSync ? COLORS.APP_COLOR : undefined}
                 style={{ borderRadius: 5 }}
               />
-              <Text style={[styles.statusStyle, { marginLeft: 5, fontSize: fontSize(0.025) }]}>
-                Show on FE
-              </Text>
+              <Text style={[styles.statusStyle, { marginLeft: 10 }]}>Show on FE</Text>
             </View>
           )}
-          {fileType !== 'folder' && !isOffline && (
+          {fileType !== 'folder' && !normalizeBool(isOffline) && (
             <View style={styles.actionButtons}>
               {Boolean((rowData as DocumentModel)?.laserficheEntryId) && (
                 <TouchableOpacity onPress={handleOpenLaserfiche}>
@@ -319,7 +317,7 @@ export const AttachedDocsItem: React.FC<AttachedDocsItemProps> = ({
               </Menu>
             </View>
           )}
-          {fileType === 'folder' && !isOffline && (
+          {fileType === 'folder' && !normalizeBool(isOffline) && (
             <TouchableOpacity
               style={
                 isGridView

@@ -27,6 +27,7 @@ import {
 import { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
 import { useUnifiedCaseStore } from '../../store/caseStore';
 import { syncAllCaseFoldersFilesAPI } from '../sub-screens/attached-docs/attachedDocsSync';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const myCaseAPICall = async (): Promise<void> => {
   const { setTotalCaseCount } = useUnifiedCaseStore.getState();
@@ -84,6 +85,7 @@ export const myCaseAPICall = async (): Promise<void> => {
             uniqueCaseTypeIds.push(caseTypeId);
           }
         } catch (error) {
+          recordCrashlyticsError(`Failed to update case ${summary?.contentItemId}:`, error);
           console.error(`Failed to update case ${summary?.contentItemId}:`, error);
         }
       }
@@ -104,6 +106,7 @@ export const myCaseAPICall = async (): Promise<void> => {
           await updateCaseTypeSettingsIfExists(serverData, caseTypeId);
           // console.log(`Stored setting for caseTypeId: ${caseTypeId}`);
         } catch (error) {
+          recordCrashlyticsError(`Failed to store setting for caseTypeId ${caseTypeId}`, error);
           console.error(`Failed to store setting for caseTypeId ${caseTypeId}`, error);
         }
       }
@@ -125,6 +128,7 @@ export const myCaseAPICall = async (): Promise<void> => {
           await syncLocationWithDatabase(contentItemId, 'Case');
           await syncAllCaseFoldersFilesAPI(contentItemId, true);
         } catch (error) {
+          recordCrashlyticsError(`Error syncing data for Case ID ${contentItemId}:`, error);
           console.error(`Error syncing data for Case ID ${contentItemId}:`, error);
         }
       });
@@ -148,6 +152,7 @@ export const myCaseAPICall = async (): Promise<void> => {
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Critical error in myCaseAPICall:', error);
     console.error('Critical error in myCaseAPICall:', error);
   }
 };
@@ -270,6 +275,7 @@ export const updateCaseIfIdExist = async (
       return true;
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating case:', error);
     console.error('Error updating case:', error);
     return false;
   }
@@ -303,6 +309,7 @@ export const fetchCasesFromDB = async (
 
     return filteredRows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching cases:', error);
     console.error('Error fetching cases:', error);
     return [];
   }
@@ -316,6 +323,7 @@ export const fetchLocalCasebyId = async (caseId: string) => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case by ID:', error);
     console.error('Error fetching case by ID:', error);
     return null;
   }
@@ -330,6 +338,7 @@ export const fetchCaseSettingById = async (contentItemId: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseSettingById :', error);
     console.log('Error fetching case data from DB fetchCaseSettingById :', error);
     return [];
   }
@@ -346,6 +355,8 @@ export const fetchCaseForSyncScreen = async () => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseForSyncScreen :', error);
+
     console.log('Error fetching case data from DB fetchCaseForSyncScreen :', error);
     return [];
   }
@@ -361,6 +372,8 @@ export const fetchCaseSettingForSyncScreen = async () => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseForSyncScreen :', error);
+
     console.log('Error fetching case data from DB fetchCaseForSyncScreen :', error);
     return [];
   }
@@ -376,6 +389,8 @@ export const fetchContactForSyncScreen = async () => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching data from DB fetchContactForSyncScreen :', error);
+
     console.log('Error fetching data from DB fetchContactForSyncScreen :', error);
     return [];
   }
@@ -392,6 +407,8 @@ export const fetchContactForSyncCaseLicense = async (isCase: 0 | 1) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching data from DB fetchContactForSyncScreen :', error);
+
     console.log('Error fetching data from DB fetchContactForSyncScreen :', error);
     return [];
   }
@@ -407,6 +424,8 @@ export const fetchAttachedDocsForSyncScreen = async (isCase: 0 | 1) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching data from DB fetchAttachedDocsForSyncScreen :', error);
+
     console.log('Error fetching data from DB fetchAttachedDocsForSyncScreen :', error);
     return [];
   }
@@ -424,6 +443,8 @@ export const fetchAdminNotesItemForSyncScreen = async (isCase: 0 | 1) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseSettingById :', error);
+
     console.log('Error fetching data from DB fetchAdminNotesItemForSyncScreen :', error);
     return [];
   }
@@ -441,6 +462,8 @@ export const fetchPublicCommentItemForSyncScreen = async (isCase: 0 | 1) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseSettingById :', error);
+
     console.log('Error fetching data from DB fetchAdminNotesItemForSyncScreen :', error);
     return [];
   }

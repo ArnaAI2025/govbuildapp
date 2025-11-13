@@ -7,6 +7,7 @@ import {
   FilterItemInterface,
 } from '../utils/interfaces/IComponent';
 import { sortData } from '../utils/helper/helpers';
+import { recordCrashlyticsError } from './CrashlyticsService';
 
 export const fetchFilterOptions = async (
   headerType: string,
@@ -88,6 +89,7 @@ export const fetchFilterOptions = async (
       filterType: FILTER_TYPE,
     };
   } catch (error) {
+    recordCrashlyticsError('Error fetching filter options:---->>>', error);
     console.error('Error fetching filter options:---->>>', error);
     throw new Error(`Failed to fetch filter options:----> ${(error as Error).message}`);
   }
@@ -105,6 +107,7 @@ export const fetchCaseStatusesByCaseType = async (
       a.displayText.localeCompare(b.displayText),
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case statuses:', error);
     console.error('Error fetching case statuses:', error);
     throw new Error(`Failed to fetch case statuses: ${(error as Error).message}`);
   }

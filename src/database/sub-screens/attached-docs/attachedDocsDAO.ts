@@ -1,6 +1,7 @@
 import { TABLES } from '../../DatabaseConstants';
 import { getDatabase } from '../../DatabaseService';
 import { getNewUTCDate } from '../../../utils/helper/helpers';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const fetchAttachedDocsFromDB = async (caseId: string) => {
   try {
@@ -11,6 +12,7 @@ export const fetchAttachedDocsFromDB = async (caseId: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchAttachedDocsFromDB :', error);
     console.log('Error fetching case data from DB fetchAttachedDocsFromDB :', error);
   }
 };
@@ -27,6 +29,10 @@ export const fetchAttachedDocsFolderFilesFromDB = async (
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB fetchAttachedDocsFolderFilesFromDB :',
+      error,
+    );
     console.log('Error fetching case data from DB fetchAttachedDocsFolderFilesFromDB :', error);
   }
 };
@@ -41,6 +47,10 @@ export const fetchAttachedDocsOfflineFromDB = async (id: string, isCase: boolean
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB fetchAttachedDocsOfflineFromDB:',
+      error,
+    );
     console.log('Error fetching case data from DB fetchAttachedDocsOfflineFromDB:', error);
   }
 };
@@ -61,6 +71,7 @@ export const fetchAttachedDocsByFolderID = async (
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchAttachedDocsByFolderID :', error);
     console.log('Error fetching case data from DB fetchAttachedDocsByFolderID :', error);
   }
 };
@@ -91,6 +102,7 @@ export const storeAttachedDocsFolderData = async (
       0, // isEdited defaults to 0
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing attached document folder data:', error);
     console.error('Error storing attached document folder data:', error?.message);
   }
 };
@@ -112,6 +124,7 @@ export const updateAttachedDocsFoldersData = async (data: any, caseId: string) =
     );
     console.log('Attched Docs folder file Updated');
   } catch (error) {
+    recordCrashlyticsError('Error updating attached document folders data:', error);
     console.error('Error updating attached document folders data:', error);
   }
 };
@@ -175,11 +188,13 @@ export const storeDocToSync = async (
           clearTimeout(timer);
           console.log('attached doc resukt', result);
         } catch (updateError) {
+          recordCrashlyticsError('Update error:', error);
           console.error('Update error:', updateError);
         }
       }, 2000);
     }
   } catch (error) {
+    recordCrashlyticsError('Error inserting document to sync:', error);
     console.error('Error inserting document to sync:', error);
   }
 };
@@ -201,6 +216,7 @@ export const addCaseLicenseData = async (caseData: any, isCase: boolean) => {
       1,
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB addCaseLicenseData :', error);
     console.log('Error fetching case data from DB addCaseLicenseData :', error);
   }
 };
@@ -217,6 +233,7 @@ export const updateFileExtensionIfIDExist = async (data: any) => {
       await deleteFileExtension(data);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating file extension:', error);
     console.error('Error updating file extension:', error);
   }
 };
@@ -232,6 +249,7 @@ export const storeFileExtensionData = async (data: any) => {
     await statement.executeAsync(data);
     console.log('File extension data stored successfully.');
   } catch (error) {
+    recordCrashlyticsError('Error storing file extension data:', error);
     console.error('Error storing file extension data:', error);
   }
 };
@@ -249,6 +267,7 @@ export const fetchFileExtensionData = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.FILE_EXTENSION_TABLE_NAME}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching file extension data:', error);
     console.error('Error fetching file extension data:', error);
     return [];
   }
@@ -265,6 +284,7 @@ export const fetchAllDocDataToSync = async (caseID: string, isCase: boolean) => 
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching all doc data to sync:', error);
     console.error('Error fetching all doc data to sync:', error);
     return [];
   }
@@ -279,6 +299,7 @@ export const fetchDocByParentID = async (id: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching doc by parent ID:', error);
     console.error('Error fetching doc by parent ID:', error);
     return [];
   }
@@ -298,6 +319,7 @@ export const deleteRowsByCaseID = async (caseID: string, isCase: boolean) => {
     ]);
     console.log('Deleted attached docs after sync');
   } catch (error) {
+    recordCrashlyticsError('Error deleting rows by case ID:', error);
     console.error('Error deleting rows by case ID:', error);
   }
 };
@@ -311,6 +333,7 @@ export const updateSyncDocURL = async (url: string, id: string) => {
       id,
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB updateSyncDocURL :', error);
     console.log('Error fetching case data from DB updateSyncDocURL :', error);
   }
 };
@@ -323,6 +346,7 @@ export const updateSyncDocURLReady = async (isReady: boolean, id: string) => {
       [isReady === true ? 1 : 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB updateSyncDocURLReady :', error);
     console.log('Error fetching case data from DB updateSyncDocURLReady :', error);
   }
 };
@@ -336,6 +360,7 @@ export const updateDocURL = async (url: string, id: string) => {
       id,
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB updateDocURL :', error);
     console.log('Error fetching case data from DB updateDocURL :', error);
   }
 };
@@ -348,6 +373,7 @@ export const updateDocURLReady = async (isReady: boolean, id: string) => {
       [isReady === true ? 1 : 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB updateDocURLReady :', error);
     console.log('Error fetching case data from DB updateDocURLReady :', error);
   }
 };
@@ -365,6 +391,10 @@ export const updateAttachedDocsSyncStatus = async (
       [isSync === true ? 1 : 0, isEdited === true ? 1 : 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB updateAttachedDocsSyncStatus :',
+      error,
+    );
     console.log('Error fetching case data from DB updateAttachedDocsSyncStatus :', error);
   }
 };
@@ -388,6 +418,7 @@ export const updateAttachedisNewStatus = async (id: string, isNew: boolean, newI
       console.log(`No changes made for record with ID ${id}.`);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating attached status:', error);
     console.error('Error updating attached status:', error);
   }
 };
@@ -408,6 +439,7 @@ export const updateAttachedDocsIfIDExist = async (data: any, isCase: boolean, id
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating attached documents:', error);
     console.error('Error updating attached documents:', error);
     // Logging the error to avoid disruptions
     return false;
@@ -439,6 +471,7 @@ export const storeAttachedDocsData = async (data: any, isCase: boolean, id: stri
       0, // Check if isNew is null or undefined, set to 1 if not
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing attached document data:', error);
     console.error('Error storing attached document data:', error.message);
   }
 };
@@ -474,6 +507,7 @@ export const updateAttachedDocsData = async (data: any, id: string) => {
       ],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating attached document data:', error);
     console.error('Error updating attached document data:', error);
   }
 };

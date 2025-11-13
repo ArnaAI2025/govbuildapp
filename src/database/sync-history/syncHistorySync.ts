@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { CASE, TAB, TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 import { insertSyncHistoryData, updateSyncHistory } from './syncHistoryDAO';
@@ -79,6 +80,7 @@ export const updateOfflineHistoryIfIdExist = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating history if ID exists:', error);
     console.error('Error updating history if ID exists:', error);
   }
 };

@@ -4,6 +4,7 @@ import { COLORS } from '../theme/colors';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { processBatch } from '../database/sync-offline-to-server/syncOfflineToServerSync';
 import { syncing } from '../constants/data';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
 
 // Interface for sync queue task
 export interface SyncQueueTask {
@@ -148,6 +149,7 @@ export const updateSyncTaskStatus = async (
     );
     console.log('updated successfully.');
   } catch (error) {
+    recordCrashlyticsError('updateSyncTaskStatus failed:', error);
     console.error('updateSyncTaskStatus failed:', error);
     throw new SyncError(
       `Error updating sync task: ${error instanceof Error ? error.message : String(error)}`,

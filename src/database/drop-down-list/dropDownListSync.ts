@@ -17,6 +17,7 @@ import {
   updateFormFilterDataIfExists,
 } from './dropDownlistDAO';
 import { TABLES } from '../DatabaseConstants';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const syncDropdownListData = async (): Promise<void> => {
   try {
@@ -56,6 +57,7 @@ export const syncDropdownListData = async (): Promise<void> => {
         licenseRenewalData?.data?.data?.forEach((object) => insertRenewalStatus(object, false));
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching license renewal statuses:-->', error);
       console.error('Error fetching license renewal statuses:-->', error);
     }
     // Daily inpection inpectors API
@@ -67,6 +69,7 @@ export const syncDropdownListData = async (): Promise<void> => {
         departmentMemberData?.data?.data?.forEach((object) => insertDepartmentMemberList(object));
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching department Member Data:-->', error);
       console.error('Error fetching department Member Data:-->', error);
     }
 
@@ -81,6 +84,7 @@ export const syncDropdownListData = async (): Promise<void> => {
         );
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching advanced form type data:-->', error);
       console.error('Error fetching advanced form type data:-->', error);
     }
 
@@ -95,6 +99,7 @@ export const syncDropdownListData = async (): Promise<void> => {
         );
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching advanced form tag data:-->', error);
       console.error('Error fetching advanced form tag data:-->', error);
     }
 
@@ -161,6 +166,7 @@ export const syncDropdownListData = async (): Promise<void> => {
 
     console.log('Dropdown list data synced successfully');
   } catch (error) {
+    recordCrashlyticsError('Error syncing dropdown list data:', error);
     console.error('Error syncing dropdown list data:', error);
     throw error;
   }
@@ -172,6 +178,7 @@ export const markForSync = async (tableName: string, id: string): Promise<void> 
   try {
     await db.runAsync(`UPDATE ${tableName} SET isSync = 0 WHERE id = ?`, [id]);
   } catch (error) {
+    recordCrashlyticsError(`Error marking ${tableName} for sync:`, error);
     console.error(`Error marking ${tableName} for sync:`, error);
     throw error;
   }
@@ -183,6 +190,7 @@ export const fetchTeamMembers = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.TEAM_MEMBER_TABLE_NAME}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching team members:', error);
     console.error('Error fetching team members:', error);
   }
 };

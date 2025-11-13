@@ -36,6 +36,7 @@ import { height } from '../../../utils/helper/dimensions';
 import NoData from '../../../components/common/NoData';
 import { normalizeBool } from '../../../utils/helper/helpers';
 import { useOrientation } from '../../../utils/useOrientation';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type PublicCommentsScreenProps = NativeStackScreenProps<RootStackParamList, 'PublicComments'>;
 
@@ -101,6 +102,7 @@ const PublicComments: React.FC<PublicCommentsScreenProps> = ({ route, navigation
         setState((prev) => ({ ...prev, comments: [] }));
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching admin comments:',error);
       console.error('Error fetching admin comments:', error);
       setState((prev) => ({ ...prev, comments: [] }));
     } finally {
@@ -171,6 +173,7 @@ const PublicComments: React.FC<PublicCommentsScreenProps> = ({ route, navigation
         ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
       }
     } catch (error) {
+      recordCrashlyticsError('Error saving comment:', error);
       console.error('Error saving comment:', error);
       ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
     } finally {

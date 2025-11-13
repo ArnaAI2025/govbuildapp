@@ -84,7 +84,7 @@ const OfflineSyncScreen: React.FC<OfflineSyncScreenProps> = ({}) => {
 
             <View style={styles.footer}>
               <Text style={styles.footerText}>
-                {Platform.OS === 'ios' ? '2.29.91' : DeviceInfo.getVersion()}
+                {Platform.OS === 'ios' ? '3.1.0' : DeviceInfo.getVersion()}
               </Text>
             </View>
           </View>

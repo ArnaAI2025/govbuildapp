@@ -4,52 +4,10 @@ import qs from 'qs';
 import { getAccessToken } from '../session/SessionManager';
 import { COLORS } from '../theme/colors';
 import { TokenRefreshGlobal } from '../session/TokenRefresh';
-import { TEXTS } from '../constants/strings';
-import { getFirstErrorMessage } from '../utils/validations';
 import NetInfo from '@react-native-community/netinfo';
+import { recordCrashlyticsError } from './CrashlyticsService';
 
 const axiosInstance = axios.create();
-
-//const { isNetworkAvailable } = useNetworkStatus();
-const handleError = (error: AxiosError | any) => {
-  if (error?.message == 'Network Error') {
-    ToastService.show('Internet not available', COLORS.WARNING_ORANGE);
-  }
-  if (error.response) {
-    const { status, data } = error.response;
-
-    switch (status) {
-      case 400:
-        if (data) {
-          const message = getFirstErrorMessage(data);
-          if (message) {
-            ToastService.show(message, COLORS.ERROR);
-          } else {
-            ToastService.show(data?.message || TEXTS.apiServiceFile.badRequest, COLORS.ERROR);
-          }
-        }
-
-        break;
-      case 403:
-        ToastService.show(TEXTS.apiServiceFile.notHavePermission, COLORS.ERROR);
-        break;
-      case 500:
-        ToastService.show(TEXTS.apiServiceFile.internalServerError, COLORS.ERROR);
-        break;
-      case 404:
-        ToastService.show(TEXTS.apiServiceFile.notFound, COLORS.ERROR);
-        break;
-      default:
-        ToastService.show(data?.title || 'Server error occurred.', COLORS.ERROR);
-    }
-  } else if (error.request) {
-    console.log('error.request--->', error.request);
-
-    // ToastService.show(TEXTS.apiServiceFile.networkIssue, COLORS.WARNING_ORANGE);
-  } else {
-    ToastService.show(TEXTS.apiServiceFile.unexpectedErrorOccurred, COLORS.ERROR);
-  }
-};
 
 const executeRequest = async <T>(
   config: AxiosRequestConfig,
@@ -69,6 +27,7 @@ const executeRequest = async <T>(
     return response;
   } catch (error: any) {
     const axiosError = error as AxiosError;
+    recordCrashlyticsError('API request failed:------>>>>>>', error);
     console.error('API request failed:------>>>>>>', {
       url: config.url,
       error: axiosError.message,
@@ -285,6 +244,7 @@ export const UPLOAD_API = async (payload: { url: string; body: FormData }): Prom
     ) {
       ToastService.show('The file is too large to upload.', COLORS.ERROR);
     } else {
+      recordCrashlyticsError('Upload error:', error);
       console.error('Upload error:', error?.message || error);
     }
 
@@ -303,7 +263,11 @@ export const GETAPI_FOR_DOWNLOAD = async (url: string, token: string) => {
 
     return response.data; // csv string
   } catch (error) {
+    recordCrashlyticsError('Error downloading CSV:', error);
     console.error('Error downloading CSV:', error);
     throw error;
   }
 };
+function handleError(axiosError: AxiosError<unknown, any>) {
+  throw new Error('Function not implemented.');
+}

@@ -3,6 +3,7 @@ import uuid from 'react-native-uuid';
 import { Alert, Linking, Platform } from 'react-native';
 import { COLORS as COLORSCODE } from '../../theme/colors';
 import { ToastService } from '../../components/common/GlobalSnackbar';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const formatDate = (value?: string, format: string = 'YYYY-MM-DD'): string => {
   if (!value) return '';
@@ -340,6 +341,7 @@ export const openMaps = async (location: string | undefined, isNetworkAvailable:
       return;
     }
   } catch (error) {
+    recordCrashlyticsError('Error opening maps:', error);
     console.error('Error opening maps:', error);
     Alert.alert('Error', 'Unable to open maps. Please try again.');
   }

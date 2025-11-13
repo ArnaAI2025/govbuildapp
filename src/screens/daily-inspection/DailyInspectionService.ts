@@ -20,6 +20,7 @@ import { fetchDepartmentMemberList } from '../../database/drop-down-list/dropDow
 import { navigate } from '../../navigation/Index';
 import { Alert, Linking, Platform } from 'react-native';
 import { COLORS } from '../../theme/colors';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 interface AdvanceFilter {
   inspectorBy: string;
@@ -88,6 +89,7 @@ export const DailyInspectionService = {
         };
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchInspections:', error);
       console.error('Error in fetchInspections:', error);
       return {
         data: [],
@@ -123,6 +125,7 @@ export const DailyInspectionService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in fetchTeamMembers:', error);
       console.error('Error in fetchTeamMembers:', error);
       return [];
     }
@@ -175,6 +178,7 @@ export const DailyInspectionService = {
         ),
       };
     } catch (error) {
+      recordCrashlyticsError('Error in fetchDropdownFilters:', error);
       console.error('Error in fetchDropdownFilters:', error);
       return {
         inspectionTypes: [],
@@ -341,6 +345,7 @@ export const DailyInspectionService = {
       return false;
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in updateOrder:', error);
       console.error('Error in updateOrder:', error);
       return false;
     }
@@ -461,6 +466,7 @@ export const DailyInspectionService = {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in getCaseByCID:', error);
       console.error('Error in getCaseByCID:', error);
     }
   },
@@ -481,6 +487,7 @@ export const DailyInspectionService = {
         ToastService.show(TEXTS.alertMessages.noNetwork);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in downloadCSV:', error);
       console.error('Error in downloadCSV:', error);
     }
   },
@@ -553,6 +560,7 @@ export const DailyInspectionService = {
       console.warn('No internet connection');
       return false;
     } catch (error) {
+      recordCrashlyticsError('Error in deleteInspection:', error);
       console.error('Error in deleteInspection:', error);
       return false;
     }
@@ -620,6 +628,7 @@ export const DailyInspectionService = {
       return false;
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in saveOrUpdateInspection:', error);
       console.error('Error in saveOrUpdateInspection:', error);
       return false;
     }

@@ -30,6 +30,7 @@ import {
 import { TABLES } from '../../database/DatabaseConstants';
 import { getDatabase } from '../../database/DatabaseService';
 import { AdminNoteSyncData } from '../../database/types/commonSyncModels';
+import { recordCrashlyticsError } from '../CrashlyticsService';
 
 class ServiceError extends Error {
   constructor(message: string) {
@@ -100,6 +101,7 @@ export const fetchAdminAndPublicComment = async (
       return comments as unknown as AdminAndPublicComment[];
     }
   } catch (error) {
+    recordCrashlyticsError(`Error fetching comments:`, error);
     throw new ServiceError(
       `Error fetching comments: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -128,6 +130,7 @@ export const fetchStandardComments = async (isNetworkAvailable: boolean): Promis
     }
     return [[], []];
   } catch (error) {
+    recordCrashlyticsError(`Error fetching standard comments:`, error);
     throw new ServiceError(
       `Error fetching standard comments: ${error instanceof Error ? error.message : ''}`,
     );
@@ -252,6 +255,7 @@ export const saveComment = async (
       };
     }
   } catch (error) {
+    recordCrashlyticsError(`Error saving comment:`, error);
     ToastService.show('Error saving comment', COLORS.ERROR);
     throw new ServiceError(
       `Error saving comment: ${error instanceof Error ? error.message : String(error)}`,
@@ -330,6 +334,7 @@ export const applySetAsAlert = async (
       return { success: true };
     }
   } catch (error) {
+    recordCrashlyticsError(`Error setting comment as alert:`, error);
     ToastService.show('Error setting comment as alert', COLORS.ERROR);
     throw new ServiceError(
       `Error setting comment as alert: ${error instanceof Error ? error.message : String(error)}`,
@@ -390,6 +395,7 @@ export const applyPublicComment = async (
       return { success: true };
     }
   } catch (error) {
+    recordCrashlyticsError(`Error setting comment as public:`, error);
     ToastService.show('Error setting comment as public', COLORS.ERROR);
     throw new ServiceError(
       `Error setting comment as public: ${error instanceof Error ? error.message : String(error)}`,
@@ -530,6 +536,7 @@ export const saveCommentWithDoc = async (
       return newId;
     }
   } catch (error) {
+    recordCrashlyticsError(`Error saving comment with doc:`, error);
     throw new ServiceError(
       `Error saving comment with doc: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -589,6 +596,7 @@ export const saveCommentOffline = async (
       caseData,
     );
   } catch (error) {
+    recordCrashlyticsError(`Error saving offline comment:`, error);
     throw new ServiceError(
       `Error saving offline comment: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -622,8 +630,10 @@ export const fetchSentEmails = async (
   } catch (error) {
     setLoading(false);
     if (error instanceof Error) {
+      recordCrashlyticsError('Error in fetchSentEmails:', error);
       console.error('Error in fetchSentEmails:', error.message);
     } else {
+      recordCrashlyticsError('Error in fetchSentEmails:', error);
       console.error('Error in fetchSentEmails:', error);
     }
     return [];
@@ -654,8 +664,10 @@ export const fetchTaskList = async (
   } catch (error) {
     setLoading(false);
     if (error instanceof Error) {
+      recordCrashlyticsError('Error in fetchTasks:', error);
       console.error('Error in fetchTasks:', error.message);
     } else {
+      recordCrashlyticsError('Error in fetchTasks:', error);
       console.error('Error in fetchTasks:', error);
     }
     return [];

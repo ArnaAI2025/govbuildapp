@@ -53,6 +53,7 @@ import { useOrientation } from '../../../utils/useOrientation';
 import moment from 'moment';
 import { isIPad } from '../../../utils/helper/dimensions';
 import IMAGES from '../../../theme/images';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type Props = Record<string, never>;
 
@@ -66,7 +67,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
   const [offlineData, setOfflineData] = useState(0);
   const [dailyAppointments, setDailyAppointments] = useState(0);
   const [isCaseAccess, setIsCaseAccess] = useState(false);
-  const [isScheduleAccess, setIsScheduleAccess] = useState(false);
+  const [, setIsScheduleAccess] = useState(false);
   const [isDailyInspectionAccess, setIsDailyInspectionAccess] = useState(false);
   const [isLicenseAccess, setIsLicenseAccess] = useState(false);
   const [isParcleAccess, setIsParcleAccess] = useState(false);
@@ -83,19 +84,16 @@ const HomeScreen: FunctionComponent<Props> = () => {
   const wasOnline = useRef<boolean>(getWasOnline());
 
   useEffect(() => {
-    // Check for online-to-offline transition
     if (wasOnline.current && !isNetworkAvailable) {
       const utcDate = moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-      // alert(utcDate);
       saveOfflineUtcDate(utcDate);
     }
     wasOnline.current = isNetworkAvailable;
     setWasOnline(isNetworkAvailable);
   }, [isNetworkAvailable]);
-  // Animation effect for progress bar
+
   useEffect(() => {
     if (syncProgress !== null) {
-      // Show progress bar with animation
       setIsProgressVisible(true);
       Animated.timing(progressAnim, {
         toValue: 1,
@@ -168,46 +166,10 @@ const HomeScreen: FunctionComponent<Props> = () => {
         setMyCases(caseData?.length || 0);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in CountAPICall:------>', error)
       console.error('Error in APICall:------>', error);
     }
   };
-
-  // const handleScroll = useCallback(
-  //   (event: any) => {
-  //     if (syncProgress != null) return;
-
-  //     const currentScrollY = event.nativeEvent.contentOffset.y;
-
-  //     // Trigger only on pull-down gesture beyond threshold
-  //     if (currentScrollY < -30) {
-  //       if (!isRefreshing.current && isNetworkAvailable) {
-  //         isRefreshing.current = true;
-  //         ToastService.show("Refreshing home screen...", COLORS.ORANGE);
-
-  //         const refreshData = async () => {
-  //           try {
-  //             await CountAPICall();
-  //             await checkTotalSyncCount();
-  //             ToastService.show(
-  //               "Data refreshed successfully!",
-  //               COLORS.SUCCESS_GREEN
-  //             );
-  //           } catch (error) {
-  //             console.error("Error refreshing data:", error);
-  //             ToastService.show("Failed to refresh data.", COLORS.ERROR);
-  //           } finally {
-  //             isRefreshing.current = false;
-  //           }
-  //         };
-
-  //         refreshData();
-  //       }
-  //     }
-
-  //     lastScrollY.current = currentScrollY;
-  //   },
-  //   [isNetworkAvailable, syncProgress]
-  // );
 
   const OfflineItemsCount = async () => {
     try {
@@ -240,10 +202,6 @@ const HomeScreen: FunctionComponent<Props> = () => {
       syncCount += caseSyncCount || 0;
       setOfflineData(syncCount);
 
-      // const caseSettingForceSync = await fetchSettingToForceSync();
-      // syncCount += caseSettingForceSync || 0;
-      // setOfflineData(syncCount);
-
       const settingsSync = await fetchSettingSyncCount();
       syncCount += settingsSync || 0;
       setOfflineData(syncCount);
@@ -274,6 +232,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
 
       return syncCount;
     } catch (error) {
+      recordCrashlyticsError('error in OfflineItemsCount:',error)
       console.error('error in OfflineItemsCount:', error);
       return 0;
     }
@@ -284,6 +243,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
       const offlineItemCount = await OfflineItemsCount();
       setOfflineData(offlineItemCount);
     } catch (error) {
+      recordCrashlyticsError('Error in Total Count:---->', error)
       console.error('Error in Total Count:---->', error);
     }
   };
@@ -390,22 +350,22 @@ const HomeScreen: FunctionComponent<Props> = () => {
         }
       },
     },
-    {
-      image: SvgImages.MY_SHEDULE,
-      value: TEXTS.home.mySchedule,
-      disabled: isScheduleAccess,
-      onPress: () => {
-        if (isNetworkAvailable) {
-          // ToastService.show(
-          //   "This feature is currently under development and will be available soon.",
-          //   COLORS.STANDARAD_ORANGE
-          // );
-          navigate('MyScheduleScreen');
-        } else {
-          ToastService.show("You're offline. My Schedule feature may not work.", COLORS.ERROR);
-        }
-      },
-    },
+    // {
+    //   image: SvgImages.MY_SHEDULE,
+    //   value: TEXTS.home.mySchedule,
+    //   disabled: isScheduleAccess,
+    //   onPress: () => {
+    //     if (isNetworkAvailable) {
+    //       // ToastService.show(
+    //       //   "This feature is currently under development and will be available soon.",
+    //       //   COLORS.STANDARAD_ORANGE
+    //       // );
+    //       navigate('MyScheduleScreen');
+    //     } else {
+    //       ToastService.show("You're offline. My Schedule feature may not work.", COLORS.ERROR);
+    //     }
+    //   },
+    // },
     {
       image: IMAGES.PARCELS,
       value: TEXTS.home.parcels,
@@ -454,7 +414,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
                     } else {
                       ToastService.show(
                         TEXTS.alertMessages.notAvailableInOffline,
-                        COLORS.WARNING_ORANGE,
+                        COLORS.ERROR,
                       );
                     }
                   }}

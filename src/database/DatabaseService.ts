@@ -1,11 +1,43 @@
+import crashlytics from '@react-native-firebase/crashlytics';
 import * as SQLite from 'expo-sqlite';
 import EventEmitter from 'eventemitter3';
-import { DATABASE_NAME, CREATE_TABLES, TABLES } from './DatabaseConstants';
+import { DATABASE_NAME, TABLES } from './DatabaseConstants';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
+import { createDropdownListTables } from './drop-down-list/dropDownlistScheme';
+import { createFormSubmissionTables } from './form-submission/formSubmissionSchema';
+import { createHistoryTable } from './sync-history/syncHistorySchema';
+import { createCaseTable, createSubTabsTables } from './my-case/myCaseSchema';
+import { createLicenseTable } from './license/licenseSchema';
+import { createDailyInspectionTables } from './daily-inspection/DailyInspectionSchema';
+import { createFormSelectionListTab } from './new-form/newFormSchema';
 
 let db: SQLite.SQLiteDatabase | null = null;
 let dbInstance: SQLite.SQLiteDatabase | null = null;
 export const dbEventEmitter = new EventEmitter();
 
+let isInitialized = false;
+
+export const initializeDatabase = async () => {
+  if (isInitialized) return;
+  try {
+    await openDatabase();
+    await Promise.all([
+      createDropdownListTables(),
+      createFormSubmissionTables(),
+      createHistoryTable(),
+      createCaseTable(),
+      createSubTabsTables(),
+      createLicenseTable(),
+      createDailyInspectionTables(),
+      createFormSelectionListTab(),
+    ]);
+    crashlytics().log('Database tables created successfully');
+    isInitialized = true;
+  } catch (error) {
+    console.error('Error initializing database:', error);
+    crashlytics().recordError(error);
+  }
+};
 // Open the database (Singleton pattern)
 export const openDatabase = (): SQLite.SQLiteDatabase => {
   if (!db) {
@@ -15,6 +47,7 @@ export const openDatabase = (): SQLite.SQLiteDatabase => {
       });
       console.log('****<----DATABASE OPEN SUCCESSFULLY---->****', db);
     } catch (error) {
+      recordCrashlyticsError('Failed to open database:', error);
       console.error('Failed to open database:', error);
       throw error;
     }
@@ -30,6 +63,7 @@ export const closeDatabase = async (): Promise<void> => {
       console.log('***<----DATABASE CLOSED SUCCESSFULLY------>***');
       db = null;
     } catch (error) {
+      recordCrashlyticsError('Error closing database:', error);
       console.error('Error closing database:', error);
     }
   } else {
@@ -49,15 +83,16 @@ export const getDatabase = (): SQLite.SQLiteDatabase => {
 };
 
 // Initialize schema/tables
-export const initializeDatabase = async (): Promise<void> => {
-  const database = getDatabase();
-  try {
-    await database.execAsync(CREATE_TABLES?.EXAMPLE);
-    console.log('=========Database initialized.========');
-  } catch (error) {
-    console.error('Error initializing database:', error);
-  }
-};
+// export const initializeDatabase = async (): Promise<void> => {
+//   const database = getDatabase();
+//   try {
+//     await database.execAsync(CREATE_TABLES?.EXAMPLE);
+//     console.log('=========Database initialized.========');
+//   } catch (error) {
+//     recordCrashlyticsError('Error initializing database:', error);
+//     console.error('Error initializing database:', error);
+//   }
+// };
 
 // Track DB operations with event emitter and Crashlytics (future)
 export const trackDatabaseOperation = async (
@@ -92,7 +127,7 @@ export const trackDatabaseOperation = async (
       params,
       error: error.message,
     });
-
+    recordCrashlyticsError(`Database operation failed (${method}):`, error);
     console.error(`Database operation failed (${method}):`, error);
 
     throw error;
@@ -158,6 +193,7 @@ export const logDatabaseStats = async (): Promise<void> => {
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error retrieving database stats:', error);
     console.error('Error retrieving database stats:', error);
   }
 };

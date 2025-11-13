@@ -11,6 +11,7 @@ import {
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
 import { navigateReplace } from '../../navigation/Index';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const fetchFormList = async (
   pageNo: number,
@@ -34,6 +35,7 @@ export const fetchFormList = async (
       return [];
     }
   } catch (error) {
+    recordCrashlyticsError('Error fetching form list:', error);
     console.error('Error fetching form list:', error);
     return [];
   }
@@ -69,6 +71,7 @@ export const fetchNewFormService = async (
       }
       return response?.data?.data?.contentItemSummaries || [];
     } catch (error) {
+      recordCrashlyticsError('fetchFormService error:--->', error);
       console.error('fetchFormService error:--->', error?.message || error);
       return [];
     }
@@ -97,6 +100,7 @@ export const fetchTypeService = async (isNetworkAvailable: boolean) => {
         return response?.data?.data;
       }
     } catch (error) {
+      recordCrashlyticsError('fetchTypeService error:--->', error);
       console.error('fetchTypeService error:--->', error?.message || error);
       return [];
     }
@@ -117,6 +121,7 @@ export const fetchTagService = async (isNetworkAvailable: boolean) => {
         return response?.data?.data;
       }
     } catch (error) {
+      recordCrashlyticsError('fetchTagService error:--->', error);
       console.error('fetchTagService error:--->', error?.message || error);
       return [];
     }
@@ -199,6 +204,7 @@ export const fetchCaseOrLicenseByIdService = async (
       throw new Error('Failed to fetch data from API');
     }
   } catch (error) {
+    recordCrashlyticsError(`Error fetching ${type} data:`, error);
     console.error(`Error fetching ${type} data:`, error);
   }
 };

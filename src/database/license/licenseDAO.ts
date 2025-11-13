@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { getNewUTCDate, toSqlVal } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
@@ -80,6 +81,7 @@ export const storeLicenseData = async (
     return { success: true, message: 'License stored successfully.' };
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error storing license data:---->>>', error);
     console.error('Error storing license data:---->>>', error);
     return {
       success: false,
@@ -175,6 +177,7 @@ export const updateLicenseData = async (
     );
     console.log(`License successfully updated for contentItemId = ${data?.contentItemId}`);
   } catch (err) {
+    recordCrashlyticsError('Error updating license data:--->', err);
     console.error('Error updating license data:--->', err);
     throw err;
     // try {
@@ -270,6 +273,7 @@ export const updateFatchLicenseData = async (
     );
     console.log('fetch License data updated successfully.');
   } catch (err) {
+    recordCrashlyticsError('Error updating license data:--->', err);
     console.error('Error updating license data:--->', err);
     throw err;
   }
@@ -350,6 +354,7 @@ export const updateOnlyLicenseData = async (
     console.log('Only License data updated successfully.');
   } catch (err) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError('Error updating only license data:--->', err);
     console.error('Error updating only license data:--->', err);
     throw err;
   }
@@ -384,6 +389,7 @@ export const updateLicensePermission = async (
     return result;
   } catch (error) {
     await db.execAsync('ROLLBACK;');
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error(
       `Error updating license permissions for contentItemId: ${data?.contentItemId}`,
       error,
@@ -398,6 +404,7 @@ export const fetchAllLicenseFromDB = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.LICENSE}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error('Error fetching license data:', error);
     return [];
   }
@@ -421,6 +428,7 @@ export const deleteLicenseFromDBIfNotFormTheApi = async (id: string) => {
     }
     console.log(`License with ID ${id} deleted successfully.`);
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error(`Error fetching license by ID:----> ${id}`, error);
   }
 };
@@ -433,6 +441,7 @@ export const licenseToForceSyncByID = async (licenseId: string) => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error(`Error fetching license by ID: ${licenseId}`, error);
   }
 };

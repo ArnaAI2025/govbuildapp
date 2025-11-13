@@ -19,10 +19,13 @@ import { License } from '../types/license';
 import {
   syncContractorWithDatabase,
   syncInspectionWithDatabase,
+  syncLicenseDetailsDataWithDatabase,
+  syncLicenseOwnerWithDatabase,
   syncLicenseSubScreenData,
   syncPaymentsWithDatabase,
 } from '../sub-screens/subScreensSync';
 import { syncAllCaseFoldersFilesAPI } from '../sub-screens/attached-docs/attachedDocsSync';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // Sync All license data on home screen
 export const licenseAPICall = async (): Promise<void> => {
@@ -76,6 +79,7 @@ export const licenseAPICall = async (): Promise<void> => {
             uniqueLicenseTypeIds.push(licenseTypeId);
           }
         } catch (error) {
+          recordCrashlyticsError('Error updating only license data:--->', error);
           console.error(`Failed to update license ${summary?.contentItemId}:`, error);
         }
       }
@@ -98,8 +102,11 @@ export const licenseAPICall = async (): Promise<void> => {
           await syncContractorWithDatabase(contentItemId, 'License');
           await syncInspectionWithDatabase(contentItemId, 'License');
           await syncAllCaseFoldersFilesAPI(contentItemId, false);
+          await syncLicenseDetailsDataWithDatabase(contentItemId);
+          await syncLicenseOwnerWithDatabase(contentItemId, 'License');
           // await syncLocationWithDatabase(contentItemId, "Case");
         } catch (error) {
+          recordCrashlyticsError('Error updating only license data:--->', error);
           console.error(`Error syncing data for Case ID ${contentItemId}:`, error);
         }
       });
@@ -123,6 +130,7 @@ export const licenseAPICall = async (): Promise<void> => {
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error('Critical error in licenseAPICall:', error);
   }
 };
@@ -238,6 +246,7 @@ export const updateLicenseIfIdExist = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error('Error updating or inserting license: ---->', error);
     return false;
   }
@@ -273,6 +282,7 @@ export const fetchMyLicenseDataFromDB = async (
         !row?.viewOnlyAssignUsers,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error('Offline DB fetch error:--->', error);
     return [];
   }
@@ -287,6 +297,7 @@ export const fetchLocalLicenseById = async (licenseId: string) => {
     ]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error(`Error fetching license by ID:----> ${licenseId}`, error);
     return null;
   }
@@ -302,6 +313,7 @@ export const fetchLicenseForSyncScreen = async () => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchLicenseForSyncScreen :', error);
     console.log('Error fetching case data from DB fetchLicenseForSyncScreen :', error);
   }
 };

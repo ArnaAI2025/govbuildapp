@@ -33,6 +33,7 @@ import {
 } from '../../../database/drop-down-list/dropDownlistDAO';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const DocumentService = {
   async fetchAllFoldersAndFiles(
@@ -79,6 +80,7 @@ export const DocumentService = {
         return [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchAllFoldersAndFiles:', error);
       console.error('Error in fetchAllFoldersAndFiles:', error);
       return [];
     }
@@ -113,6 +115,7 @@ export const DocumentService = {
 
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching folder files:', error);
       console.error('Error fetching folder files:', error);
       return [];
     }
@@ -258,6 +261,7 @@ export const DocumentService = {
         // );
         return [];
       }
+      recordCrashlyticsError('Error adding folder:', error);
       console.error('Error adding folder:', error);
       return null;
     }
@@ -288,6 +292,7 @@ export const DocumentService = {
       }
       return false;
     } catch (error) {
+      recordCrashlyticsError('Error deleting document:', error);
       console.error('Error deleting document:', error);
       return false;
     }
@@ -308,6 +313,7 @@ export const DocumentService = {
         return result as [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching status:', error);
       console.error('Error fetching status:', error);
       return [];
     }
@@ -329,6 +335,7 @@ export const DocumentService = {
         return result as [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching document types:', error);
       console.error('Error fetching document types:', error);
       return [];
     }
@@ -438,6 +445,7 @@ export const DocumentService = {
         return true;
       }
     } catch (error) {
+      recordCrashlyticsError('Error adding/updating document:', error);
       console.error('Error adding/updating document:', error);
       return false;
     }

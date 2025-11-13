@@ -12,6 +12,7 @@ import NoData from '../../../components/common/NoData';
 import { getCaseByCidData } from '../OfflineSyncService';
 import { useIsFocused } from '@react-navigation/native';
 import { getNavigationState, saveNavigationState } from '../../../session/SessionManager';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface ItemData {
   id: string;
@@ -122,8 +123,10 @@ const AllOfflineView: React.FC<AllOfflineViewScreenProps> = ({ isActive }) => {
       setData(itemToSyncData);
     } catch (error) {
       if (error instanceof Error) {
+        recordCrashlyticsError('Error loading offline data:',error)
         console.error('Error loading offline data:', error.message);
       } else {
+        recordCrashlyticsError('Error loading offline data:',error)
         console.error('Error loading offline data:', error);
       }
     } finally {
@@ -138,6 +141,7 @@ const AllOfflineView: React.FC<AllOfflineViewScreenProps> = ({ isActive }) => {
       setBtnLoad(false);
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching case/license:',error)
       console.error('Error fetching case/license:', error);
     }
   };

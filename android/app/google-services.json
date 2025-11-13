@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1068468924983",
+    "project_id": "govbuilt-mobile-hub",
+    "storage_bucket": "govbuilt-mobile-hub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068468924983:android:6b6952105b36f6e119c5b2",
+        "android_client_info": {
+          "package_name": "com.appoffline"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbACWkQY1b9yXIrG3pi4k99FbJB-tsbpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

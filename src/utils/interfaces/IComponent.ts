@@ -133,6 +133,7 @@ export interface MultiSelectDropdownProps {
   error?: boolean;
   hintText?: string;
   alldata?: any[];
+  editable?:boolean
 }
 
 export interface FABProps {

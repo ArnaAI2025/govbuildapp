@@ -51,6 +51,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { validateCaseFields } from '../../../utils/validations';
 import { HintText } from '../../../components/common/EditCaseLicenseInfo';
 import { saveNavigationState } from '../../../session/SessionManager';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type EditCaseScreenProps = NativeStackScreenProps<RootStackParamList, 'EditCaseScreen'>;
 
@@ -133,6 +134,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
             }, 200);
           });
         } catch (error) {
+          recordCrashlyticsError('Error fetching data:',error)
           console.error('Error fetching data:', error);
           setAlertPopup({
             title: 'Error',
@@ -170,6 +172,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       try {
         await fetchCaseDropdown(); // this function uses caseData.caseTypeId internally
       } catch (error) {
+        recordCrashlyticsError('Error fetching dropdown data:',error)
         console.error('Error fetching dropdown data:', error);
         setAlertPopup({
           title: 'Error',
@@ -242,6 +245,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
         casesDetails?.data?.selectedInspectionCaseStatus,
       );
     } catch (error) {
+      recordCrashlyticsError('Error fetching case details:',error)
       console.error('Error fetching case details:', error);
       setAlertPopup({
         title: 'Error',
@@ -272,6 +276,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       setIsAllowMultipleAddress(isMultipleAddress);
       console.log('selectedCaseType.isMultipleLocation -->', isMultipleAddress);
     } catch (error) {
+      recordCrashlyticsError('Error fetching dropdown data:', error)
       console.error('Error fetching dropdown data:', error);
       setAlertPopup({
         title: 'Error',
@@ -350,6 +355,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
           ToastService.show(updatedLocation?.message || 'Error updating address', COLORS.ERROR);
         }
       } catch (error) {
+        recordCrashlyticsError('Error updating location:',error)
         console.error('Error updating location:', error);
       } finally {
         setIsLoading(false);
@@ -410,6 +416,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
           );
         }
       } catch (error) {
+        recordCrashlyticsError('Error updating mailing address:',error)
         console.error('Error updating mailing address:', error);
       } finally {
         setIsLoading(false);
@@ -512,6 +519,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
         goBack();
       }
     } catch (error) {
+      recordCrashlyticsError('Error updating case:',error)
       console.error('Error updating case:', error);
     } finally {
       setIsLoading(false);
@@ -535,6 +543,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       }
     } catch (error) {
       setIsLoading(false);
+      recordCrashlyticsError('Error fetching case number:',error)
       console.error('Error fetching case number:', error);
     }
   };

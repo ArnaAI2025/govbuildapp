@@ -7,6 +7,7 @@ import { WebViewContent } from '../utils/interfaces/IComponent';
 import { NavigationProp, StackActions } from '@react-navigation/native';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { COLORS } from '../theme/colors';
+import { recordCrashlyticsError } from './CrashlyticsService';
 
 export const loadWebViewContent = async (path: string): Promise<WebViewContent | null> => {
   try {
@@ -24,6 +25,7 @@ export const loadWebViewContent = async (path: string): Promise<WebViewContent |
     const url = constructWebViewUrl({ baseUrl, path });
     return { url, accessToken };
   } catch (error) {
+    recordCrashlyticsError('Error loading WebView content:', error);
     console.error('Error loading WebView content:', error);
     return null;
   }
@@ -120,6 +122,7 @@ export const fetchCaseOrLicenseById = async (
       throw new Error('Failed to fetch data from API');
     }
   } catch (error) {
+    recordCrashlyticsError(`Error fetching ${type} data:`, error);
     console.error(`Error fetching ${type} data:`, error);
   }
 };

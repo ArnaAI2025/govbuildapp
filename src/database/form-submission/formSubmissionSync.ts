@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 import { storeSubmissionData, updateSubmissionListData } from './formSubmissionDAO';
@@ -16,6 +17,7 @@ export const syncSubmissionData = async (data: any) => {
       await updateSubmissionListData(data);
     }
   } catch (error) {
+    recordCrashlyticsError('Error in updating submission data:', error);
     console.error('Error in updating submission data:', error);
   }
 };

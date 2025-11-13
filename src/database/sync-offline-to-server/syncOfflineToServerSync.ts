@@ -80,6 +80,7 @@ import {
 } from '../sub-screens/attached-items/attachedItemsDAO';
 import { updateOfflineHistoryIfIdExist } from '../sync-history/syncHistorySync';
 import { SyncModel } from '../../utils/interfaces/ISubScreens';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // Enum for supported sync types
 enum SyncType {
@@ -202,6 +203,7 @@ export const processBatch = async (
           }
         });
       } catch (error) {
+        recordCrashlyticsError(`Error processing task ${task.id}:`, error);
         console.error(`Error processing task ${task.id}:`, error);
         await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
         if (task.retry_count >= MAX_RETRIES) {
@@ -230,6 +232,7 @@ export const getTotalPendingSyncItemCount = async (): Promise<number> => {
 
     return result?.total ?? 0;
   } catch (error) {
+    recordCrashlyticsError('Error fetching pending sync count:', error);
     console.error('Error fetching pending sync count:', error);
     return 0;
   }
@@ -706,6 +709,7 @@ export const processAdminNotesTask = async (
       );
     }
   } catch (error) {
+    recordCrashlyticsError('Failed to sync admin note:', error);
     console.error('Failed to sync admin note:', error);
     await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
     if (task.retry_count >= MAX_RETRIES) {
@@ -764,6 +768,7 @@ export const processAdminNotesFileTask = async (
     await updateSyncTaskStatus(task.id, 'completed');
     offlineItemsCount();
   } catch (error) {
+    recordCrashlyticsError(`Error processing admin note file task ${task.id}:`, error);
     console.error(`Error processing admin note file task ${task.id}:`, error);
     await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
     if (task.retry_count >= MAX_RETRIES) {
@@ -867,6 +872,7 @@ export const processContactsTask = async (
       offlineItemsCount();
     }
   } catch (error) {
+    recordCrashlyticsError('contact sync SQLite error -----→', error);
     console.error('contact sync SQLite error -----→', error?.message, error?.code, error);
     await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
   } finally {
@@ -895,6 +901,7 @@ export const syncSettings = async (offlineItemsCount: () => void, isNetworkAvail
 
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing settings:', error);
     console.error('Error syncing settings:', error);
     ToastService.show('Error syncing settings. Will retry later.', COLORS.ERROR);
   }
@@ -929,6 +936,7 @@ export const syncAdminNotes = async (
 
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing admin notes:', error);
     console.error('Error syncing admin notes:', error);
     ToastService.show('Error syncing admin notes. Will retry later.', COLORS.ERROR);
   }
@@ -953,6 +961,7 @@ export const syncAdminNotesFiles = async (
     }
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing admin note files:', error);
     console.error('Error syncing admin note files:', error);
     ToastService.show('Error syncing admin note files. Will retry later.', COLORS.ERROR);
   }
@@ -973,6 +982,7 @@ export const syncEditCase = async (offlineItemsCount: () => void, isNetworkAvail
       }
       await processSyncQueue(offlineItemsCount);
     } catch (error) {
+      recordCrashlyticsError('Error syncing cases:', error);
       console.error('Error syncing cases:', error);
       ToastService.show('Error syncing cases. Will retry later.', COLORS.ERROR);
     }
@@ -998,6 +1008,7 @@ export const syncEditLicense = async (
       }
       await processSyncQueue(offlineItemsCount);
     } catch (error) {
+      recordCrashlyticsError('Error syncing license:', error);
       console.error('Error syncing license:', error);
       ToastService.show('Error syncing license. Will retry later.', COLORS.ERROR);
     }
@@ -1020,6 +1031,7 @@ export const syncContacts = async (offlineItemsCount: () => void, isNetworkAvail
       }
       await processSyncQueue(offlineItemsCount);
     } catch (error) {
+      recordCrashlyticsError('Error syncing cases:', error);
       console.error('Error syncing cases:', error);
       ToastService.show('Error syncing contacts. Will retry later.', COLORS.ERROR);
     }
@@ -1048,6 +1060,7 @@ export const syncAttachments = async (
 
       await processSyncQueue(offlineItemsCount);
     } catch (error) {
+      recordCrashlyticsError('Error syncing attachments:', error);
       console.error('Error syncing attachments:', error);
       ToastService.show('Error syncing attachments. Will retry later.', COLORS.ERROR);
     }
@@ -1076,6 +1089,7 @@ export const syncAttachedDocs = async (
 
       await processSyncQueue(offlineItemsCount);
     } catch (error) {
+      recordCrashlyticsError('Error syncing attached documents:', error);
       console.error('Error syncing attached documents:', error);
       ToastService.show('Error syncing attached documents. Will retry later.', COLORS.ERROR);
     }
@@ -1142,6 +1156,7 @@ export const markCommentAsAlert = async (
       );
     }
   } catch (alertError) {
+    recordCrashlyticsError('Failed to set comment as alert:', alertError);
     console.error('Failed to set comment as alert:', alertError);
     ToastService.show(
       'Failed to set comment as alert. Task still completed.',
@@ -1182,6 +1197,7 @@ export const handleConflict = async (setting: SettingsSyncData, taskId: number) 
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error resolving conflict:', error);
     console.error('Error resolving conflict:', error);
     await updateSyncTaskStatus(taskId, 'failed');
   }
@@ -1223,6 +1239,7 @@ export const handleAdminNotesConflict = async (note: AdminNoteSyncData, taskId: 
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error resolving admin notes conflict:', error);
     console.error('Error resolving admin notes conflict:', error);
     await updateSyncTaskStatus(taskId, 'failed');
   }
@@ -1251,6 +1268,7 @@ export const editAddressApi = async (caseData: CaseData, SyncModel: SyncModel) =
     //   );
     // }
   } catch (error) {
+    recordCrashlyticsError('Error updating address:', error);
     console.error('Error updating address:', error);
     // ToastService.show("Error updating address.", COLORS.ERROR);
   }
@@ -1279,6 +1297,7 @@ export const editMailingAddressApi = async (caseData: CaseData, SyncModel: SyncM
     //   );
     // }
   } catch (error) {
+    recordCrashlyticsError('Error updating mailing address:', error);
     console.error('Error updating mailing address:', error);
   }
 };
@@ -1299,6 +1318,7 @@ export const syncFormFiles = async (offlineItemsCount: () => void, isNetworkAvai
     }
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing form files:', error);
     console.error('Error syncing form files:', error);
     ToastService.show('Error syncing files. Will retry later.', COLORS.ERROR);
   }
@@ -1323,6 +1343,7 @@ export const syncForms = async (offlineItemsCount: () => void, isNetworkAvailabl
     }
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing forms:', error);
     console.error('Error syncing forms:', error);
     ToastService.show('Error syncing forms. Will retry later.', COLORS.ERROR);
   }
@@ -1348,6 +1369,7 @@ export const syncEditedForms = async (
     }
     await processSyncQueue(offlineItemsCount);
   } catch (error) {
+    recordCrashlyticsError('Error syncing edited forms:', error);
     console.error('Error syncing edited forms:', error);
     ToastService.show('Error syncing edited forms. Will retry later.', COLORS.ERROR);
   }
@@ -1603,6 +1625,7 @@ export const updateAddFormData = async (id: string, isSync: number) => {
     console.log('Updated form data for id:', id, isSync);
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating form data:', error);
     console.error('Error updating form data:', error);
     return false;
   }

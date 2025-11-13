@@ -16,6 +16,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/Types';
 import { goBack, navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // // Interfaces (unchanged from your new code)*
 interface FormData {
@@ -370,6 +371,7 @@ const NewFormWebView: React.FC<NewFormWebViewProps> = ({ navigation, route }) =>
             }
           }
         } catch (error) {
+          recordCrashlyticsError('Failed to save form data: ' ,error)
           console.error('Database error:', error);
           ToastService.show('Failed to save data: ' + error?.message, COLORS.ERROR);
         }

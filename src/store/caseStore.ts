@@ -126,7 +126,7 @@ export const useUnifiedCaseStore = create<UnifiedCaseState>((set, get) => ({
         ...DEFAULT_ADVANCED_FILTERS,
         isMyCaseOnly: hardReset ? false : state.filters.isMyCaseOnly,
       },
-      filterCount: 1,
+      filterCount: 0,
       pageNo: 1,
       cases: [],
       caseIds: [],

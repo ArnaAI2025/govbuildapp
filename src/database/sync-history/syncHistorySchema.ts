@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -18,6 +19,7 @@ export const createHistoryTable = async (): Promise<void> => {
     `;
     await db.execAsync(query);
   } catch (error) {
+    recordCrashlyticsError('History sync error --->>', error);
     console.log('History sync error --->>', error);
   }
 };

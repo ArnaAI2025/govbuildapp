@@ -2,6 +2,7 @@ import { URL } from '../../../constants/url';
 import { GET_DATA } from '../../../services/ApiClient';
 import { SubLicenseResponse } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const fetchRelatedLicense = async (
   contentItemId: string,
@@ -22,6 +23,7 @@ export const fetchRelatedLicense = async (
         return { allChildLicense: [], allParentLicense: [] };
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching ---:', error);
       console.error('Error fetching ---:', error);
     }
   }

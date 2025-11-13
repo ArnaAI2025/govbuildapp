@@ -20,6 +20,7 @@ import {
   getNewUTCDate,
 } from '../../utils/helper/helpers';
 import { updateSettingsSyncStatus } from '../sync-offline-to-server/syncOfflineToServerDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const caseForceSync = async (caseId: string, isNetworkAvailable: boolean) => {
   if (isNetworkAvailable) {
@@ -254,6 +255,7 @@ export const updateIsEditedByCaseID = async (id) => {
       [0, 0, 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating case by ID:', error);
     console.error('Error updating case by ID:', error);
   }
 };
@@ -268,6 +270,7 @@ export const updateIsEditedByLicenseID = async (id) => {
       [0, 0, 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating isEdited by license ID:------>>>>>', error);
     console.error('Error updating isEdited by license ID:------>>>>>', error);
   }
 };
@@ -281,6 +284,7 @@ export const updateIsEditedByCaseSettingId = async (id) => {
       [0, 0, 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating isEdited by license ID:------>>>>>', error);
     console.error('Error updating isEdited by license ID:------>>>>>', error);
   }
 };
@@ -293,6 +297,7 @@ export const updateIsEditedByContactId = async (id) => {
       [0, 0, 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating isEdited by license ID:------>>>>>', error);
     console.error('Error updating isEdited by license ID:------>>>>>', error);
   }
 };
@@ -306,6 +311,7 @@ export const updateIsEditedByAdminNotesId = async (id) => {
       [0, 0, 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating isEdited by license ID:------>>>>>', error);
     console.error('Error updating isEdited by license ID:------>>>>>', error);
   }
 };

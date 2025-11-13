@@ -22,6 +22,7 @@ import { TEXTS } from '../../constants/strings';
 import { useNetworkStatus } from '../../utils/checkNetwork';
 import { sortByKey } from '../../utils/helper/helpers';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type AddFormScreenProps = NativeStackScreenProps<RootStackParamList, 'AddForm'>;
 
@@ -59,6 +60,7 @@ const AddForm: React.FC<AddFormScreenProps> = ({ route, navigation }) => {
           setPageNo(2);
         }
       } catch (error) {
+        recordCrashlyticsError('Error in fetching forms:---->', error)
         console.warn('Error fetching forms:', error);
       } finally {
         setIsLoading(false);
@@ -83,6 +85,7 @@ const AddForm: React.FC<AddFormScreenProps> = ({ route, navigation }) => {
         setPageNo((prev) => prev + 1);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in loading more forms:', error)
       console.warn('Error loading more forms:', error);
     } finally {
       setLoadMore(false);

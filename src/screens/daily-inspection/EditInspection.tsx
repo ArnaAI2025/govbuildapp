@@ -38,6 +38,7 @@ import PublishButton from '../../components/common/PublishButton';
 import { useNetworkStatus } from '../../utils/checkNetwork';
 import { goBack } from '../../navigation/Index';
 import { useFocusEffect } from '@react-navigation/native';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type EditInspectionScreenProps = NativeStackScreenProps<RootStackParamList, 'EditInspection'>;
 
@@ -135,6 +136,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
         setTeamMember(members);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchTeamMembers:',error)
       console.error('Error in fetchTeamMembers:', error);
     }
   };
@@ -146,6 +148,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
         setStatusList(status);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchStatusList:',error)
       console.error('Error in fetchStatusList:', error);
     }
   };
@@ -190,6 +193,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in fetchInspectionData:',error)
       console.error('Error in fetchInspectionData:', error);
     }
   };
@@ -287,6 +291,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error in saveInspection:', error)
       console.error('Error in saveInspection:', error);
     }
   };
@@ -296,6 +301,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       tempArray.splice(index, 1);
       setSelectedTeamMember(tempArray);
     } catch (error) {
+      recordCrashlyticsError('Error in deleteInspectionType:',error)
       console.error('Error in deleteInspectionType:', error);
     }
   }

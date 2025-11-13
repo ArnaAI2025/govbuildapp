@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -90,6 +91,7 @@ export const createDropdownListTables = async (): Promise<void> => {
     `);
     console.log('Selection dropdown tables created successfully');
   } catch (error) {
+    recordCrashlyticsError('Error creating dropdown list tables:', error);
     console.error('Error creating dropdown list tables:', error);
     throw error;
   }
@@ -106,6 +108,7 @@ export const migrateSchema = async () => {
       console.log(`Schema migrated to version ${SCHEMA_VERSION}`);
     }
   } catch (error) {
+    recordCrashlyticsError('Error migrating schema:', error);
     console.error('Error migrating schema:', error);
   }
 };

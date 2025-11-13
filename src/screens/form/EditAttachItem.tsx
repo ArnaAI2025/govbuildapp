@@ -21,6 +21,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/Types';
 import { navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 interface FileObject {
   id: string;
@@ -423,6 +424,7 @@ const EditAttachItem: React.FC<EditAttachItemProps> = ({ navigation, route }) =>
             navigation.goBack();
           }
         } catch (error) {
+          recordCrashlyticsError('Failed to save data: ', error)
           ToastService.show('Failed to save data: ' + error?.message, COLORS.ERROR);
         }
       };

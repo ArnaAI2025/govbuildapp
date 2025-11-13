@@ -18,6 +18,7 @@ import InfoCard from '../../components/common/InfoCard';
 import { getNavigationState, getUserRole, saveNavigationState } from '../../session/SessionManager';
 import { goBack, navigate } from '../../navigation/Index';
 import { useIsFocused } from '@react-navigation/native';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 type MyCaseScreenProps = NativeStackScreenProps<RootStackParamList, 'MyCaseScreen'>;
 
 const MyCaseScreen: React.FC<MyCaseScreenProps> = (route) => {
@@ -149,6 +150,7 @@ const MyCaseScreen: React.FC<MyCaseScreenProps> = (route) => {
           setHasMoreData(false); // no more data to load
         }
       } catch (error) {
+        recordCrashlyticsError('Error loading cases:', error)
         console.error('Error loading cases:', error);
       } finally {
         setIsLoading(false);
@@ -192,6 +194,7 @@ const MyCaseScreen: React.FC<MyCaseScreenProps> = (route) => {
         isMyCaseOnly: value,
         teamMember: value ? { userId: '' } : { userId: getUserRole() },
       });
+      if (value) resetFilters(false);
     },
     [setFilters],
   );

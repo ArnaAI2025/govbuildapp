@@ -15,6 +15,7 @@ import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
 import { MultiSelectDropdownProps } from '../../utils/interfaces/IComponent';
 import { height } from '../../utils/helper/dimensions';
+import { normalizeBool } from '../../utils/helper/helpers';
 
 const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   data = [],
@@ -30,12 +31,14 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   hintText = '',
   alldata = [],
   disabled = false,
+  // editable,
   error = false,
 }) => {
   const scrollRef = useRef<ScrollView>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  const disableData= normalizeBool(disabled);
   const safeSearchText = searchText?.toLowerCase() || '';
 
   //  Logic to determine selected items:
@@ -76,7 +79,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   }, [safeSearchText, data, labelField]);
 
   const toggleDropdown = () => {
-    if (disabled) return; // disable dropdown open/close
+    if (disableData) return; // disable dropdown open/close
 
     setShowDropdown((prev) => {
       const next = !prev;
@@ -92,8 +95,8 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       : [...value, itemValue];
     onChange(updatedValues);
 
-    if (Platform.OS === 'android' && scrollRef.current) {
-      console.log('android scroll calling...');
+    if (Platform.OS === "android" && scrollRef.current) {
+      console.log("android scroll calling...");
       InteractionManager.runAfterInteractions(() => {
         scrollRef.current?.scrollToEnd({ animated: true });
       });
@@ -131,7 +134,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       style={[
         styles.container,
         containerStyle,
-        { zIndex: baseZIndex, opacity: disabled ? 0.6 : 1 }, // dim effect
+        { zIndex: baseZIndex, opacity: disableData ? 0.6 : 1 }, // dim effect
       ]}
     >
       <View style={styles.dropdownWrapper}>
@@ -140,7 +143,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
             style={[
               styles.floatingLabel,
               {
-                color: disabled
+                color: disableData
                   ? COLORS.GRAY_LABEL
                   : showDropdown
                     ? COLORS.APP_COLOR
@@ -158,7 +161,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
             {
               borderColor: error
                 ? COLORS.ERROR
-                : disabled
+                : disableData
                   ? COLORS.GRAY_MEDIUM
                   : showDropdown
                     ? COLORS.APP_COLOR
@@ -182,7 +185,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                     style={[
                       styles.placeholderText,
                       {
-                        color: disabled ? COLORS.GRAY_LIGHT : COLORS.DRAWER_TEXT_COLOR,
+                        color: disableData ? COLORS.GRAY_LIGHT : COLORS.DRAWER_TEXT_COLOR,
                       },
                     ]}
                   >
@@ -197,7 +200,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                       titleStyle={styles.chipText}
                       style={styles.chipItem}
                       right={() =>
-                        !disabled && (
+                            !disableData && (
                           <TouchableOpacity onPress={() => handleSelect(item)}>
                             <List.Icon icon="close-circle" color={COLORS.WHITE} />
                           </TouchableOpacity>
@@ -211,14 +214,14 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           </View>
 
           <TouchableOpacity
-            disabled={disabled}
+              disabled={disableData}
             style={{ backgroundColor: COLORS.WHITE }}
             hitSlop={{ left: 15, right: 15, top: 12, bottom: 12 }}
             onPress={toggleDropdown}
           >
             <List.Icon
               icon={showDropdown ? 'chevron-up' : 'chevron-down'}
-              color={disabled ? COLORS.GRAY_LIGHT : COLORS.GRAY_DARK}
+              color={disableData ? COLORS.GRAY_LIGHT : COLORS.GRAY_DARK}
             />
           </TouchableOpacity>
         </View>
@@ -226,10 +229,10 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         {hintText ? <Text style={styles.hintText}>{hintText}</Text> : null}
       </View>
 
-      {!disabled && isLoading ? (
+      {!disableData && isLoading ? (
         <ActivityIndicator size="small" style={styles.loader} />
       ) : (
-        !disabled &&
+        !disableData &&
         showDropdown && (
           <View style={styles.dropdownBox}>
             <TextInput

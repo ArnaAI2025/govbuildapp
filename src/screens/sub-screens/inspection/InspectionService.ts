@@ -23,6 +23,7 @@ import {
 import { URL } from '../../../constants/url';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 class ServiceError extends Error {
   constructor(message: string) {
@@ -57,6 +58,7 @@ export class InspectionService {
       }
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching inspections:', error);
       console.error('Error fetching inspections:', error);
       return [];
     }
@@ -95,6 +97,7 @@ export class InspectionService {
 
       return results;
     } catch (error) {
+      recordCrashlyticsError('Error in inspections uploadFile:', error);
       console.log('Upload Error: ', error);
       throw error;
     }
@@ -125,6 +128,7 @@ export class InspectionService {
         return [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching inspection types:', error);
       console.error('Error fetching inspection types:', error);
       return [];
     }
@@ -163,6 +167,7 @@ export class InspectionService {
         const response = await GET_DATA({ url: fullUrl });
         return response?.status && Array.isArray(response?.data?.data) ? response.data.data : [];
       } catch (error) {
+        recordCrashlyticsError(' Error in fetchInspectionTypeList:---->', error);
         console.error(' Error in fetchInspectionTypeList:---->', error);
         return [];
       }
@@ -187,6 +192,7 @@ export class InspectionService {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
     }
@@ -205,6 +211,7 @@ export class InspectionService {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
     }
@@ -223,6 +230,7 @@ export class InspectionService {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
     }
@@ -241,6 +249,7 @@ export class InspectionService {
       }
       return null;
     } catch (error) {
+      recordCrashlyticsError('Error fetching inspection by ID:', error);
       console.error('Error fetching inspection by ID:', error);
       return null;
     }
@@ -265,6 +274,7 @@ export class InspectionService {
       }
       return { defaultTime: 0, timeDifference: 0 };
     } catch (error) {
+      recordCrashlyticsError('Error fetching inspection default time:', error);
       console.error('Error fetching inspection default time:', error);
       return { defaultTime: 0, timeDifference: 0 };
     }
@@ -283,6 +293,7 @@ export class InspectionService {
       }
       return null;
     } catch (error) {
+      recordCrashlyticsError('Error fetching team member signature:', error);
       console.error('Error fetching team member signature:', error);
       return null;
     }
@@ -307,6 +318,7 @@ export class InspectionService {
       }
       return { bookedTeamMembers: [] };
     } catch (error) {
+      recordCrashlyticsError('Error verifying team member schedule:', error);
       console.error('Error verifying team member schedule:', error);
       return { bookedTeamMembers: [] };
     }
@@ -324,6 +336,7 @@ export class InspectionService {
       }
       return '';
     } catch (error) {
+      recordCrashlyticsError('Error fetching inspection title:', error);
       console.error('Error fetching inspection title:', error);
       return '';
     }
@@ -375,6 +388,7 @@ export class InspectionService {
       return false;
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error saving inspection:', error);
       console.error('Error saving inspection:', error);
       if (
         typeof error === 'object' &&

@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 export const createLicenseTable = async (): Promise<void> => {
@@ -78,6 +79,7 @@ export const createLicenseTable = async (): Promise<void> => {
       db.execAsync(licenseDetailsTableQuery),
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error updating only license data:--->', error);
     console.error('Error creating License table:', error);
     throw error;
   }

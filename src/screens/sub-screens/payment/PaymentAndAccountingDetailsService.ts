@@ -9,6 +9,7 @@ import { URL } from '../../../constants/url';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../../constants/strings';
 import { fetchPaymentsFromDb } from '../../../database/sub-screens/subScreenDAO';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const PaymentAndAccountingDetailsService = {
   async fetchPayments(
@@ -34,6 +35,7 @@ export const PaymentAndAccountingDetailsService = {
         return payments || [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error in fetchPayments:', error);
       console.error('Error in fetchPayments:', error);
       return [];
     }
@@ -70,8 +72,10 @@ export const PaymentAndAccountingDetailsService = {
       }
     } catch (error) {
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in fetchAccountingDetails:', error);
         console.error('Error in fetchAccountingDetails:', error.message);
       } else {
+        recordCrashlyticsError('Error in fetchAccountingDetails:', error);
         console.error('Error in fetchAccountingDetails:', error);
       }
       return { details: [], titles: [] };

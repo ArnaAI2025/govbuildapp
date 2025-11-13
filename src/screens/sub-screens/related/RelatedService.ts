@@ -2,6 +2,7 @@ import { URL } from '../../../constants/url';
 import { GET_DATA } from '../../../services/ApiClient';
 import { RelatedCasesResponse } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const fetchRelatedCases = async (
   contentItemId: string,
@@ -27,6 +28,7 @@ export const fetchRelatedCases = async (
         return { allChildCase: [], allParentCase: [] };
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetchRelatedCases ---:', error);
       console.error('Error fetching ---:', error);
     }
   }

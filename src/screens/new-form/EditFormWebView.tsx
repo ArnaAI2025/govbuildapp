@@ -18,6 +18,7 @@ import { RootStackParamList } from '../../navigation/Types';
 import { navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { editFormSubmission, storeFormFilesUrls } from '../../database/new-form/newFormDAO';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 interface FileObject {}
 interface GridObject {}
@@ -366,6 +367,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
       try {
         message = JSON.parse(raw);
       } catch (e) {
+        recordCrashlyticsError('Could not parse message from webview:',e)
         console.error('Could not parse message from webview:', e, raw);
         return;
       }
@@ -506,6 +508,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
         console.log('Form change:---->>>', message.data);
       }
     } catch (err) {
+      recordCrashlyticsError('Error in onMessage:', err)
       console.error('Error in onMessage:', err);
     }
   };
@@ -530,6 +533,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
         navigation.goBack(null);
       }
     } catch (error) {
+      recordCrashlyticsError('Error saving submission:',error)
       console.error('Error saving submission:', error);
     }
   };

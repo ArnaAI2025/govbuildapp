@@ -40,6 +40,7 @@ import { goBack } from '../../navigation/Index';
 import AllInspectionDialog from './components/AllInspectionDialog';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import PublishButton from '../../components/common/PublishButton';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type DailyInspectionScreenProps = NativeStackScreenProps<RootStackParamList, 'DailyInspection'>;
 const ITEMS_PER_PAGE = 10;
@@ -223,6 +224,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
 
         await fetchInspections(selectedTeamMember?.id || userId);
       } catch (error) {
+        recordCrashlyticsError('Error in fetching daily inpection:', error)
         console.error('Error in initialize:', error);
       }
     };
@@ -264,6 +266,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
       setIsCreateRoute(DailyInspectionService.checkLocationForRouteCreate(result.data));
       setLoading(false);
     } catch (error) {
+      recordCrashlyticsError('Error fetching inspections:', error)
       console.error('Error fetching inspections:', error);
       setData([]);
     } finally {
@@ -341,6 +344,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
             }
           }
         } catch (error) {
+           recordCrashlyticsError('Invalid JSON location:',  error)
           console.warn('Invalid JSON location:', object?.location, error);
         }
       }

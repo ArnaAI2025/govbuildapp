@@ -18,6 +18,7 @@ import {
 } from '../database/sync-offline-to-server/syncOfflineToServerSync';
 import { licenseAPICall } from '../database/license/licenseSync';
 import { getOtherScreenData } from '../database/other-sections/otherSectionSync';
+import { recordCrashlyticsError } from './CrashlyticsService';
 
 let cancelSync = false;
 export const stopSyncing = () => {
@@ -51,6 +52,7 @@ export const syncServerToOfflineDatabase = async (
       try {
         await task();
       } catch (err) {
+        recordCrashlyticsError('Task failed:', err);
         console.warn('Task failed:', err);
       }
       completedTasks++;
@@ -75,6 +77,7 @@ export const syncServerToOfflineDatabase = async (
     return successMessage;
   } catch (error: unknown) {
     if (!cancelSync) {
+      recordCrashlyticsError('Unexpected error during sync:', error);
       console.error('Unexpected error during sync:', error);
       ToastService.show('Sync failed. Please try again.', COLORS.RED);
     }

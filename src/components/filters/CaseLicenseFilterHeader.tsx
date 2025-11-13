@@ -117,7 +117,7 @@ export const ListHeader: React.FC<ListCaseLicenseHeaderProps> = ({
               setSearchText(text);
               onSearch(text.trim());
             }}
-            placeholder={LICENSE ? 'Filter by Applicant' : filters?.filterType?.displayText}
+            placeholder={LICENSE ? 'Filter by Title' : filters?.filterType?.displayText}
             style={styles.searchInput}
             autoCapitalize="none"
             autoFocus={false}

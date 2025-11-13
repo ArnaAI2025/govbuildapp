@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
 import { getDatabase } from '../DatabaseService';
 import { DAILY_INSPECTION_TABLE } from './DailyInspectionSchema';
@@ -48,6 +49,7 @@ export async function storeDailyInspectionData(
       data.statusForeColor,
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing daily inspection data:', error);
     console.error('Error storing daily inspection data:', error);
     throw error;
   }
@@ -98,6 +100,7 @@ export async function updateDailyInspectionData(
       data.contentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating daily inspection data:', error);
     console.error('Error updating daily inspection data:', error);
     throw error;
   }
@@ -115,6 +118,7 @@ export async function fetchInspectionData(teamMemberId: string): Promise<DailyIn
     const rows = await db.getAllAsync(query, ...params);
     return rows as DailyInspectionModel[];
   } catch (error) {
+    recordCrashlyticsError('Error fetching daily inspection data:', error);
     console.error('Error fetching daily inspection data:', error);
     return [];
   }
@@ -148,6 +152,7 @@ export async function updateDailyInspectionListIfExist(
       );
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating daily inspection list:', error);
     console.error('Error updating daily inspection list:', error);
   }
 }

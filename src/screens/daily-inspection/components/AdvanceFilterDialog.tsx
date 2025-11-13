@@ -12,6 +12,7 @@ import { useDailyInspectionStore } from '../../../store/useDailyInspectionStore'
 import useNetworkStore from '../../../store/networkStore';
 import SwitchToggle from 'react-native-switch-toggle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface AdvanceFilterDialogProps {
   openAdvanceFilter: boolean;
@@ -83,6 +84,7 @@ export const AdvanceFilterDialog: React.FC<AdvanceFilterDialogProps> = ({
         setLicenseType(dropdownData.licenseType);
         setLicenseTypeCategory(dropdownData.licenseTypeCategory);
       } catch (error) {
+        recordCrashlyticsError('Error in initialize:',error)
         console.error('Error in initialize:', error);
       }
     };

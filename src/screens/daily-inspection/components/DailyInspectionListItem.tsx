@@ -24,6 +24,7 @@ import globalStyles from '../../../theme/globalStyles';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../../constants/strings';
 import { handleLocationPress } from '../DailyInspectionService';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 // Define interfaces for better type safety
 interface LocationData {
@@ -122,6 +123,7 @@ const DailyInspectionListItem: React.FC<DailyInspectionListItemProps> = ({
     try {
       return rowData.advancedFormLinksJson ? JSON.parse(rowData.advancedFormLinksJson) : [];
     } catch (error) {
+      recordCrashlyticsError('Invalid JSON in advancedFormLinksJson:',error)
       console.warn('Invalid JSON in advancedFormLinksJson:', error);
       return [];
     }

@@ -3,52 +3,55 @@ import { saveIsUpdateLater, saveIsVersionUpdateOffline } from '../session/Sessio
 import { APP_STORE, PLAY_STORE, URL } from '../constants/url';
 import { navigate } from '../navigation/Index';
 import { TEXTS } from '../constants/strings';
+import { GET_DATA } from '../services/ApiClient';
+import DeviceInfo from 'react-native-device-info';
+import { MMKV } from 'react-native-mmkv';
+import VersionCheck from 'react-native-version-check';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
 
-export const checkAppVersion = async (isUpdate: boolean) => {
-  callAPIForAppUpdate(1, isUpdate);
+export const storage = new MMKV();
+
+export const checkAppVersion = async (isUpdate: boolean): Promise<void> => {
+  await callAPIForAppUpdate(1, isUpdate);
 };
 
-const redirectMethod = () => {
-  Linking.openURL(Platform.OS === 'ios' ? APP_STORE : PLAY_STORE);
+const redirectToStore = (): void => {
+  const storeUrl = Platform.OS === 'ios' ? APP_STORE : PLAY_STORE;
+  Linking.openURL(storeUrl ?? '').catch((err) =>
+    console.error('[redirectToStore] Failed to open store:', err),
+  );
 };
 
-export const mandatoryUpdateDialog = () => {
+export const mandatoryUpdateDialog = (): void => {
   Alert.alert(
     TEXTS.alertMessages.updateRequired,
     TEXTS.alertMessages.mandatoryUpdateMes,
     [
       {
         text: TEXTS.alertMessages.updateNow,
-        onPress: () => {
-          redirectMethod();
-          return null;
-        },
+        onPress: redirectToStore,
       },
     ],
     { cancelable: false },
   );
 };
 
-export const AppUpdateDialog = (flag: number) => {
+export const appUpdateDialog = (flag: number): void => {
   Alert.alert(
     TEXTS.alertMessages.UpdateAlert,
-    flag == 1 ? TEXTS.alertMessages.UpdateMsg : TEXTS.alertMessages.UpdateNewVersion,
+    flag === 1 ? TEXTS.alertMessages.UpdateMsg : TEXTS.alertMessages.UpdateNewVersion,
     [
       {
         text: TEXTS.alertMessages.updateNow,
-        onPress: () => {
-          redirectMethod();
-          return null;
-        },
+        onPress: redirectToStore,
       },
       {
         text: TEXTS.alertMessages.updateLatter,
         onPress: () => {
           saveIsUpdateLater(true);
-          if (flag == 1) {
-            navigate('HomeScreen');
+          if (flag === 1) {
+            if (flag === 1) navigate('DashboardDrawerScreen');
           }
-          return null;
         },
       },
     ],
@@ -56,54 +59,90 @@ export const AppUpdateDialog = (flag: number) => {
   );
 };
 
-export const callAPIForAppUpdate = (type: number, isUpdate: boolean) => {
-  var isNeedUpdate = false;
-  var isMandatoryUpdate = false;
-  var data;
+export const callAPIForAppUpdate = async (type: number, isUpdate: boolean) => {
+  try {
+    const payload = {
+      url: URL.GET_MOBILE_APP_VERSION,
+    };
+    const response = await GET_DATA(payload);
+    if (!response || !response?.data?.items || !Array.isArray(response?.data?.items)) {
+      handleNoUpdate(isUpdate);
+      return;
+    }
 
-  // const payload={url:URL.GET_MOBILE_APP_VERSION}
-  // const Response = GET_DATA(payload);
+    const hasMandatoryUpdate = response?.data?.items.some((item) => item.IsMandatory === 'true');
 
-  fetch(URL.GET_MOBILE_APP_VERSION, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    //If response is in json then in success
-    .then((responseJson) => {
-      console.log('respo----->>>>>', responseJson);
+    const hasUpdate = response?.data?.items?.length > 0;
 
-      if (
-        Object.prototype.hasOwnProperty.call(responseJson, 'items') &&
-        responseJson.items != null &&
-        responseJson.items != ''
-      ) {
-        if (responseJson.items.length > 0) {
-          isNeedUpdate = true;
-          data = responseJson.items.filter(function (item) {
-            return item.IsMandatory == 'true';
-          });
-          if (data.length > 0) {
-            isMandatoryUpdate = true;
-          }
-        }
+    if (!hasUpdate) {
+      handleNoUpdate(isUpdate);
+      return;
+    }
 
-        if (isNeedUpdate) {
-          if (isMandatoryUpdate) {
-            saveIsVersionUpdateOffline(true);
-            mandatoryUpdateDialog();
-          } else {
-            if (!isUpdate) {
-              saveIsVersionUpdateOffline(false);
-              //   optionalUpdateDialog(type);
-            }
-          }
-        }
-      } else {
+    if (hasMandatoryUpdate) {
+      saveIsVersionUpdateOffline(true);
+      mandatoryUpdateDialog();
+    } else {
+      if (!isUpdate) {
         saveIsVersionUpdateOffline(false);
-        if (isUpdate) {
-          saveIsUpdateLater(false);
-          navigate('HomeScreen');
-        }
+        appUpdateDialog(type);
       }
-    });
+    }
+  } catch (error) {
+    console.error('[callAPIForAppUpdate] API call failed:', error);
+    recordCrashlyticsError("Error in callAPIForAppUpdate:',", error);
+    saveIsVersionUpdateOffline(false);
+  }
+};
+
+const handleNoUpdate = (isUpdate: boolean) => {
+  saveIsVersionUpdateOffline(false);
+  if (isUpdate) {
+    saveIsUpdateLater(false);
+    navigate('DashboardDrawerScreen');
+  }
+};
+
+export const versionCheckHandler = async () => {
+  try {
+    const updateInfo = await VersionCheck.needUpdate();
+    const androidVersion = DeviceInfo.getVersion();
+    const latestAndroidVersion = '3.1.0';
+    const lastPromptDate = storage.getString('lastVersionPromptDate');
+
+    if (lastPromptDate) {
+      const lastDate = new Date(lastPromptDate);
+      const now = new Date();
+      const diffHours = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60);
+      if (diffHours < 24) {
+        return;
+      }
+    }
+
+    if (Platform.OS === 'ios' ? updateInfo.isNeeded : androidVersion < latestAndroidVersion) {
+      Alert.alert(
+        'Update Available',
+        'A newer version of the app is available. Please update to continue.',
+        [
+          {
+            text: 'Later',
+            style: 'cancel',
+            onPress: async () => {
+              storage.set('lastVersionPromptDate', new Date().toISOString());
+            },
+          },
+          {
+            text: 'Update',
+            onPress: () =>
+              Linking.openURL(
+                Platform.OS === 'ios' ? updateInfo.storeUrl : 'market://details?id=com.appoffline',
+              ),
+          },
+        ],
+        { cancelable: false },
+      );
+    }
+  } catch (error) {
+    console.error('Version check failed:', error);
+  }
 };

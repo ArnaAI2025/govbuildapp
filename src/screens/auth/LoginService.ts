@@ -17,6 +17,7 @@ import {
   saveUserRole,
 } from '../../session/SessionManager';
 import { navigate } from '../../navigation/Index';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 export const fetchTenantList = async (): Promise<Tenant[]> => {
   try {
@@ -62,6 +63,7 @@ export const fetchTenantList = async (): Promise<Tenant[]> => {
     }
     return [];
   } catch (error) {
+    recordCrashlyticsError(TEXTS.biometric.errorFetching, error);
     console.error(TEXTS.biometric.errorFetching, error);
     return [];
   }
@@ -126,6 +128,7 @@ export const fetchAndValidateUserRole = async ({
     }
   } catch (error) {
     console.log('error->>>>>', error);
+    recordCrashlyticsError('Error initializing fetchAndValidateUserRole:', error);
     ToastService.show(TEXTS.apiServiceFile.somethingWentWrong, COLORS.ERROR);
   }
 
@@ -257,6 +260,7 @@ export const loginAndFetchToken = async (
     }
   } catch (error) {
     console.log('Error-->', error);
+    recordCrashlyticsError('Error initializing loginAndFetchToken:', error);
     return {
       success: false,
       message: TEXTS.apiServiceFile.loginFailedAlert,
@@ -311,6 +315,7 @@ export const handleLoginNavigation = ({
     setShowBiometricDialog(false);
     navigate('DashboardDrawerScreen');
   } catch (error) {
+    recordCrashlyticsError('Error navigating to dashboard:', error);
     console.error('Error navigating to dashboard:', error);
     ToastService.show(TEXTS.apiServiceFile.loginSetupFailed, 'red');
   }

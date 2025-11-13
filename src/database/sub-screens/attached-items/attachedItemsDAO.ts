@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 import { getNewUTCDate } from '../../../utils/helper/helpers';
 import { TABLES } from '../../DatabaseConstants';
 import { getDatabase } from '../../DatabaseService';
@@ -8,6 +9,7 @@ export const fetchAddFormListFromDB = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.ADDFORM_TABLE_NAME}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching AddForm list from DB:', error);
     console.error('Error fetching AddForm list from DB:', error);
     return [];
   }
@@ -68,6 +70,7 @@ export const storeAddFormDataNew = async (
       return false;
     }
   } catch (error) {
+    recordCrashlyticsError('Error saving form data:', error);
     console.error('Error saving form data:', error);
     return false;
   }
@@ -108,6 +111,7 @@ export const storeFormIOImageDataNew = async (data, formId) => {
     }
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error storing FormIO image data:', error);
     console.error('Error storing FormIO image data:', error);
   }
 };
@@ -160,6 +164,7 @@ export const storeItemToAttachTable = async (
       [1, data?.caseAndLicenseId],
     );
   } catch (error) {
+    recordCrashlyticsError('Error inserting into Case_Attached_Items_TABLE_NAME:', error);
     console.error('Error inserting into Case_Attached_Items_TABLE_NAME:', error);
   }
 };
@@ -174,6 +179,7 @@ export const fetchFormioImgswithLocalID = async (id: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching FormIO images with local ID:', error);
     console.error('Error fetching FormIO images with local ID:', error);
     return [];
   }
@@ -189,6 +195,7 @@ export const fetchFromFileById = async (id: string) => {
 
     return row; // Return the fetched row
   } catch (error) {
+    recordCrashlyticsError('Error fetching form file by ID:', error);
     console.error('Error fetching form file by ID:', error?.message);
   }
 };
@@ -210,6 +217,7 @@ export const updateIsDraftAddFormData = async (id: string) => {
 
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating draft status:', error);
     console.error('Error updating draft status:', error);
     return false;
   }
@@ -235,6 +243,7 @@ export const storeFormFiles = async (data: any) => {
       data?.name ?? null,
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing form file:', error);
     console.error('Error storing form file:', error.message);
   }
 };
@@ -260,6 +269,7 @@ export const storeFormFilesForSync = async (data: any) => {
       1, // isSync is set to 1 if isSync is true
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing form file:', error);
     console.error('Error storing form file:', error.message);
   }
 };
@@ -273,6 +283,7 @@ export const fetchForIoImgsWithLocalKey = async (key: any, id: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching FormIO images with local key:', serror);
     console.error('Error fetching FormIO images with local key:', error);
     return [];
   }
@@ -291,6 +302,7 @@ export const updateFormFileIfExist = async (id: string, object: any) => {
       await updateFormFile(object);
     }
   } catch (err) {
+    recordCrashlyticsError('Error updating or storing form file:', err);
     console.error('Error updating or storing form file:', err);
   }
 };
@@ -314,6 +326,7 @@ export const updateFormFile = async (data: any) => {
 
     return result;
   } catch (error) {
+    recordCrashlyticsError('Error updating form file:', error);
     console.error('Error updating form file:', error.message);
   }
 };
@@ -328,6 +341,7 @@ export const fetchFromFileDB = async () => {
     ]);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching from file DB:', error);
     console.error('Error fetching from file DB:', error);
     return [];
   }
@@ -345,6 +359,7 @@ export const fetchAllFormData1 = async () => {
     }
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching form data:', error);
     console.error('Error fetching form data:', error);
     return [];
   }
@@ -360,6 +375,7 @@ export const fetchAllFormDataJSON = async () => {
     console.log('form sync data---->', rows);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching form data from DB fetchAllFormDataJSON:', error);
     console.error('Error fetching form data from DB fetchAllFormDataJSON:', error);
 
     return [];
@@ -375,6 +391,7 @@ export const fetchFormDataJSONById = async (localId: string) => {
     console.log('form sync data---->', rows);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching form data from DB fetchAllFormDataJSON:', error);
     console.error('Error fetching form data from DB fetchAllFormDataJSON:', error);
 
     return [];
@@ -393,6 +410,7 @@ export const fetchAllEditedFormData = async () => {
     }
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching edited form data:', error);
     console.error('Error fetching edited form data:', error);
     return [];
   }
@@ -409,6 +427,7 @@ export const fetchAllEditedAdvancedFormData = async () => {
     }
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching edited form data:', error);
     console.error('Error fetching edited form data:', error);
     return [];
   }
@@ -423,6 +442,7 @@ export const updateFormImageAssureURL = async (url: string, id: number) => {
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating Assure URL:', error);
     console.error('Error updating Assure URL:', error);
     return false;
   }
@@ -443,6 +463,7 @@ export const updateSubmissionJSON = async (json: string, id: string, isLast: boo
     }
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating submission JSON:', error);
     console.error('Error updating submission JSON:', error);
     return false;
   }
@@ -464,6 +485,7 @@ export const updateEditSubmissionJSON = async (json: string, id: string, isLast:
     }
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating edited submission JSON:', error);
     console.error('Error updating edited submission JSON:', error);
     return false;
   }
@@ -482,6 +504,7 @@ export const updateReadyToSyncJSON = async (id: string, readyToSync: number) => 
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating readyToSync:', error);
     console.error('Error updating readyToSync:', error);
     return false;
   }
@@ -500,6 +523,7 @@ export const updateReadyToUpdateJSON = async (id: string, readyToSync: number) =
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating readyToSync for edited form:', error);
     console.error('Error updating readyToSync for edited form:', error);
     return false;
   }
@@ -514,6 +538,7 @@ export const updateAddFormStartSync = async (startSyncing: boolean, id: string) 
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating startSyncing for form:', error);
     console.error('Error updating startSyncing for form:', error);
     return false;
   }
@@ -528,6 +553,7 @@ export const updateEditedFormStartSync = async (startSyncing: boolean, id: strin
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating startSyncing for edited form:', error);
     console.error('Error updating startSyncing for edited form:', error);
     return false;
   }
@@ -548,6 +574,7 @@ export const updateEditedFormSyncStatus = async (
     );
     return result.changes === 1;
   } catch (error) {
+    recordCrashlyticsError('Error updating edited form sync status:', error);
     console.error('Error updating edited form sync status:', error);
     return false;
   }
@@ -566,6 +593,7 @@ export const fetchFormioFileData = async (id: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching file data:', error);
     console.error('Error fetching file data:', error);
     return null;
   }
@@ -577,6 +605,7 @@ export const deleteImageFormId = async (id: string) => {
     await db.runAsync(`DELETE FROM ${TABLES.FORMIO_IMAGE_DATA} WHERE FormId = ?`, [id]);
     await db.runAsync(`DELETE FROM ${TABLES.FORM_FILE_TABLE} WHERE formId = ?`, [id]);
   } catch (error) {
+    recordCrashlyticsError('Error deleting image by FormId:', error);
     console.error('Error deleting image by FormId:', error);
   }
 };
@@ -590,6 +619,7 @@ export const deleteImageKeyAndFormId = async (id: string, key: any) => {
       id,
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error deleting image by ID:', error);
     console.error('Error deleting image by ID:', error.message);
   }
 };
@@ -607,6 +637,7 @@ export const storeAddFormCaseLicenceAttach = async (
     );
     await statement.executeAsync(formId, caseId, licenseId, itemText);
   } catch (error) {
+    recordCrashlyticsError('Error inserting form case license attach:', error);
     console.error('Error inserting form case license attach:', error);
   }
 };
@@ -626,6 +657,7 @@ export const updateFormReadyToSync = async (formId: string) => {
       console.log('Marked form ready to sync:', formId);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating form readyToSync:', error);
     console.error('Error updating form readyToSync:', error);
   }
 };
@@ -682,6 +714,7 @@ export const storeEditSubmissionToAttachTable = async (
 
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating submission in attach table:', error);
     console.error('Error updating submission in attach table:', error);
     return false;
   }
@@ -697,6 +730,8 @@ export const fetchFormForSyncScreen = async () => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchFormForSyncScreen :', error);
+
     console.log('Error fetching case data from DB fetchFormForSyncScreen :', error);
   }
 };
@@ -710,6 +745,7 @@ export const fetchFormForByLocalId = async (localId: string) => {
     );
     return row; // Return the result directly
   } catch (err) {
+    recordCrashlyticsError('Error fetching form by local ID:', err);
     console.error('Error fetching form by local ID:', err);
     return null; // Return null or handle as per your needs
   }
@@ -725,6 +761,8 @@ export const getFormListById = async (id: string) => {
     );
     return rows; // Return the retrieved rows
   } catch (err) {
+    recordCrashlyticsError('Error in getFormListById:', err);
+
     console.log('error', err);
     return []; // Return an empty array in case of an error
   }
@@ -739,7 +777,8 @@ export const updateFormAfterSync = async (id: string, localId: string) => {
     );
     return true;
   } catch (error) {
-    console.error('Error updating edited submission JSON:', error);
+    recordCrashlyticsError('Error in updateFormAfterSync:', error);
+    console.error('Error in updateFormAfterSync:', error);
     return false;
   }
 };

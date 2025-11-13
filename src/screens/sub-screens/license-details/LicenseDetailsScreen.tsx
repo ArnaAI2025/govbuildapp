@@ -11,7 +11,7 @@ import { COLORS } from '../../../theme/colors';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { fontSize, height } from '../../../utils/helper/dimensions';
+import { fontSize } from '../../../utils/helper/dimensions';
 import FloatingInput from '../../../components/common/FloatingInput';
 import { DatePickerInput } from '../../../components/common/DatePickerInput';
 import { FONT_FAMILY, FONT_SIZE } from '../../../theme/fonts';
@@ -23,15 +23,18 @@ import PublishButton from '../../../components/common/PublishButton';
 import AutocompleteInput from 'react-native-autocomplete-input';
 import CustomMultiSelectDropdown from '../../../components/common/MultiSelectDropdown';
 import Checkbox from 'expo-checkbox';
+import useAuthStore from '../../../store/useAuthStore';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface LicenseDetailsScreenProps
   extends NativeStackScreenProps<RootStackParamList, 'LicenseDetailsScreen'> {}
 const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) => {
-  const { isNetworkAvailable } = useNetworkStatus() ?? {};
+  const { isNetworkAvailable } = useNetworkStatus();
   const [loading, setLoading] = useState(false);
   const { param } = route.params;
   const ownerName = route?.params?.param?.licenseOwner;
   const isFocused = useIsFocused();
+  const [userId, setUserId] = useState<string>('');
   const [formData, setFormData] = useState({
     testScore: '',
     licenseFee: '',
@@ -61,6 +64,9 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
   useEffect(() => {
     const fetchOwnerData = async () => {
       setLoading(true);
+      const { authData } = useAuthStore.getState();
+      const userId = authData?.adminRole?.teamMember?.userId || '';
+      setUserId(userId);
       const data = await LicenseDetailsService.fetchLicenseData(
         param?.contentItemId,
         isNetworkAvailable,
@@ -110,10 +116,12 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
         formData,
         param?.contentItemId,
         ownerName,
+        userId,
         isNetworkAvailable,
       );
       setLoading(false);
     } catch (error) {
+      recordCrashlyticsError('Error saveLicenseData:---->>>', error);
       console.error('Error saving:---->>>', error);
       ToastService.show(TEXTS.subScreens.contactAndContract.savingError, COLORS.ERROR);
     }
@@ -157,6 +165,7 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
           const results = await LicenseDetailsService.searchCaseOwner(query, isNetworkAvailable);
           setCaseOwnerSuggestions(results || []);
         } catch (error) {
+          recordCrashlyticsError('Case owner search error:', error);
           console.error('Case owner search error:', error);
         }
       }
@@ -187,58 +196,60 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 200 }}
           >
-            <FloatingInput
-              label={TEXTS.subScreens.licenseDetails.testScore}
-              value={formData?.testScore}
-              numberOfLines={1}
-              onChangeText={(text) => updateFormData('testScore', text)}
-              placeholder={TEXTS.subScreens.licenseDetails.testScorePlaceholder}
-              hintText={TEXTS.subScreens.licenseDetails.testScoreHints}
-            />
-            <FloatingInput
-              label={TEXTS.subScreens.licenseDetails.licenseFee}
-              value={formData?.licenseFee}
-              numberOfLines={1}
-              onChangeText={(text) => updateFormData('licenseFee', text)}
-              placeholder={TEXTS.subScreens.licenseDetails.licenseFeePlaceholder}
-              keyboardType="numeric"
-              leftIcon="currency-usd"
-              hintText={TEXTS.subScreens.licenseDetails.licenseFeeHints}
-              style={{ marginTop: 10 }}
-            />
-
-            {dateFields.map((field) => (
-              <DatePickerInput
-                key={field.key}
-                label={field.label}
-                value={formData[field.key]}
-                onChange={(date) => updateFormData(field.key, date ? date.toISOString() : '')}
-                hintText={field?.hintText}
+            <View pointerEvents={!isNetworkAvailable ? 'none' : 'auto'}>
+              <FloatingInput
+                label={TEXTS.subScreens.licenseDetails.testScore}
+                value={formData?.testScore}
+                numberOfLines={1}
+                onChangeText={(text) => updateFormData('testScore', text)}
+                placeholder={TEXTS.subScreens.licenseDetails.testScorePlaceholder}
+                hintText={TEXTS.subScreens.licenseDetails.testScoreHints}
               />
-            ))}
+              <FloatingInput
+                label={TEXTS.subScreens.licenseDetails.licenseFee}
+                value={formData?.licenseFee}
+                numberOfLines={1}
+                onChangeText={(text) => updateFormData('licenseFee', text)}
+                placeholder={TEXTS.subScreens.licenseDetails.licenseFeePlaceholder}
+                keyboardType="numeric"
+                leftIcon="currency-usd"
+                hintText={TEXTS.subScreens.licenseDetails.licenseFeeHints}
+                style={{ marginTop: 10 }}
+              />
 
-            <CustomMultiSelectDropdown
-              data={teamMembers?.map((item) => ({
-                item: `${item?.firstName} ${item?.lastName}`,
-                id: item?.userId,
-              }))}
-              labelField="item"
-              valueField="id"
-              value={formData?.assignTeamMembers}
-              onChange={(item) => {
-                setFormData({
-                  ...formData,
-                  assignTeamMembers: item,
-                });
-              }}
-              label={TEXTS.license.teamMember}
-              placeholder={TEXTS.license.teamMemberPlaceholder}
-              zIndexPriority={1}
-              hintText="The Assigned Users of the form."
-              containerStyle={{ marginTop: 20 }}
-            />
+              {dateFields.map((field) => (
+                <DatePickerInput
+                  key={field.key}
+                  label={field.label}
+                  value={formData[field.key]}
+                  onChange={(date) => updateFormData(field.key, date ? date.toISOString() : '')}
+                  hintText={field?.hintText}
+                />
+              ))}
 
-            <View style={styles.assignedView}>
+              <CustomMultiSelectDropdown
+                data={teamMembers?.map((item) => ({
+                  item: `${item?.firstName} ${item?.lastName}`,
+                  id: item?.userId,
+                }))}
+                labelField="item"
+                valueField="id"
+                value={formData?.assignTeamMembers}
+                onChange={(item) => {
+                  setFormData({
+                    ...formData,
+                    assignTeamMembers: item,
+                  });
+                }}
+                label={TEXTS.license.teamMember}
+                placeholder={TEXTS.license.teamMemberPlaceholder}
+                zIndexPriority={1}
+                hintText="The Assigned Users of the form."
+                containerStyle={{ marginTop: 15 }}
+                // editable={!isNetworkAvailable}
+              />
+            </View>
+            <View style={styles.assignedView} pointerEvents={!isNetworkAvailable ? 'none' : 'auto'}>
               <Checkbox
                 value={formData?.isAllowAssigned}
                 onValueChange={(newValue) => {
@@ -258,9 +269,8 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
             </View>
 
             {isNetworkAvailable && (
-              <View style={[styles.inputContainer, { zIndex: 2 }]}>
+              <View style={[{ zIndex: 2 }]}>
                 <Text style={styles.label}>License Owner</Text>
-
                 <AutocompleteInput
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -318,7 +328,11 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
                 />
               </View>
             )}
-            <PublishButton buttonStyle={{ marginTop: 15 }} onPress={callSaveApi} />
+            <PublishButton
+              buttonStyle={{ marginTop: 19 }}
+              onPress={callSaveApi}
+              disabled={!isNetworkAvailable}
+            />
           </KeyboardAwareScrollView>
         </ScreenWrapper>
       </MenuProvider>
@@ -357,8 +371,7 @@ const styles = StyleSheet.create({
   assignedView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: height(0.02),
-    marginBottom: height(0.02),
+    paddingVertical:15,
   },
   checkBox: { borderRadius: 5 },
   flexStyle: { flexDirection: 'row', alignItems: 'center' },
@@ -397,9 +410,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 6,
     margin: 10,
-  },
-  inputContainer: {
-    marginTop: 15,
   },
   label: {
     color: COLORS.TEXT_COLOR,

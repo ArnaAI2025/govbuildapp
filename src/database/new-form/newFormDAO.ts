@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { getNewUTCDate } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
@@ -55,6 +56,7 @@ export const fetchNewAdvancedFormListFromDB = async (
 
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching AddForm list from DB:', error);
     console.error('Error fetching AddForm list from DB:', error);
     return [];
   }
@@ -66,6 +68,7 @@ export const fetchFormFilterTypes = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.FORM_TYPES_TABLE}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching form types list from DB:', error);
     console.error('Error fetching form types list from DB:', error);
     return [];
   }
@@ -76,6 +79,7 @@ export const fetchFormFilterTags = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.FORM_TAGS_TABLE}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching form tags list from DB:', error);
     console.error('Error fetching form tags list from DB:', error);
     return [];
   }
@@ -102,6 +106,7 @@ export const storeFormFilesUrls = async (data) => {
       1, // assuming isSync is always 1
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing form file URLs:', error);
     console.error('Error storing form file URLs:', error.message);
   }
 };
@@ -128,7 +133,42 @@ export const editFormSubmission = async (submission, id, fileArray) => {
     return true; // Return true when operation is successful
   } catch (err) {
     console.log('err', err);
-    console.log('Error editing form submission:', err);
+    recordCrashlyticsError('Error in editFormSubmission:', err);
+
     return false;
+  }
+};
+
+export const saveOfflineFormCachedData = async (data) => {
+  try {
+    const { content_item_id, form_type, title, path, html_data, form_json, user_id } = data;
+    const db = await getDatabase();
+    const last_updated = new Date().toISOString();
+    await db.runAsync(
+      `INSERT OR REPLACE INTO  ${TABLES.OFFLINE_FORMS_CACHED_DATA} 
+    (content_item_id, form_type, title, path, html_data, form_json, last_updated, synced, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [content_item_id, form_type, title, path, html_data, form_json, last_updated, 0, user_id],
+    );
+    console.log('save Offline Form Cached Data');
+    return true;
+  } catch (err) {
+    console.log('Error saveOfflineFormCachedData:', err);
+    return false;
+  }
+};
+
+export const getOfflineFormCachedData = async (content_item_id) => {
+  try {
+    const db = await getDatabase();
+    const result = await db.getAllAsync(
+      `SELECT * FROM ${TABLES.OFFLINE_FORMS_CACHED_DATA} 
+       WHERE content_item_id = ?`,
+      [content_item_id],
+    );
+    return result?.length ? result[0] : null;
+  } catch (err) {
+    console.log('Error fetching offline form HTML:', err);
+    return null;
   }
 };

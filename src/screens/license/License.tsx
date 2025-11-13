@@ -19,6 +19,7 @@ import { goBack, navigate } from '../../navigation/Index';
 import { useLicenseStore } from '../../store/useLicenseStore';
 import { getNavigationState, getUserRole, saveNavigationState } from '../../session/SessionManager';
 import { normalizeBool } from '../../utils/helper/helpers';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type Props = Record<string, never>;
 const LicenseScreen: FunctionComponent<Props> = () => {
@@ -151,6 +152,7 @@ const LicenseScreen: FunctionComponent<Props> = () => {
           setHasMoreData(false);
         }
       } catch (error) {
+        recordCrashlyticsError('Error loading license --->',error)
         console.error('Error loading license --->', error);
       } finally {
         setLoading(false);
@@ -185,6 +187,7 @@ const LicenseScreen: FunctionComponent<Props> = () => {
         isMyLicenseOnly: value,
         teamMember: value ? { userId: '' } : { userId: getUserRole() },
       });
+      if (value) resetFilters(false);
     },
     [setFilters],
   );

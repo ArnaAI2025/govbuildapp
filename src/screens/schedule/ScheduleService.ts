@@ -5,6 +5,7 @@ import { getBaseUrl } from './../../session/SessionManager';
 import { ScheduleModel } from './../../utils/interfaces/ISubScreens';
 import { COLORS } from '../../theme/colors';
 import { ToastService } from '../../components/common/GlobalSnackbar';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 export const ScheduleService = {
   async fetchSchedules(
     startDate: string,
@@ -26,6 +27,7 @@ export const ScheduleService = {
       return response?.status ? response?.data?.data || [] : [];
     } catch (error) {
       setLoading(false);
+      recordCrashlyticsError('Error fetching schedules', error);
       ToastService.show('Error fetching schedules', COLORS.ERROR);
       console.error('Error in fetchSchedules:', error);
       return [];

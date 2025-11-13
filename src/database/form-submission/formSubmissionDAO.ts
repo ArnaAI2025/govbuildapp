@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -13,6 +14,7 @@ export const fetchSubmissionData = async (statusId: string) => {
 
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error in fetching submission data:', error);
     console.error('Error in fetching submission data:', error);
   }
 };
@@ -22,6 +24,7 @@ export const fetchFormStatusData = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.FORM_SUBMISSION_STATUS_TABLE}`);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error in fetching form status data:', error);
     console.error('Error in fetching form status data:', error);
   }
 };
@@ -49,6 +52,7 @@ export const storeSubmissionData = async (data: any) => {
       data?.StatusId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error in storing submission data:', error);
     console.error('Error in storing submission data:', error);
   }
 };
@@ -75,6 +79,7 @@ export const updateSubmissionListData = async (data: any) => {
       data?.ContentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error in updating submission list data:', error);
     console.error('Error in updating submission list data:', error);
   }
 };
@@ -84,7 +89,9 @@ export const deleteFormListData = async () => {
   try {
     db.runAsync('DELETE FROM ' + TABLES.ADDFORM_TABLE_NAME);
   } catch (error) {
-    console.log('error in deleting form list datat', error);
+    recordCrashlyticsError('error in deleting form list data', error);
+
+    console.log('error in deleting form list data', error);
   }
 };
 
@@ -92,6 +99,8 @@ export const updateFormListIfExist = async (data: any) => {
   try {
     await storeAddFormListData(data);
   } catch (err) {
+    recordCrashlyticsError('Error updating form list:', err);
+
     console.log('Error updating form list:', err);
   }
 };
@@ -130,6 +139,7 @@ const storeAddFormListData = async (data: any) => {
       return null;
     }
   } catch (error) {
+    recordCrashlyticsError('Error storing form data:', error);
     console.error('Error storing form data:', error);
     return null; // Handle error without throwing
   }

@@ -118,7 +118,7 @@ const AddCaseAndLicenseContractor: React.FC<AddContractScreenProps> = ({ navigat
           }
         }
       })
-      .catch((err) => console.error('Error loading licenses:', err));
+      .catch((err) => {console.error('Error loading licenses:', err)} );
   };
 
   const updateContractorDataFromLicense = (license: LicenseForContract) => {

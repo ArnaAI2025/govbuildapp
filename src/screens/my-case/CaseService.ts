@@ -23,6 +23,7 @@ import {
 import { generateUniqueID, getNewUTCDate } from '../../utils/helper/helpers';
 import { getOfflineCaseTypeSettingsById } from '../../database/my-case/myCaseDAO';
 import { fetchAlertAdminNotes } from '../../database/sub-screens/subScreensSync';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 const buildQueryString = (
   filters: DefaultAdvancedFiltersInterface,
@@ -101,6 +102,7 @@ export const fetchCases = async (
         isAllowEditCase: response?.data?.permissions?.isAllowEditCase ?? false,
       };
     } catch (error) {
+      recordCrashlyticsError('Error in fetchCases:', error);
       console.error('Error in fetchCases:', error);
       if (error instanceof Error) {
         throw new Error(`Failed to fetch cases: ${error.message}`);
@@ -206,6 +208,7 @@ export const fetchCaseDataById = async (
         // },
       };
     } catch (error) {
+      recordCrashlyticsError('Error in fetchCases dropdown:', error);
       console.error('Error in fetchCases:', error);
       if (error instanceof Error) {
         throw new Error(`Failed to fetch cases: ${error.message}`);
@@ -293,6 +296,7 @@ export const fetchCaseDropdownData = async (
         },
       };
     } catch (error) {
+      recordCrashlyticsError('Error in fetchCaseDropdownData:', error);
       console.error('Error in fetchCaseDropdownData:', error);
       throw new Error(`Failed to fetch dropdowns: ${error.message}`);
     }
@@ -336,6 +340,7 @@ export const fetchCaseTypeFieldSetting = async (
       const serverData = caseTypeFieldSetting?.data?.data;
       return serverData;
     } catch (error) {
+      recordCrashlyticsError('Error in fetch case type field setting:', error);
       console.error('Error in fetchCases:', error);
       if (error instanceof Error) {
         throw new Error(`Failed to fetch cases: ${error.message}`);
@@ -366,6 +371,7 @@ export const updateCaseDetails = async (
         return response.data;
       }
     } catch (error) {
+      recordCrashlyticsError('Failed to save case:--->', error);
       if (error instanceof Error) {
         throw new Error(`Failed to save case:---> ${error.message}`);
       } else {
@@ -435,6 +441,7 @@ export const getCaseUniqueNumber = async (
         return response?.data ?? [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching case number:', error);
       console.error('Error fetching case number:', error);
     }
   }
@@ -469,6 +476,7 @@ export const updateLocation = async (locationInput: AdressModel) => {
       // ToastService.show(response?.statusText, COLORS.ERROR);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating case location:', error);
     if (error instanceof Error) {
       throw new Error(`Failed to save case:---> ${error.message}`);
     } else {
@@ -501,6 +509,7 @@ export const updateMailingAdress = async (mailingAdressInput: AdressModel) => {
       ToastService.show(response?.statusText, COLORS.ERROR);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating maailing address:', error);
     if (error instanceof Error) {
       throw new Error(`Failed to save case:---> ${error.message}`);
     } else {

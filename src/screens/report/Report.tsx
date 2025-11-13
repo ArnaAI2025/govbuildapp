@@ -8,6 +8,7 @@ import WebView from 'react-native-webview';
 import { getBaseUrl } from '../../session/SessionManager';
 import { URL } from '../../constants/url';
 import useAuthStore from '../../store/useAuthStore';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 type Props = Record<string, never>;
 
@@ -45,6 +46,7 @@ const ReportScreen: FunctionComponent<Props> = () => {
 
       setURL(newURL);
     } catch (error) {
+      recordCrashlyticsError('Error fetching URL:',error)
       console.error('Error fetching URL:', error);
       setLoading(false);
     }

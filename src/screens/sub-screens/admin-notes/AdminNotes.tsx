@@ -38,6 +38,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { height } from '../../../utils/helper/dimensions';
 import { normalizeBool } from '../../../utils/helper/helpers';
 import { useOrientation } from '../../../utils/useOrientation';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type AdminNotesScreenProps = NativeStackScreenProps<RootStackParamList, 'AdminNotes'>;
 
@@ -103,6 +104,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
         setState((prev) => ({ ...prev, comments: [] }));
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching admin comments:',error)
       console.error('Error fetching admin comments:', error);
       setState((prev) => ({ ...prev, comments: [] }));
     } finally {
@@ -154,6 +156,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
         ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
       }
     } catch (error) {
+      recordCrashlyticsError('Error saving comment:',error)
       console.error('Error saving comment:', error);
       ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
     } finally {
@@ -189,6 +192,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
           ToastService.show(TEXTS.subScreens.adminNotes.commentUpdateError, COLORS.ERROR);
         }
       } catch (error) {
+        recordCrashlyticsError('Error setting comment as alert:', error)
         console.error('Error setting comment as alert:', error);
       }
     },
@@ -212,6 +216,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
           ToastService.show(TEXTS.subScreens.adminNotes.commentUpdateError, COLORS.ERROR);
         }
       } catch (error) {
+        recordCrashlyticsError('Error making comment public:',error);
         console.error('Error making comment public:', error);
       }
     },

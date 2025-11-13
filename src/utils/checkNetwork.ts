@@ -2,6 +2,7 @@ import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
 import { useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import useNetworkStore from '../store/networkStore';
+import { recordCrashlyticsError } from '../services/CrashlyticsService';
 
 interface NetworkStore {
   isNetworkAvailable: boolean;
@@ -36,6 +37,7 @@ export const useNetworkStatus = () => {
       const state = await NetInfo.fetch();
       updateNetworkState(state);
     } catch (error) {
+      recordCrashlyticsError('Failed to fetch network status on app resume:', error);
       console.error('Failed to fetch network status on app resume:', error);
       if (isMounted.current) setNetworkAvailable(false);
     }

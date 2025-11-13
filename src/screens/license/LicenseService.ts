@@ -29,6 +29,7 @@ import { TEXTS } from '../../constants/strings';
 import { COLORS } from '../../theme/colors';
 import { fetchAlertAdminNotes } from '../../database/sub-screens/subScreensSync';
 import { SyncModelParam } from '../../utils/params/commonParams';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 const buildQueryString = (
   filters: DefaultAdvancedFiltersInterface,
@@ -98,6 +99,7 @@ export const fetchLicenseService = async (
         selectedTeamMember: licenseData?.selectedTeamMember ?? '',
       };
     } catch (error) {
+      recordCrashlyticsError('fetchLicenseService error:--->', error);
       console.error('fetchLicenseService error:--->', error?.message || error);
       // Return a safe fallback
       return {
@@ -130,6 +132,41 @@ export const fetchLicenseService = async (
     };
   }
 };
+export const fetchLicenseTypeFieldSetting = async (
+  licenseTypeId: string,
+  isNetworkAvailable: boolean
+): Promise<any> => {
+  if (isNetworkAvailable) {
+    const baseUrl = getBaseUrl();
+    const url =  `${baseUrl}${URL.GET_LICENSE_TYPE_FIELDS_SETTING}${licenseTypeId}`
+    
+    try {
+      // For the case type fields
+      const licenseTypeFieldSetting = await GET_DATA({
+        url:url,
+      });
+      
+      if (!licenseTypeFieldSetting?.status) {
+        throw new Error(
+          "Failed to fetch cases type field setting: Invalid response status"
+        );
+      }
+      const serverData = licenseTypeFieldSetting?.data?.data;
+      return serverData;
+    } catch (error) {
+      console.error("Error in fetchCases:", error);
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch cases: ${error.message}`);
+      } else {
+        throw new Error("Failed to fetch cases: An unknown error occurred");
+      }
+    }
+  } else {
+    // const responseCaseData = await getOfflineCaseTypeSettingsById(licenseTypeId);
+    // return responseCaseData ?? {};
+     return {}
+  }
+};
 export const fetchLicenseByID = async (
   contentItemId?: string,
   licenseDataProps?: LicenseData,
@@ -158,6 +195,7 @@ export const fetchLicenseByID = async (
         chevronList: chevronStatusResponse?.data ?? [],
       };
     } catch (error) {
+      recordCrashlyticsError('Error in fetchCases:-->', error);
       console.error('Error in fetchCases:-->', error);
       if (error instanceof Error) {
         throw new Error(`Failed to fetch cases:---> ${error.message}`);
@@ -197,6 +235,7 @@ export const fetchLicenseSubtype = async (isNetworkAvailable?: boolean, licenseT
         return licenseSubType ?? [];
       }
     } catch (error) {
+      recordCrashlyticsError('get sub type data api error--->', error);
       console.log('get sub type data api error--->', error);
     }
   }
@@ -252,6 +291,7 @@ export const fetchLicenseDropdown = async (
         },
       };
     } catch (error) {
+      recordCrashlyticsError('get Dropdown data api error--->', error);
       console.log('get Dropdown data api error--->', error);
     }
   } else {
@@ -289,6 +329,7 @@ export const fetchTeamMember = async (isNetworkAvailable: boolean) => {
       return sortByKey(result || [], 'firstName', 'lastName');
     }
   } catch (error) {
+    recordCrashlyticsError('Error fetching team members:', error);
     console.error('Error fetching team members:', error);
     return [];
   }
@@ -363,6 +404,7 @@ export const postLicenseDetails = async (
       }
     } catch (error) {
       if (error instanceof Error) {
+        recordCrashlyticsError('Failed to fetch license number:--->', error);
         throw new Error(`Failed to fetch license number:---> ${error.message}`);
       } else {
         throw new Error('Failed to fetch license number: An unknown error occurred');
@@ -426,6 +468,7 @@ export const fetchLicenseNumber = async (
         return response?.data ?? [];
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching license number:', error);
       console.error('Error fetching license number:', error);
     }
   }

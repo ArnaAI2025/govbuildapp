@@ -69,7 +69,6 @@ const LoginScreen: React.FC = () => {
     const tenants = await fetchTenantList();
     setItems(tenants);
   };
-
   useFocusEffect(
     useCallback(() => {
       if (isNetworkAvailable === true) {

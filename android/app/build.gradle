@@ -1,6 +1,10 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: 'com.google.gms.google-services' // Firebase services
+apply plugin: 'com.google.firebase.crashlytics' // Crashlytics
 apply plugin: "com.facebook.react"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
@@ -91,8 +95,12 @@ android {
         applicationId "com.appoffline"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 89 //88
-        versionName "1.88" //"1.87"
+        versionCode 313 //92
+        versionName "3.1.3" //"1.91"
+        ndk {
+         abiFilters "arm64-v8a", "x86_64"
+    }
+    ndk.debugSymbolLevel 'FULL'
     }
     signingConfigs {
         release {
@@ -179,4 +187,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 }

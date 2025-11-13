@@ -11,6 +11,7 @@ import SyncItemView from './SyncItemView';
 import Loader from '../../../components/common/Loader';
 import NoData from '../../../components/common/NoData';
 import { fetchAllCasesFromDB } from '../../../database/my-case/myCaseDAO';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type RootStackParamList = {
   // Define your navigation stack here
@@ -73,6 +74,7 @@ const SyncItem: React.FC<SyncItemProps> = ({ navigation }) => {
           more ? [...data, ...(safeResult as SyncItemData[])] : (safeResult as SyncItemData[]),
         );
       } catch (error) {
+        recordCrashlyticsError('Error loading sync items:',error)
         console.error('Error loading sync items:', error);
       } finally {
         setIsLoading(false);

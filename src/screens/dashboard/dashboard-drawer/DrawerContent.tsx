@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Image } from 'react-native';
 import {
   DrawerContentScrollView,
@@ -13,16 +13,14 @@ import { navigate } from '../../../navigation/Index';
 import { TEXTS } from '../../../constants/strings';
 import { useBiometricStore } from '../../../store/biometricStore';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
-import { getIsUpdateLater, getIsVersionUpdateOffline } from '../../../session/SessionManager';
+import { getIsUpdateLater } from '../../../session/SessionManager';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
 import { CustomConfirmationDialog } from '../../../components/dialogs/CustomConfirmationDialog';
 import { SvgImages } from '../../../theme';
 import { iconSize } from '../../../utils/helper/dimensions';
 import {
-  // AppUpdateDialog,
-  checkAppVersion,
-  mandatoryUpdateDialog,
+  appUpdateDialog,
 } from '../../../utils/checkAppVersion';
 import { useFocusEffect } from '@react-navigation/native';
 import useAuthStore from '../../../store/useAuthStore';
@@ -57,33 +55,16 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     onConfirm: () => setDialogConfig((prev) => ({ ...prev, visible: false })),
   };
   const [isCaseAccess, setIsCaseAccess] = useState(false);
-  const [isScheduleAccess, setIsScheduleAccess] = useState(false);
+  const [, setIsScheduleAccess] = useState(false);
   const [isDailyInspectionAccess, setIsDailyInspectionAccess] = useState(false);
   const [isLicenseAccess, setIsLicenseAccess] = useState(false);
   const [isParcleAccess, setIsParcleAccess] = useState(false);
-  const [, setIsUpdateLater] = useState(false);
+  const [isUpdateLater, ] = useState(getIsUpdateLater());
   const [isFormSubmissionAccess, setIsFormSubmissionAccess] = useState(false);
-
-  useEffect(() => {
-    const isUpdate = getIsUpdateLater();
-    if (typeof isUpdate !== 'undefined') {
-      setIsUpdateLater(isUpdate);
-      if (isNetworkAvailable) {
-        checkAppVersion(isUpdate);
-      } else {
-        const isVersion = getIsVersionUpdateOffline();
-        if (isVersion) {
-          mandatoryUpdateDialog();
-        }
-      }
-    }
-  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      // setTimeout(() => {
       getUserAccessPermissions();
-      // }, 3000);
     }, []),
   );
   const Spacer = ({ gap = spacing }: { gap?: number }) => <View style={{ height: gap }} />;
@@ -96,39 +77,6 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     setIsParcleAccess(false);
     setIsFormSubmissionAccess(false);
   };
-  // This below commented code i will remove in future
-  // useEffect(() => {
-  //   const myTabData = async () => {
-  //     if (isNetworkAvailable) {
-  //       try {
-  //         // const client = new GovbuiltClientCaseService({
-  //         //   baseUrl: authData?.value?.uRL?.url,
-  //         //   headers: () => ({
-  //         //     Authorization: authData?.access_token,
-  //         //   }),
-  //         // });
-  //         // const data =await client.getGlobalCaseSetting.get();
-  //         // if (data.ok) {
-  //         //   // global.isShowTaskStatusLogTab = data.data.isShowTaskStatusLogTab;
-  //         // } else {
-  //         //   console.error("Failed to fetch global case settings:", data);
-  //         // }
-  //         const Payload = {
-  //           url: authData?.value?.uRL?.url + URL.GET_GLOBAL_CASE_SETTING,
-  //         };
-  //         const Response = await GET_DATA(Payload);
-  //         if (Response?.status === 200) {
-  //           // const data = Response.data?.data;
-  //         } else {
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching global case settings:", error);
-  //       }
-  //     } else {
-  //     }
-  //   };
-  //   myTabData();
-  // }, [isNetworkAvailable]);
 
   return (
     <View style={styles.drawerContainer}>
@@ -324,7 +272,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
         />
         <Spacer />
 
-        <DrawerItem
+        {/* <DrawerItem
           label={() => (
             <Text
               style={[
@@ -361,7 +309,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             }
           }}
         />
-        <Spacer />
+        <Spacer /> */}
 
         <DrawerItem
           label={() => (
@@ -400,10 +348,11 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             if (isParcleAccess) {
               setDialogConfig(permissionRequiredPayload);
             } else {
-              ToastService.show(
-                'This feature is currently under development and will be available soon.',
-                COLORS.STANDARAD_ORANGE,
-              );
+            if (isNetworkAvailable) {
+              navigate('ParcelScreen');
+            } else {
+              ToastService.show("You're offline. Reports feature may not work.", COLORS.ERROR);
+            }
             }
           }}
         />
@@ -493,7 +442,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
        <Spacer />
       */}
 
-        {/* {isUpdateLater && (
+        {isUpdateLater && (
           <DrawerItem
             label={() => (
               <Text style={[styles.drawerTextStyle, { color: COLORS.BLACK }]}>
@@ -509,10 +458,10 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             )}
             onPress={() => {
               navigation.toggleDrawer();
-              AppUpdateDialog(2);
+              appUpdateDialog(2);
             }}
           />
-        )} */}
+        )}
 
         <DrawerItem
           label={() => (

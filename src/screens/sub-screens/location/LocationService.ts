@@ -10,6 +10,7 @@ import {
 import { URL } from '../../../constants/url';
 import { AdressModel } from '../../../utils/interfaces/ISubScreens';
 import { fetchLocationData } from '../../../database/sub-screens/subScreenDAO';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const LocationService = {
   async fetchLocations(
@@ -36,8 +37,10 @@ export const LocationService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in fetchLocations:', error);
         console.error('Error in fetchLocations:', error.message);
       } else {
+        recordCrashlyticsError('Error in fetchLocations:', error);
         console.error('Error in fetchLocations:', error);
       }
       return [];
@@ -67,8 +70,10 @@ export const LocationService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in deleteLocation:', error);
         console.error('Error in deleteLocation:', error.message);
       } else {
+        recordCrashlyticsError('Error in deleteLocation:', error);
         console.error('Error in deleteLocation:', error);
       }
       return false;
@@ -131,8 +136,10 @@ export const LocationService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in saveOrUpdateLocation:', error);
         console.error('Error in saveOrUpdateLocation:', error.message);
       } else {
+        recordCrashlyticsError('Error in saveOrUpdateLocation:', error);
         console.error('Error in saveOrUpdateLocation:', error);
       }
       return false;

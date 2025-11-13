@@ -3,6 +3,7 @@ import { TABLES } from '../DatabaseConstants';
 import { addCaseLicenseData } from '../my-case/myCaseDAO';
 import { SyncModel } from '../../utils/interfaces/ISubScreens';
 import { getNewUTCDate } from '../../utils/helper/helpers';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 class SyncError extends Error {
   constructor(message: string) {
@@ -39,6 +40,7 @@ export const syncAdminNotesWithDatabase = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError(`Error syncing admin notes for ID ${id}:`, error);
     throw new SyncError(
       `Error syncing admin notes for ID ${id}: ${
         error instanceof Error ? error.message : String(error)
@@ -56,6 +58,7 @@ export const fetchCaseSettingsDataFromDB = async (caseId: string) => {
     );
     return rows.length > 0 ? rows[0] : null;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchCaseSettingsDataFromDB :', error);
     console.log('Error fetching case data from DB fetchCaseSettingsDataFromDB :', error);
   }
 };
@@ -87,6 +90,7 @@ export const syncCaseSettingsWithDatabase = async (
       }
     }
   } catch (error) {
+    recordCrashlyticsError(`Error syncing admin notes for ID ${id}: `, error);
     throw new SyncError(
       `Error syncing admin notes for ID ${id}: ${
         error instanceof Error ? error.message : String(error)
@@ -120,6 +124,7 @@ export const storeSettings = async (data: any, isCase: boolean, id: string) => {
       data?.caseOwner ?? null,
     );
   } catch (error) {
+    recordCrashlyticsError(`Error storing settings data:`, error);
     console.error(
       `Error storing settings data:`,
       error instanceof Error ? error.message : String(error),
@@ -148,6 +153,7 @@ export const updateServerSettings = async (data: any) => {
       ],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating server settings data:`, error);
     console.error(
       `Error updating server settings data:`,
       error instanceof Error ? error.message : String(error),
@@ -193,6 +199,7 @@ export const updateSettings = async (
     );
     console.log('updateset', updateaSet);
   } catch (error) {
+    recordCrashlyticsError(`Error updating settings data:`, error);
     console.error(
       `Error updating settings data:`,
       error instanceof Error ? error.message : String(error),
@@ -280,6 +287,8 @@ export const storeAdminNote = async (
       data?.commentSubmissionPart?.FileName ?? '',
     ]);
   } catch (error) {
+    recordCrashlyticsError(`Error inserting admin note:`, error);
+
     throw new DatabaseError(
       `Error inserting admin note: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -318,6 +327,8 @@ export const updateAdminNote = async (data: AdminNote): Promise<void> => {
       ],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating admin note:`, error);
+
     throw new DatabaseError(
       `Error updating admin note: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -378,6 +389,8 @@ export const updateAdminNoteComment = async (
       [1, data?.caseAndLicenseId],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating admin note comment:`, error);
+
     throw new DatabaseError(
       `Error updating admin note comment: ${
         error instanceof Error ? error.message : String(error)
@@ -421,6 +434,8 @@ export const updateAdminNoteAlert = async (data: AdminNote, isCase: boolean): Pr
     console.log('Updated Note:', updatedNote);
   } catch (error) {
     await db.execAsync(`ROLLBACK;`);
+    recordCrashlyticsError(`Error updating admin note alert: `, error);
+
     throw new DatabaseError(
       `Error updating admin note alert: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -449,10 +464,10 @@ export const updateAdminNotePublic = async (data: AdminNote, isCase: boolean): P
       [1, data.caseAndLicenseId],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating admin note alert: `, error);
+
     throw new DatabaseError(
-      `Error updating admin note public status: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      `Error updating admin note alert:  ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 };
@@ -471,6 +486,8 @@ export const updateAdminNoteMakeAsPublic = async (
       [isPublic ? 1 : 0, contentItemId],
     );
   } catch (error) {
+    recordCrashlyticsError(`Error updating admin note public status:`, error);
+
     throw new DatabaseError(
       `Error updating admin note public status: ${
         error instanceof Error ? error.message : String(error)
@@ -523,6 +540,7 @@ export const storeAdminNotesWithDocsOffline = async (
       ]);
     }
   } catch (error) {
+    recordCrashlyticsError('Error storing admin notes offline:', error);
     console.error('Error storing admin notes offline:', error.message);
   }
 };
@@ -579,6 +597,10 @@ export const updateAdminNotesWithDocs = async (
       await addCaseLicenseData(caseData, isCase);
     }
   } catch (error) {
+    recordCrashlyticsError(
+      `Error updating admin notes with attachment for contentItemId ${data.contentItemId}:`,
+      error,
+    );
     console.error(
       `Error updating admin notes with attachment for contentItemId ${data.contentItemId}:`,
       error.message,
@@ -614,6 +636,8 @@ export const storeAttachedItems = async (data: any, isCase: boolean, id: string)
       data.submission,
     );
   } catch (error) {
+    recordCrashlyticsError(`Error fetching case data from DB storeAttachedItemsData:`, error);
+
     throw new DatabaseError(
       `Error fetching case data from DB storeAttachedItemsData: ${
         error instanceof Error ? error.message : String(error)
@@ -644,6 +668,8 @@ export const updateAttachedItems = async (data: any) => {
       data.contentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError(`Error fetching case data from DB updateAttachedItemsData: `, error);
+
     throw new DatabaseError(
       `Error fetching case data from DB updateAttachedItemsData: ${
         error instanceof Error ? error.message : String(error)
@@ -668,6 +694,7 @@ export const storeSubmissionToAttachTable = async (data: any) => {
       data.submissionId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating submission to attach table:', error);
     console.error('Error updating submission to attach table:', error);
   }
 };
@@ -729,6 +756,7 @@ export const syncContactItemWithDatabase = async (
 
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating contact: ----->>>>', error);
     console.error('Error updating contact: ----->>>>', error);
     return false;
   }
@@ -788,6 +816,7 @@ export const storeContactData = async (
       addCaseLicenseData(caseData, isCase);
     }
   } catch (error: any) {
+    recordCrashlyticsError('Error storing contact data:', error);
     console.error('Error storing contact data:', error.message);
   }
 };
@@ -842,6 +871,7 @@ export const updateContactData = async (
       caseId,
     ]);
   } catch (error: any) {
+    recordCrashlyticsError('Error updating contact data:', error);
     console.error('Error updating contact data:', error.message);
   }
 };
@@ -897,6 +927,7 @@ export const updateContactDataSync = async (
       console.warn('No contact data updated.');
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating contact data sync:', error);
     console.error('Error updating contact data sync:', error);
   }
 };
@@ -931,6 +962,7 @@ export const deleteNotInOfflineContact = async (contentItemId) => {
     // );  //this is old code but not sure notInOffline why we used , if any resion please add this also
     console.log(`Contact with contentItemId ${contentItemId} deleted successfully.`);
   } catch (error) {
+    recordCrashlyticsError(`Error deleting contact with contentItemId ${contentItemId}:`, error);
     console.error(`Error deleting contact with contentItemId ${contentItemId}:`, error);
   }
 };
@@ -946,6 +978,7 @@ export const updateContactDataForceSync = async (id) => {
       [1, id], // Set isForceSync to 1
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating contact force sync:', error);
     console.error('Error updating contact force sync:', error);
   }
 };
@@ -960,6 +993,8 @@ export const fetchInspectionData = async (contentItemId: string, type: string) =
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching inspection data:', error);
+
     console.error('Error fetching inspection data:', error);
   }
 };
@@ -969,7 +1004,7 @@ export const insertInspectionRecord = async (data: any) => {
     const statement = await db.prepareAsync(
       'INSERT INTO ' +
         TABLES.INSPECTION_TABLE +
-        ' (appointmentDate , contentItemId , caseContentItemId  , caseNumber , endTime , licenseContentItemId ,  licenseNumber , location , preferredTime ,  scheduleWithName , startTime , status , statusLabel , subject ,type , appointmentStatus ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        ' (appointmentDate , contentItemId , caseContentItemId  , caseNumber , endTime , licenseContentItemId ,  licenseNumber , location , preferredTime ,  scheduleWithName , startTime , status , statusLabel , subject ,type , appointmentStatus, body ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
     );
 
     await statement.executeAsync(
@@ -989,8 +1024,10 @@ export const insertInspectionRecord = async (data: any) => {
       data?.subject,
       data?.type,
       data?.appointmentStatus,
+      data?.body,
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing inspection data:', error);
     console.error('Error storing inspection data:', error);
   }
 };
@@ -1000,7 +1037,7 @@ export const updateInspectionRecord = async (data: any) => {
     await db.runAsync(
       'Update ' +
         TABLES.INSPECTION_TABLE +
-        ' SET appointmentDate =?,  caseContentItemId =? , caseNumber=? , endTime=? , licenseContentItemId =?,  licenseNumber =?, location =?, preferredTime =?,  scheduleWithName =?, startTime=? , status=?, statusLabel=? , subject =?,type =?, appointmentStatus=? WHERE contentItemId=?',
+        ' SET appointmentDate =?,  caseContentItemId =? , caseNumber=? , endTime=? , licenseContentItemId =?,  licenseNumber =?, location =?, preferredTime =?,  scheduleWithName =?, startTime=? , status=?, statusLabel=? , subject =?,type =?, appointmentStatus=?, body=? WHERE contentItemId=?',
       data?.appointmentDate,
       data?.caseContentItemId,
       data?.caseNumber,
@@ -1016,10 +1053,11 @@ export const updateInspectionRecord = async (data: any) => {
       data?.subject,
       data?.type,
       data?.appointmentStatus,
-
+      data?.body,
       data?.contentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating inspection data:', error);
     console.error('Error updating inspection data:', error);
   }
 };
@@ -1033,6 +1071,8 @@ export const fetchContactsDataByIdFromDB = async (id) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchContactsDataByIdFromDB :', error);
+
     console.log('Error fetching case data from DB fetchContactsDataByIdFromDB :', error);
   }
 };
@@ -1046,6 +1086,8 @@ export const fetchContactsFromDB = async (caseLicenseId: string) => {
     );
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching constact data from DB fetchContactsFromDB :', error);
+
     console.log('Error fetching constact data from DB fetchContactsFromDB :', error);
   }
 };
@@ -1060,6 +1102,7 @@ export const fetchContractorFromDb = async (caseLicenseId: string) => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching contractor data:----->', error);
     console.error('Error fetching contractor data:----->', error);
   }
 };
@@ -1074,7 +1117,236 @@ export const fetchContractorToSync = async () => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching contractors to sync:---->', error);
     console.error('Error fetching contractors to sync:---->', error);
+  }
+};
+
+export const getLicenseDetailsDataById = async (contentItemId) => {
+  try {
+    const db = await getDatabase();
+    const result = await db.getAllAsync(
+      `SELECT * FROM ${TABLES.LICENSE_DETAILS_TABLE_NAME} WHERE contentItemId = ?`,
+      contentItemId,
+    );
+    return result.length > 0 ? result[0] : null; // return first match or null
+  } catch (error) {
+    console.error('Error fetching license details by ID:', error);
+    return null;
+  }
+};
+
+export const getOwnerDetailsDataById = async (contentItemId) => {
+  try {
+    const db = await getDatabase();
+    const result = await db.getAllAsync(
+      `SELECT * FROM ${TABLES.LICENSE_OWNER_TABLE_NAME} WHERE contentItemId = ?`,
+      contentItemId,
+    );
+    return result.length > 0 ? result[0] : null; // return first match or null
+  } catch (error) {
+    console.error('Error fetching owner details by ID:', error);
+    return null;
+  }
+};
+
+export const updateLicenseOwnerIfExist = async (data, isCase, caseLicenseId) => {
+  try {
+    const db = await getDatabase();
+    const result = await db.getAllAsync(
+      `SELECT * FROM ${TABLES.LICENSE_OWNER_TABLE_NAME} WHERE contentItemId = ?`,
+      data?.contentItemId,
+    );
+
+    if (result?.length === 0) {
+      await storeOwnerDetailsData(data, isCase, caseLicenseId, 0, 0, false);
+    } else {
+      await updateOwnerDetailsData(data, isCase, caseLicenseId, 1, 0);
+    }
+  } catch (error) {
+    console.error('Error updating LicenseDetails list:', error);
+  }
+};
+
+export const storeOwnerDetailsData = async (data, isCase, caseLicenseId, isNew, isEdited = 0) => {
+  try {
+    const db = await getDatabase();
+    const statement = await db.prepareAsync(`
+      INSERT INTO ${TABLES.LICENSE_OWNER_TABLE_NAME} 
+      (contentItemId, contactEmail, contactFirstName, contactLastName, contactMailingAddress, 
+       contactPhoneNumber, licenseOwner, ownerAddress, ownerCellPhone, ownerEmail, 
+       ownerMailingAddress, ownerName, ownerPhoneNumber, isEdited, isSync, isForceSync)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    `);
+
+    await statement.executeAsync(
+      data.contentItemId,
+      data.contactEmail,
+      data.contactFirstName,
+      data.contactLastName,
+      data.contactMailingAddress,
+      data.contactPhoneNumber,
+      data.licenseOwner,
+      data.ownerAddress,
+      data.ownerCellPhone,
+      data.ownerEmail,
+      data.ownerMailingAddress,
+      data.ownerName,
+      data.ownerPhoneNumber,
+      isEdited,
+      0, // isSync default 0
+      0, // isForceSync default 0
+    );
+  } catch (error) {
+    console.error('Error storing owner details data:', error);
+    throw error;
+  }
+};
+
+export const updateOwnerDetailsData = async (
+  data,
+  isCase,
+  caseLicenseId,
+  isSync = 0,
+  isEdited = 0,
+) => {
+  try {
+    const db = await getDatabase();
+    await db.runAsync(
+      `UPDATE ${TABLES.LICENSE_OWNER_TABLE_NAME}
+       SET contactEmail = ?, 
+           contactFirstName = ?, 
+           contactLastName = ?, 
+           contactMailingAddress = ?, 
+           contactPhoneNumber = ?, 
+           licenseOwner = ?, 
+           ownerAddress = ?, 
+           ownerCellPhone = ?, 
+           ownerEmail = ?, 
+           ownerMailingAddress = ?, 
+           ownerName = ?, 
+           ownerPhoneNumber = ?, 
+           isEdited = ?, 
+           isSync = ?
+       WHERE contentItemId = ?`,
+      [
+        data.contactEmail,
+        data.contactFirstName,
+        data.contactLastName,
+        data.contactMailingAddress,
+        data.contactPhoneNumber,
+        data.licenseOwner,
+        data.ownerAddress,
+        data.ownerCellPhone,
+        data.ownerEmail,
+        data.ownerMailingAddress,
+        data.ownerName,
+        data.ownerPhoneNumber,
+        isEdited,
+        isSync,
+        data.contentItemId,
+      ],
+    );
+  } catch (error) {
+    console.error('Error updating owner details data:', error);
+  }
+};
+
+export const updateLicenseDetailsIfExist = async (data, isCase, caseLicenseId) => {
+  try {
+    const db = await getDatabase();
+    const result = await db.getAllAsync(
+      `SELECT * FROM ${TABLES.LICENSE_DETAILS_TABLE_NAME} WHERE contentItemId = ?`,
+      data?.contentItemId,
+    );
+    if (result?.length === 0) {
+      await storeLicenseDetailsData(data, isCase, caseLicenseId, 0, 0, false);
+    } else {
+      await updateLicenseDetailsData(data, isCase, caseLicenseId, 1, 0);
+    }
+  } catch (error) {
+    console.error('Error updating LicenseDetails list:', error);
+  }
+};
+
+export const storeLicenseDetailsData = async (data, isCase, caseLicenseId, isNew, isEdited = 0) => {
+  try {
+    const db = await getDatabase();
+    const statement = await db.prepareAsync(`
+      INSERT INTO ${TABLES.LICENSE_DETAILS_TABLE_NAME} 
+      (contentItemId, assignedUsers, licenseOwner, effectiveDate, issueDate, 
+       liabilityInsuranceExpDate, workersCompExpDate, licenseFee, testScore, 
+       isNewMobileAppApi, viewOnlyAssignUsers, syncModel, isEdited, isSync, isForceSync)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    `);
+
+    await statement.executeAsync(
+      data.contentItemId,
+      data.assignedUsers,
+      data.licenseOwner,
+      data.effectiveDate,
+      data.issueDate,
+      data.liabilityInsuranceExpDate,
+      data.workersCompExpDate,
+      data.licenseFee,
+      data.testScore,
+      data.isNewMobileAppApi ? 1 : 0,
+      data.viewOnlyAssignUsers ? 1 : 0,
+      data.syncModel || null,
+      isEdited,
+      0, // isSync default 0
+      0, // isForceSync default 0
+    );
+  } catch (error) {
+    console.error('Error storing license details data:', error);
+    throw error;
+  }
+};
+
+export const updateLicenseDetailsData = async (
+  data,
+  isCase,
+  caseLicenseId,
+  isSync = 0,
+  isEdited = 0,
+) => {
+  try {
+    const db = await getDatabase();
+    await db.runAsync(
+      `UPDATE ${TABLES.LICENSE_DETAILS_TABLE_NAME} 
+       SET assignedUsers = ?, 
+           licenseOwner = ?, 
+           effectiveDate = ?, 
+           issueDate = ?, 
+           liabilityInsuranceExpDate = ?, 
+           workersCompExpDate = ?, 
+           licenseFee = ?, 
+           testScore = ?, 
+           isNewMobileAppApi = ?, 
+           viewOnlyAssignUsers = ?, 
+           syncModel = ?, 
+           isEdited = ?, 
+           isSync = ? 
+       WHERE contentItemId = ?`,
+      [
+        data.assignedUsers,
+        data.licenseOwner,
+        data.effectiveDate,
+        data.issueDate,
+        data.liabilityInsuranceExpDate,
+        data.workersCompExpDate,
+        data.licenseFee,
+        data.testScore,
+        data.isNewMobileAppApi ? 1 : 0,
+        data.viewOnlyAssignUsers ? 1 : 0,
+        data.syncModel || null,
+        isEdited,
+        isSync,
+        data.contentItemId,
+      ],
+    );
+  } catch (error) {
+    console.error('Error updating license details data:', error);
   }
 };
 
@@ -1092,6 +1364,7 @@ export const updateContractorListIfExist = async (data, isCase, caseLicenseId) =
       await updateContractorData(data, isCase, caseLicenseId, 1, 0);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating contractor list:', error);
     console.error('Error updating contractor list:', error);
   }
 };
@@ -1149,6 +1422,7 @@ const storeContractorData = async (
       await addCaseLicenseData(caseData, isCase);
     }
   } catch (error) {
+    recordCrashlyticsError('Error storing contractor data:', error);
     console.error('Error storing contractor data:', error);
     throw error;
   }
@@ -1210,6 +1484,7 @@ const updateContractorData = async (
       [isSync === 0 ? 1 : 0, caseLicenseId],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating contractor data:', error);
     console.error('Error updating contractor data:', error);
   }
 };
@@ -1287,6 +1562,7 @@ export const AddNewContactInDb = async (
 
     return true;
   } catch (error: any) {
+    recordCrashlyticsError('Error storing contacts data offline:------>', error);
     console.error('Error storing contacts data offline:------>', error?.message);
     return false;
   }
@@ -1352,6 +1628,7 @@ export const UpdateContactInDb = async (
 
     return true;
   } catch (error) {
+    recordCrashlyticsError('Error updating contact in DB:', error);
     console.error('Error updating contact in DB:', error?.message);
     return false;
   }
@@ -1366,6 +1643,7 @@ export const UpdateContactIdAfterSync = async (oldId: string, newId: string) => 
       oldId,
     ]);
   } catch (error) {
+    recordCrashlyticsError('Error updating contact ID after sync:', error);
     console.error('Error updating contact ID after sync:', error?.message);
   }
 };
@@ -1385,6 +1663,7 @@ export const updatePaymentsIfIDExist = async (data: any, isCase: boolean, id: st
       await updatePaymentData(data, id);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating payments:----->', error);
     console.error('Error updating payments:----->', error);
   }
 };
@@ -1399,6 +1678,8 @@ export const fetchPaymentsFromDb = async (caseId: string) => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchPaymentsFromDB :---->', error);
+
     console.log('Error fetching case data from DB fetchPaymentsFromDB :---->', error);
   }
 };
@@ -1431,6 +1712,7 @@ const storePaymentData = async (data: any, isCase: boolean, id: string) => {
     );
     console.log('Payment received successfully.');
   } catch (error) {
+    recordCrashlyticsError('Error storing payment data:', error);
     console.error('Error storing payment data:', error?.message);
   }
 };
@@ -1471,6 +1753,7 @@ const updatePaymentData = async (data: any, id: string) => {
     );
     console.log('Payment data successfully updated.');
   } catch (error) {
+    recordCrashlyticsError('Error updating payment data:', error);
     console.error('Error updating payment data:', error);
   }
 };
@@ -1487,6 +1770,7 @@ export const fetchLocationData = async (caseId) => {
 
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching location data:', error);
     console.error('Error fetching location data:', error);
   }
 };
@@ -1505,6 +1789,7 @@ export const updateLocationListIfExist = async (data) => {
       await updateLocationData(data);
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating or storing location data:', error);
     console.error('Error updating or storing location data:', error);
   }
 };
@@ -1527,6 +1812,7 @@ export const storeLocationData = async (data) => {
       data.longitude,
     );
   } catch (error) {
+    recordCrashlyticsError('Error storing location data:', error);
     console.error('Error storing location data:', error);
   }
 };
@@ -1546,6 +1832,7 @@ export const updateLocationData = async (data) => {
       data.contentItemId,
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating location data:', error);
     console.error('Error updating location data:', error);
   }
 };

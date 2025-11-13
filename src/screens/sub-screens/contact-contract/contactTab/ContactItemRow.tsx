@@ -73,13 +73,15 @@ export const ContactItemRow: React.FC<ContactItemRowProps> = ({
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>
+             <View style={{ flex: 1, flexDirection: 'row'}}>
           <Image
             tintColor={COLORS.APP_COLOR}
             style={styles.icon}
             source={IMAGES.LOCATION_ICON}
             resizeMode="contain"
           />
-          <Text style={styles.infoText}>{rowData.mailingAddress || 'N/A'}</Text>
+            <Text style={styles.infoText}>{rowData.mailingAddress || 'N/A'}</Text>
+            </View>
           <TouchableOpacity
             style={styles.editIcon}
             onPress={() => {
@@ -159,6 +161,6 @@ const styles = StyleSheet.create({
     marginRight: width(0.02),
   },
   editIcon: {
-    marginLeft: 'auto',
+    marginLeft: '10%',
   },
 });

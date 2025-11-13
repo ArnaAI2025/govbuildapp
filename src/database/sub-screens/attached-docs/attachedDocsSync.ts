@@ -1,5 +1,6 @@
 import { URL } from '../../../constants/url';
 import { GET_DATA, POST_DATA_WITH_TOKEN, UPLOAD_API } from '../../../services/ApiClient';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { saveUpdateAttachedDocsFormData } from '../../../utils/params/commonParams';
 import { updateSyncTaskStatus } from '../../../utils/syncUtils';
@@ -40,6 +41,7 @@ export const syncAllCaseFoldersFilesAPI = async (
       await upsertAttachedDocsByCaseIdExist(responseData, isCase, contentItemId);
     }
   } catch (error) {
+    recordCrashlyticsError('Error in LocationDataAPI:---->>>', error);
     console.error('Error in LocationDataAPI:---->>>', error);
   }
 };
@@ -61,6 +63,7 @@ export const upsertAttachedDocsByCaseIdExist = async (data: any, isCase: boolean
       }
     }
   } catch (error) {
+    recordCrashlyticsError('Error updating attached docs by Case ID:', error);
     console.error('Error updating attached docs by Case ID:', error);
   }
 };
@@ -82,6 +85,7 @@ export const syncFileExtensionData = async () => {
       await updateFileExtensionIfIDExist(JSON.stringify(response?.data?.data));
     }
   } catch (error) {
+    recordCrashlyticsError('Error in FileExtensionDataAPI:', error);
     console.error('Error in FileExtensionDataAPI:', error);
   }
 };
@@ -110,6 +114,7 @@ export const processAttachmentTask = async (task: SyncQueueTask, offlineItemsCou
         await updateSyncDocURL(response.url, record.id);
         await updateSyncDocURLReady(true, record.id);
       } else {
+        recordCrashlyticsError(`File upload failed for record ${record.id}`, response);
         console.error(`File upload failed for record ${record.id}`);
       }
     }

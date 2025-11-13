@@ -179,6 +179,8 @@ export const LICENSE_OFFLINE_TITLES = new Set([
   'Attached Docs',
   'Contacts',
   'Inspections',
+  'License Details',
+  // "Owner",
   'Payments',
   'Public Comments',
 ]);
@@ -252,6 +254,7 @@ export const radioButtons = [
     value: 'Custom',
     borderColor: COLORS.APP_COLOR,
     color: COLORS.APP_COLOR,
+    containerStyle: { flex: 1, justifyContent: 'center' },
   },
   {
     id: '2',
@@ -259,7 +262,7 @@ export const radioButtons = [
     value: 'am',
     borderColor: COLORS.APP_COLOR,
     color: COLORS.APP_COLOR,
-    containerStyle: { flex: 1 },
+    containerStyle: { flex: 1, justifyContent: 'center' },
   },
   {
     id: '3',
@@ -267,7 +270,7 @@ export const radioButtons = [
     value: 'pm',
     borderColor: COLORS.APP_COLOR,
     color: COLORS.APP_COLOR,
-    containerStyle: { flex: 1 },
+    containerStyle: { flex: 1, justifyContent: 'center' },
   },
   {
     id: '4',
@@ -275,7 +278,7 @@ export const radioButtons = [
     value: 'day',
     borderColor: COLORS.APP_COLOR,
     color: COLORS.APP_COLOR,
-    containerStyle: { flex: 1 },
+    containerStyle: { flex: 1, justifyContent: 'center' },
   },
 ];
 export const DEFAULT_DATA = {

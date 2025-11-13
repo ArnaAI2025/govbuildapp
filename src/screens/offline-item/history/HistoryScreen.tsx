@@ -5,6 +5,7 @@ import NoData from '../../../components/common/NoData';
 import { getSyncHistory } from '../../../database/sync-history/syncHistoryDAO';
 import Loader from '../../../components/common/Loader';
 import { useIsFocused } from '@react-navigation/native';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface SyncHistoryRecord {
   type: string;
@@ -85,6 +86,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ isActive }) => {
 
       setData(sortedHistory);
     } catch (error) {
+      recordCrashlyticsError('Error loading sync history:',error)
       console.error('Error loading sync history:', error);
       setData([]);
     } finally {

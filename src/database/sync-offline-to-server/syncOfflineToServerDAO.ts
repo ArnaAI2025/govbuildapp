@@ -2,6 +2,7 @@ import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 import { logDbError, SyncError } from '../../utils/syncUtils';
 import { AdminNoteSyncData, SettingsSyncData } from '../types/commonSyncModels';
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 // Fetch cash count
 // 1. Fetch Edited Cases Count
 export const fetchCaseDataCount = async () => {
@@ -10,6 +11,8 @@ export const fetchCaseDataCount = async () => {
     const rows = await db.getAllAsync(`SELECT * FROM ${TABLES.CASES} WHERE isEdited = ?`, [1]);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetchCaseDataCount:', error);
+
     logDbError('fetchCaseDataCount', error);
     return [];
   }
@@ -22,6 +25,8 @@ export const fetchCaseToForceSync = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.CASES} WHERE isForceSync = ?`, [1]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error etching case data from DB fetchCaseToForceSync :------>:', error);
+
     console.log('Error fetching case data from DB fetchCaseToForceSync :------>', error);
     return [];
   }
@@ -36,6 +41,8 @@ export const fetchSettingToForceSync = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchSettingToForceSync:', error);
+
     logDbError('fetchSettingToForceSync', error);
     return 0;
   }
@@ -50,6 +57,8 @@ export const fetchPermissionSyncFailCase = async () => {
     );
     return row.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchPermissionSyncFailCase :', error);
+
     console.log('Error fetching case data from DB fetchPermissionSyncFailCase :', error);
   }
 };
@@ -63,6 +72,11 @@ export const fetchPermissionSyncFailLicense = async () => {
     );
     return row.length;
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB fetchPermissionSyncFailLicense :',
+      error,
+    );
+
     console.log('Error fetching case data from DB fetchPermissionSyncFailLicense :', error);
   }
 };
@@ -76,6 +90,11 @@ export const fetchPermissionSyncFailSetting = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB fetchPermissionSyncFailSetting',
+      error,
+    );
+
     console.log('Error fetching case data from DB fetchPermissionSyncFailSetting :', error);
   }
 };
@@ -91,6 +110,8 @@ export const fetchCaseSync = async () => {
     console.log('Cases to sync:---->', rows);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetchCaseSync:', error);
+
     logDbError('fetchCaseSync', error);
     return [];
   }
@@ -106,6 +127,8 @@ export const fetchCaseForSyncScreenCount = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchCaseForSyncScreenCount:', error);
+
     logDbError('fetchCaseForSyncScreenCount', error);
     return 0;
   }
@@ -121,6 +144,8 @@ export const fetchSettingSyncCount = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchSettingSyncCount:', error);
+
     logDbError('fetchSettingSyncCount', error);
     return 0;
   }
@@ -136,6 +161,7 @@ export const fetchAllCommentToSync = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchAllCommentToSync:', error);
     logDbError('fetchAllCommentToSync', error);
     return 0;
   }
@@ -151,6 +177,7 @@ export const fetchEditAttachSyncCount = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchEditAttachSyncCount', error);
     logDbError('fetchEditAttachSyncCount', error);
     return 0;
   }
@@ -166,6 +193,7 @@ export const fetchAllContactToSync = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetchAllContactToSync', error);
     logDbError('fetchAllContactToSync', error);
     return 0;
   }
@@ -183,6 +211,7 @@ export const fetchContactsToSync = async () => {
 
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetchContactsToSync:', error);
     logDbError('fetchContactsToSync', error);
     return [];
   }
@@ -211,6 +240,7 @@ export const fetchAllDocCountToSync = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.CASE_DOCS_TO_SYNC_TABLE_NAME}`);
     return row.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetching all doc count to sync:', error);
     console.error('Error fetching all doc count to sync:', error);
     return 0;
   }
@@ -245,6 +275,7 @@ export const fetchAttachmentDataForSync = async () => {
     console.log('Grouped attachments to sync:', tasks);
     return tasks;
   } catch (error) {
+    recordCrashlyticsError('Error fetchAttachmentDataForSync', error);
     logDbError('fetchAttachmentDataForSync', error);
     return [];
   }
@@ -259,6 +290,7 @@ export const fetchFormForSyncScreen = async () => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchFormForSyncScreen :', error);
     console.log('Error fetching case data from DB fetchFormForSyncScreen :', error);
   }
 };
@@ -272,6 +304,7 @@ export const fetchFormForSyncScreenCount = async () => {
     );
     return rows.length;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchFormForSyncScreenCount :', error);
     console.log('Error fetching case data from DB fetchFormForSyncScreenCount :', error);
   }
 };
@@ -287,7 +320,8 @@ export const fetchSettingsToSync = async (): Promise<SettingsSyncData[]> => {
     console.log('Settings to sync:', rows);
     return rows as SettingsSyncData[];
   } catch (error) {
-    console.error('Error fetching settings to sync:', error);
+    recordCrashlyticsError('Error fetching settings: ', error);
+    console.error('Error fetching settings: ', error);
     throw new SyncError(
       `Error fetching settings: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -303,6 +337,7 @@ export const fetchCaseAdminNotesToSync = async () => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Admin notes to sync error::', error);
     console.log('Admin notes to sync error:', error);
   }
 };
@@ -369,7 +404,8 @@ export const fetchAdminNotesToSync = async (): Promise<AdminNoteSyncData[]> => {
     console.log('Admin notes to sync:---->', notes);
     return notes;
   } catch (error) {
-    console.error('Error fetching admin notes to sync:', error);
+    recordCrashlyticsError('Error fetching admin notes: ', error);
+    console.error('Error fetching admin notes: ', error);
     throw new SyncError(
       `Error fetching admin notes: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -386,6 +422,7 @@ export const fetchSetAlertCommentToSync = async (): Promise<any> => {
     console.log('Alert comments to sync:', JSON.stringify(rows, null, 2));
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching case data from DB fetchSetAlertCommentToSync :', error);
     console.log('Error fetching case data from DB fetchSetAlertCommentToSync :', error);
     return undefined;
   }
@@ -401,7 +438,8 @@ export const checkIfAlreadySynced = async (commentId: string): Promise<any> => {
     console.log('Comment already Synced:', rows);
     return rows;
   } catch (error) {
-    console.error('Error fetching admin notes to sync:', error);
+    recordCrashlyticsError('Error fetching admin notes: ', error);
+    console.error('Error fetching admin notes: ', error);
     throw new SyncError(
       `Error fetching admin notes: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -431,6 +469,7 @@ export const updateSettingsSyncStatus = async (
       [isEdited ? 1 : 0, contentItemId],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating settings status: ', error);
     throw new SyncError(
       `Error updating settings status: ${error instanceof Error ? error.message : String(error)}`,
     );
@@ -462,6 +501,7 @@ export const updateAdminNotesSyncStatus = async (
     );
     console.log(`Admin note sync status updated for id: ${offlineId}`);
   } catch (error) {
+    recordCrashlyticsError('Error updating admin notes status: ', error);
     console.log(`Admin note NOTE sync status updated for id: ${offlineId}`);
     throw new SyncError(
       `Error updating admin notes status: ${
@@ -494,6 +534,7 @@ export const updateAdminNotesAfterSetAsAlert = async (
     );
     console.log(`Admin note sync status updated for id: ${contentItemId}`);
   } catch (error) {
+    recordCrashlyticsError('Error updating admin notes status: ', error);
     console.log(`Admin note NOTE sync status updated for id: ${contentItemId}`);
     throw new SyncError(
       `Error updating admin notes status: ${
@@ -520,6 +561,7 @@ export const deleteNotInOfflineAdminNotes = async (id: string): Promise<boolean>
       return false;
     }
   } catch (error) {
+    recordCrashlyticsError(`Error deleting admin note with ID ${id}:`, error);
     console.error(
       `Error deleting admin note with ID ${id}:`,
       error instanceof Error ? error.message : String(error),
@@ -541,6 +583,7 @@ export const fetchLicenseSync = async () => {
     console.log('License to sync:---->', row);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetchLicenseSync', error);
     logDbError('fetchLicenseSync', error);
     return [];
   }
@@ -553,6 +596,7 @@ export const fetchLicenseToForceSync = async () => {
     const row = await db.getAllAsync(`SELECT * FROM ${TABLES.LICENSE} WHERE isForceSync = ?`, [1]);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching licenses to force sync:--->', error);
     console.error('Error fetching licenses to force sync:--->', error);
   }
 };
@@ -568,6 +612,10 @@ export const fetchLicenseForSyncScreenCount = async () => {
     // console.log("fetch license count----->>>>", row);
     return row.length;
   } catch (error) {
+    recordCrashlyticsError(
+      'Error fetching case data from DB fetchLicenseForSyncScreenCount :',
+      error,
+    );
     logDbError('fetchlicenseDataCount', error);
     console.log('Error fetching case data from DB fetchLicenseForSyncScreenCount :', error);
   }
@@ -585,6 +633,7 @@ export const fetchAttachmentSync = async () => {
     console.log('Attachments to sync:---->', rows);
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetchAttachmentSync', error);
     logDbError('fetchAttachmentSync', error);
     return [];
   }
@@ -600,6 +649,7 @@ export const fetchDocDataToSync = async () => {
     console.log('Attached documents to sync:---->', row);
     return row;
   } catch (error) {
+    recordCrashlyticsError('Error fetching doc data to sync:', error);
     console.error('Error fetching doc data to sync:', error);
     logDbError('fetchDocDataToSync', error);
     return [];
@@ -617,6 +667,7 @@ export const commentWithFileToUpload = async () => {
     );
     return rows;
   } catch (error) {
+    recordCrashlyticsError('Error fetching comment files to upload:', error);
     console.error('Error fetching comment files to upload:', error);
     return [];
   }
@@ -630,6 +681,7 @@ export const updateCommentFileURL = async (url: string, id: string) => {
       [url, 1, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating comment file URL:', error);
     console.error('Error updating comment file URL:', error);
   }
 };
@@ -642,6 +694,7 @@ export const updateCommentURLReady = async (isReady: boolean, id: string) => {
       [isReady ? 1 : 0, id],
     );
   } catch (error) {
+    recordCrashlyticsError('Error updating comment URL ready status:', error);
     console.error('Error updating comment URL ready status:', error);
   }
 };
@@ -655,6 +708,7 @@ export const deleteNotInOfflineAdminNotesFile = async (id: string) => {
     );
     console.log(`Admin note file with ID ${id} deleted successfully.`);
   } catch (error) {
+    recordCrashlyticsError(`Error deleting admin note file with ID ${id}:`, error);
     console.error(`Error deleting admin note file with ID ${id}:`, error);
   }
 };

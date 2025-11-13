@@ -17,6 +17,7 @@ import { ToastService } from '../../../components/common/GlobalSnackbar';
 import PublishButton from '../../../components/common/PublishButton';
 import { getDigitCount } from '../../../utils/helper/helpers';
 import { emailRegex } from '../../../utils/validations';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 interface OwnerScreenProps extends NativeStackScreenProps<RootStackParamList, 'OwnerScreen'> {}
 
 const OwnerScreen: React.FC<OwnerScreenProps> = ({ route }) => {
@@ -120,6 +121,7 @@ const OwnerScreen: React.FC<OwnerScreenProps> = ({ route }) => {
       await OwnerService.saveOwnerDetails(formData, param?.contentItemId, isNetworkAvailable);
       setLoading(false);
     } catch (error) {
+      recordCrashlyticsError('Error saveOwnerDetails:',error);
       console.error('Error saving:', error);
     }
   };

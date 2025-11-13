@@ -3,6 +3,7 @@ import { useBiometricStore } from '../store/biometricStore';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { COLORS } from '../theme/colors';
 import { TEXTS } from '../constants/strings';
+import { recordCrashlyticsError } from './CrashlyticsService';
 
 export const loginWithBiometrics = async (onSuccess: () => void, onFailure?: () => void) => {
   const hasHardware = await LocalAuthentication.hasHardwareAsync();
@@ -55,6 +56,7 @@ export const biometricVerification = async (): Promise<boolean> => {
       return false;
     }
   } catch (err) {
+    recordCrashlyticsError('Biometric Error:', err);
     ToastService.show(
       `Biometric Error: ${(err as Error)?.message || TEXTS.biometric.verificationFailed}`,
       COLORS.ERROR,

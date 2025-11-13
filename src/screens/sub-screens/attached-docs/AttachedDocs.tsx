@@ -36,6 +36,7 @@ import { FONT_FAMILY } from '../../../theme/fonts';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import Loader from '../../../components/common/Loader';
 import { normalizeBool } from '../../../utils/helper/helpers';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 type AttachedDocsProps = NativeStackScreenProps<RootStackParamList, 'AttachedDocs'>;
 
@@ -143,6 +144,7 @@ const AttachedDocs: React.FC<AttachedDocsProps> = ({ route, navigation }) => {
         ToastService.show('Document deleted successfully', COLORS.SUCCESS_GREEN);
       }
     } catch (error) {
+      recordCrashlyticsError('Error in handleDeleteDoc:', error);
       console.error('Error in handleDeleteDoc:', error);
       ToastService.show('Error deleting document', COLORS.ERROR);
     } finally {

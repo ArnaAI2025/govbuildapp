@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { StatusChangeLog } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA } from '../../../services/ApiClient';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const LogService = {
   async fetchStatusChangeLog(
@@ -27,8 +28,10 @@ export const LogService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError(`Error in fetchStatusChangeLog (${type}):`, error);
         console.error(`Error in fetchStatusChangeLog (${type}):`, error.message);
       } else {
+        recordCrashlyticsError(`Error in fetchStatusChangeLog (${type}):`, error);
         console.error(`Error in fetchStatusChangeLog (${type}):`, error);
       }
       return [];
@@ -57,8 +60,10 @@ export const LogService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in fetchInspectionHistory:', error);
         console.error('Error in fetchInspectionHistory:', error.message);
       } else {
+        recordCrashlyticsError('Error in fetchInspectionHistory:', error);
         console.error('Error in fetchInspectionHistory:', error);
       }
       return [];
@@ -88,8 +93,10 @@ export const LogService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in fetchPaymentHistory:', error);
         console.error('Error in fetchPaymentHistory:', error.message);
       } else {
+        recordCrashlyticsError('Error in fetchPaymentHistory:', error);
         console.error('Error in fetchPaymentHistory:', error);
       }
       return [];
@@ -116,8 +123,10 @@ export const LogService = {
     } catch (error) {
       setLoading(false);
       if (error instanceof Error) {
+        recordCrashlyticsError('Error in fetchLicenseStatus:', error);
         console.error('Error in fetchLicenseStatus:', error.message);
       } else {
+        recordCrashlyticsError('Error in fetchLicenseStatus:', error);
         console.error('Error in fetchLicenseStatus:', error);
       }
       return [];

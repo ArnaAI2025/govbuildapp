@@ -1,3 +1,4 @@
+import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 
@@ -165,6 +166,7 @@ CREATE TABLE IF NOT EXISTS ${TABLES.CASE_TYPE_SETTING} (
 `);
     console.log('Case table created');
   } catch (error) {
+    recordCrashlyticsError('Error creating Case table:', error);
     console.error('Error creating Case table:', error);
     throw error;
   }
@@ -570,9 +572,9 @@ export const createSubTabsTables = async (): Promise<void> => {
         notInOffline BOOLEAN DEFAULT 0,
         correlationId TEXT,
         ApiChangeDateUtc TEXT,
-        isCase BOOLEAN DEFAULT 0
+        isCase BOOLEAN DEFAULT 0,
+        body TEXT
         );
-
       CREATE TABLE IF NOT EXISTS ${TABLES.FILE_EXTENSION_TABLE_NAME} (
         data TEXT
       );
@@ -591,9 +593,59 @@ export const createSubTabsTables = async (): Promise<void> => {
   createdUtc TEXT,
   modifiedUtc TEXT
 );
+
+CREATE TABLE IF NOT EXISTS ${TABLES.LICENSE_DETAILS_TABLE_NAME} (
+    contentItemId TEXT PRIMARY KEY,
+    assignedUsers TEXT,
+    licenseOwner TEXT,
+    effectiveDate TEXT,
+    issueDate TEXT,
+    liabilityInsuranceExpDate TEXT,
+    workersCompExpDate TEXT,
+    licenseFee TEXT,
+    testScore TEXT,
+    isNewMobileAppApi BOOLEAN DEFAULT 0 NOT NULL,
+    viewOnlyAssignUsers BOOLEAN DEFAULT 0 NOT NULL,
+    syncModel TEXT,
+    isEdited BOOLEAN DEFAULT 0 NOT NULL,
+    isSync BOOLEAN DEFAULT 0 NOT NULL,
+    isForceSync BOOLEAN DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ${TABLES.LICENSE_OWNER_TABLE_NAME} (
+    contentItemId TEXT PRIMARY KEY,
+    contactEmail TEXT,
+    contactFirstName TEXT,
+    contactLastName TEXT,
+    contactMailingAddress TEXT,
+    contactPhoneNumber TEXT,
+    licenseOwner TEXT,
+    ownerAddress TEXT,
+    ownerCellPhone TEXT,
+    ownerEmail TEXT,
+    ownerMailingAddress TEXT,
+    ownerName TEXT,
+    ownerPhoneNumber TEXT,
+    isEdited BOOLEAN DEFAULT 0 NOT NULL,
+    isSync BOOLEAN DEFAULT 0 NOT NULL,
+    isForceSync BOOLEAN DEFAULT 0 NOT NULL
+);
+    CREATE TABLE IF NOT EXISTS ${TABLES.OFFLINE_FORMS_CACHED_DATA} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      content_item_id TEXT,
+      form_type TEXT,
+      title TEXT,
+      path TEXT,
+      html_data TEXT,
+      form_json TEXT,
+      last_updated TEXT,
+      synced INTEGER DEFAULT 0,
+      user_id TEXT
+    );
     `);
     console.log('Sub tabs tables created successfully');
   } catch (error) {
+    recordCrashlyticsError('Error creating additional tables:', error);
     console.error('Error creating additional tables:', error);
     throw error;
   }

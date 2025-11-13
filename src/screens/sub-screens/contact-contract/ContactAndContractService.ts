@@ -29,6 +29,7 @@ import {
 import { fetchCaseDataByCaseIdFromDb } from '../../../database/my-case/myCaseDAO';
 import { goBack } from '../../../navigation/Index';
 import { fetchLocalLicenseById } from '../../../database/license/licenseSync';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 export const contactService = {
   async fetchContacts(
@@ -52,6 +53,7 @@ export const contactService = {
         return response;
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching contacts:--->', error);
       console.error('Error fetching contacts:--->', error);
       return [];
     }
@@ -76,6 +78,7 @@ export const contactService = {
         return Response;
       }
     } catch (error) {
+      recordCrashlyticsError('Error fetching contractors:', error);
       console.error('Error fetching contractors:', error);
       return [];
     }
@@ -94,6 +97,7 @@ export const contactService = {
       // handle when network is not available
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching license types:', error);
       console.error('Error fetching license types:', error);
       return [];
     }
@@ -113,6 +117,7 @@ export const contactService = {
       }
       return null;
     } catch (error) {
+      recordCrashlyticsError('Error fetching license by content ID:', error);
       console.error('Error fetching license by content ID:', error);
       return null;
     }
@@ -134,6 +139,7 @@ export const contactService = {
       }
       return [];
     } catch (error) {
+      recordCrashlyticsError('Error fetching licenses:', error);
       console.error('Error fetching licenses:', error);
       return [];
     }
@@ -216,6 +222,7 @@ export const contactService = {
         return true;
       }
     } catch (error) {
+      recordCrashlyticsError('Error saving contractor:', error);
       console.error('Error saving contractor:', error);
       return false;
     }
@@ -310,6 +317,7 @@ export const contactService = {
                 navigation.goBack(null);
               }
             } catch (error) {
+              recordCrashlyticsError('Error adding new contact:', error);
               console.error('Error adding new contact:', error);
             }
           } else {
@@ -338,6 +346,7 @@ export const contactService = {
                 console.log('contactsData is not available.');
               }
             } catch (error) {
+              recordCrashlyticsError('Error fetching or updating contact data:', error);
               console.error('Error fetching or updating contact data:', error);
             }
           }

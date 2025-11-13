@@ -10,6 +10,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { buildCaseArray, buildLicenseArray } from '../OfflineSyncService';
 import { normalizeBool } from '../../../utils/helper/helpers';
 import { getNavigationState, saveNavigationState, storage } from '../../../session/SessionManager';
+import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
 interface ItemData {
   id: string;
@@ -86,6 +87,7 @@ const ItemToSyncScreen: React.FC<ItemToSyncScreenProps> = ({ isActive }) => {
       const itemToSyncData = combinedArray.map((item) => [item]);
       setData(itemToSyncData);
     } catch (error) {
+      recordCrashlyticsError('Error loading sync data:', error)
       console.error('Error loading sync data:', error);
     } finally {
       setLoading(false);
@@ -111,6 +113,7 @@ const ItemToSyncScreen: React.FC<ItemToSyncScreenProps> = ({ isActive }) => {
       );
       return combinedArray[0]?.modifiedUtc || null;
     } catch (error) {
+      recordCrashlyticsError('Error checking modifiedUtc:', error)
       console.error('Error checking modifiedUtc:', error);
       return null;
     }
