@@ -1,4 +1,5 @@
-import { View, Text, Image, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import type { StyleProp, ViewStyle} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { COLORS } from '../../theme/colors';
 import { fontSize, iconSize } from '../../utils/helper/dimensions';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';

@@ -1,6 +1,5 @@
 import { fetchInspectionData } from '../../../database/sub-screens/subScreenDAO';
-import NetInfo from '@react-native-community/netinfo';
-import {
+import type {
   InspectionModel,
   InspectionType,
   InspectionTeamMember,
@@ -15,11 +14,8 @@ import {
   getTimeDifference,
   sortByKey,
 } from '../../../utils/helper/helpers';
-import {
-  InspectionInputData,
-  scheduleInspectionParams,
-  SyncModelParam,
-} from '../../../utils/params/commonParams';
+import type { InspectionInputData } from '../../../utils/params/commonParams';
+import { scheduleInspectionParams, SyncModelParam } from '../../../utils/params/commonParams';
 import { URL } from '../../../constants/url';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
@@ -179,10 +175,10 @@ export class InspectionService {
   static async fetchTeamMembers(
     caseOrLicenseData: CaseOrLicenseData,
     typeIds: string,
+    isNetworkAvailable: boolean,
   ): Promise<InspectionTeamMember[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return [];
+      if (!isNetworkAvailable) return [];
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.DEPARTMENT_MEMBER_LIST}${caseOrLicenseData.schedulingDepartments}&inspectionTypeIds=${typeIds}`,
@@ -198,10 +194,9 @@ export class InspectionService {
     }
   }
 
-  static async fetchAllTeamMembers(): Promise<any[]> {
+  static async fetchAllTeamMembers(isNetworkAvailable: boolean): Promise<any[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return [];
+      if (!isNetworkAvailable) return [];
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.DEPARTMENT_MEMBER_LIST}`,
@@ -217,10 +212,9 @@ export class InspectionService {
     }
   }
 
-  static async fetchAllStatus(): Promise<any[]> {
+  static async fetchAllStatus(isNetworkAvailable: boolean): Promise<any[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return [];
+      if (!isNetworkAvailable) return [];
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.APPOINTMENT_STATUS_WITH_LABEL}`,
@@ -236,10 +230,12 @@ export class InspectionService {
     }
   }
 
-  static async fetchInspectionById(inspectionId: string): Promise<InspectionModel | null> {
+  static async fetchInspectionById(
+    inspectionId: string,
+    isNetworkAvailable: boolean,
+  ): Promise<InspectionModel | null> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return null;
+      if (!isNetworkAvailable) return null;
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.INSPECTION_BY_ID}${inspectionId}`,
@@ -259,10 +255,10 @@ export class InspectionService {
     typeIds: string,
     startTime: string,
     endTime: string,
+    isNetworkAvailable: boolean,
   ): Promise<{ defaultTime: number; timeDifference: number }> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return { defaultTime: 0, timeDifference: 0 };
+      if (!isNetworkAvailable) return { defaultTime: 0, timeDifference: 0 };
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.INSPECTION_DEFAULT_TIME_BY_TYPE}${typeIds}`,
@@ -280,10 +276,9 @@ export class InspectionService {
     }
   }
 
-  static async fetchTeamMemberSignature(): Promise<string | null> {
+  static async fetchTeamMemberSignature(isNetworkAvailable: boolean): Promise<string | null> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return null;
+      if (!isNetworkAvailable) return null;
       const url = getBaseUrl();
       const response = await GET_DATA({
         url: `${url}${URL.TEAM_MEMBER_SIGNATURE}`,
@@ -304,10 +299,10 @@ export class InspectionService {
     date: string,
     startTime: string,
     endTime: string,
+    isNetworkAvailable: boolean,
   ): Promise<{ bookedTeamMembers: any[] }> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) return { bookedTeamMembers: [] };
+      if (!isNetworkAvailable) return { bookedTeamMembers: [] };
       const url = getBaseUrl();
       const fullUrl = `${url}${URL.VERIFY_TEAM_MEMBER_SCHADULE}${teamMemberIds}&date=${formatDate(
         date,
@@ -324,10 +319,9 @@ export class InspectionService {
     }
   }
 
-  static async fetchInspectionTitle(typeIds: string): Promise<string> {
+  static async fetchInspectionTitle(typeIds: string, isNetworkAvailable: boolean): Promise<string> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) throw new Error('No internet connection');
+      if (!isNetworkAvailable) throw new Error('No internet connection');
       const url = getBaseUrl();
       const fullUrl = `${url}${URL.INSPECTION_TITLE_BY_TYPE}${typeIds}`;
       const response = await GET_DATA({ url: fullUrl });
@@ -344,10 +338,10 @@ export class InspectionService {
   static async saveInspection(
     inspectionData: InspectionInputData,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<boolean> {
     try {
-      const state = await NetInfo.fetch();
-      if (!state.isConnected) {
+      if (!isNetworkAvailable) {
         //  await this.saveInspectionOffline(inspectionData);
         return true;
       }

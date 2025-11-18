@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ParcelModel } from '../../utils/interfaces/ISubScreens';
+import type { ParcelModel } from '../../utils/interfaces/ISubScreens';
 import globalStyles from '../../theme/globalStyles';
 import { fontSize, iconSize } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';

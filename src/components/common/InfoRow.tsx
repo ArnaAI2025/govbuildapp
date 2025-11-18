@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TextStyle, StyleSheet } from 'react-native';
+import type { TextStyle} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import IMAGES from '../../theme/images';
 import { convertTime, formatDate } from '../../utils/helper/helpers';
 import { fontSize, height, iconSize } from '../../utils/helper/dimensions';

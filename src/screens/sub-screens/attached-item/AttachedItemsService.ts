@@ -1,4 +1,4 @@
-import { AttachedItem } from '../../../utils/interfaces/ISubScreens';
+import type { AttachedItem } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA } from '../../../services/ApiClient';
 import { URL } from '../../../constants/url';

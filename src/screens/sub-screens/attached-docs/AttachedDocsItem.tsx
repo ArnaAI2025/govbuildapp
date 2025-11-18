@@ -9,7 +9,7 @@ import {
   Linking,
   Platform,
 } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { Menu } from 'react-native-paper';
 import Checkbox from 'expo-checkbox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,8 +19,8 @@ import {
   getColorForFileType,
   getIconNameForFileType,
 } from '../../../utils/helper/fileHandlers';
-import { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { fontSize, height, iconSize } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';
 import { URL } from '../../../constants/url';

@@ -7,7 +7,7 @@ import Loader from '../../../../components/common/Loader';
 import { COLORS } from '../../../../theme/colors';
 import { height, iconSize } from '../../../../utils/helper/dimensions';
 import FloatingActionButton from '../../../../components/common/FloatingActionButton';
-import { Contact, ContactScreenProps } from '../../../../utils/interfaces/ISubScreens';
+import type { Contact, ContactScreenProps } from '../../../../utils/interfaces/ISubScreens';
 import NoData from '../../../../components/common/NoData';
 import { TEXTS } from '../../../../constants/strings';
 import { useNetworkStatus } from '../../../../utils/checkNetwork';

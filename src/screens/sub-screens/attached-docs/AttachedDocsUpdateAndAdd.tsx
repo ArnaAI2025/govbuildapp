@@ -3,8 +3,8 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Checkbox from 'expo-checkbox';
 import { useIsFocused } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { DocumentService } from './AttachedDocsService';
 import Loader from '../../../components/common/Loader';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
@@ -14,7 +14,7 @@ import CustomDropdown from '../../../components/common/CustomDropdown';
 import { COLORS } from '../../../theme/colors';
 import { fontSize, height } from '../../../utils/helper/dimensions';
 import { FONT_FAMILY } from '../../../theme/fonts';
-import { Status } from '../../../utils/interfaces/IComponent';
+import type { Status } from '../../../utils/interfaces/IComponent';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { normalizeBool, sortByKey } from '../../../utils/helper/helpers';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
@@ -187,7 +187,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
           );
           return { success: result, fileName: docData.fileName };
         } catch (error) {
-          recordCrashlyticsError(`Error uploading file ${docData.fileName}:`,error);
+          recordCrashlyticsError(`Error uploading file ${docData.fileName}:`, error);
           console.error(`Error uploading file ${docData.fileName}:`, error);
           return { success: false, fileName: docData.fileName, error };
         }
@@ -209,7 +209,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
         navigation.goBack();
       }
     } catch (error) {
-      recordCrashlyticsError('Error in handleSubmit:',error);
+      recordCrashlyticsError('Error in handleSubmit:', error);
       console.error('Error in handleSubmit:', error);
       ToastService.show('An unexpected error occurred during upload', COLORS.ERROR);
     } finally {
@@ -226,7 +226,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
         <MenuProvider style={styles.container}>
           <View style={styles.viewStyles}>
             <KeyboardAwareScrollView
-              nestedScrollEnabled={true}
+              nestedScrollEnabled
               style={{ flex: 1 }}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
@@ -244,7 +244,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
                         label={'File Name'}
                         value={name}
                         numberOfLines={1}
-                        multiline={true}
+                        multiline
                         onChangeText={(text) => {
                           const updatedNames = [...fileNames];
                           updatedNames[index] = text;
@@ -260,9 +260,9 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
                         label={'File Type'}
                         value={`.${fileTypes[index]?.split('/')}`}
                         numberOfLines={1}
-                        multiline={true}
+                        multiline
                         editable={false}
-                        disabled={true}
+                        disabled
                         onChangeText={() => {}}
                         placeholder=""
                         keyboardType="default"
@@ -318,7 +318,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
                   onChangeText={setShortDescription}
                   placeholder=""
                   keyboardType="default"
-                  multiline={true}
+                  multiline
                   disabled={isStatusReadOnly}
                 />
               </View>
@@ -330,7 +330,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
                   onChangeText={setDetails}
                   placeholder=""
                   keyboardType="default"
-                  multiline={true}
+                  multiline
                   disabled={isStatusReadOnly}
                 />
               </View>

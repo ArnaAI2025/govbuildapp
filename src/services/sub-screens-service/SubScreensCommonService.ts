@@ -3,7 +3,7 @@ import { TEXTS } from '../../constants/strings';
 import { URL } from '../../constants/url';
 import { getBaseUrl } from '../../session/SessionManager';
 import { COLORS } from '../../theme/colors';
-import {
+import type {
   AdminAndPublicComment,
   SentEmail,
   SyncModel,
@@ -18,8 +18,9 @@ import {
 } from '../../utils/params/commonParams';
 import useAuthStore from '../../store/useAuthStore';
 import { fetchAdminAndPublicCommentsFromOffline } from '../../database/sub-screens/subScreensSync';
+import type {
+  AdminNote} from '../../database/sub-screens/subScreenDAO';
 import {
-  AdminNote,
   storeAdminNotesWithDocsOffline,
   updateAdminNoteAlert,
   updateAdminNoteComment,
@@ -29,7 +30,7 @@ import {
 } from '../../database/sub-screens/subScreenDAO';
 import { TABLES } from '../../database/DatabaseConstants';
 import { getDatabase } from '../../database/DatabaseService';
-import { AdminNoteSyncData } from '../../database/types/commonSyncModels';
+import type { AdminNoteSyncData } from '../../database/types/commonSyncModels';
 import { recordCrashlyticsError } from '../CrashlyticsService';
 
 class ServiceError extends Error {

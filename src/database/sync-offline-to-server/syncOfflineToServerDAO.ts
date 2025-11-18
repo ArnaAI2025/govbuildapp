@@ -1,7 +1,7 @@
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 import { logDbError, SyncError } from '../../utils/syncUtils';
-import { AdminNoteSyncData, SettingsSyncData } from '../types/commonSyncModels';
+import type { AdminNoteSyncData, SettingsSyncData } from '../types/commonSyncModels';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 // Fetch cash count
 // 1. Fetch Edited Cases Count

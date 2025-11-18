@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { View, Image } from 'react-native';
+import type {
+  DrawerContentComponentProps} from '@react-navigation/drawer';
 import {
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList,
-  DrawerContentComponentProps,
+  DrawerItemList
 } from '@react-navigation/drawer';
 import { Text } from 'react-native-paper';
 import IMAGES from '../../../theme/images';
@@ -19,14 +20,13 @@ import { COLORS } from '../../../theme/colors';
 import { CustomConfirmationDialog } from '../../../components/dialogs/CustomConfirmationDialog';
 import { SvgImages } from '../../../theme';
 import { iconSize } from '../../../utils/helper/dimensions';
-import {
-  appUpdateDialog,
-} from '../../../utils/checkAppVersion';
+import { appUpdateDialog } from '../../../utils/checkAppVersion';
 import { useFocusEffect } from '@react-navigation/native';
 import useAuthStore from '../../../store/useAuthStore';
 import { useWindowDimensions } from 'react-native';
 import { closeDatabase } from '../../../database/DatabaseService';
 import { stopSyncing } from '../../../services/SyncService';
+import { removeLoginCredentials } from '../../../utils/secureStorage';
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   const { navigation } = props;
@@ -59,7 +59,7 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   const [isDailyInspectionAccess, setIsDailyInspectionAccess] = useState(false);
   const [isLicenseAccess, setIsLicenseAccess] = useState(false);
   const [isParcleAccess, setIsParcleAccess] = useState(false);
-  const [isUpdateLater, ] = useState(getIsUpdateLater());
+  const [isUpdateLater] = useState(getIsUpdateLater());
   const [isFormSubmissionAccess, setIsFormSubmissionAccess] = useState(false);
 
   useFocusEffect(
@@ -348,11 +348,11 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             if (isParcleAccess) {
               setDialogConfig(permissionRequiredPayload);
             } else {
-            if (isNetworkAvailable) {
-              navigate('ParcelScreen');
-            } else {
-              ToastService.show("You're offline. Reports feature may not work.", COLORS.ERROR);
-            }
+              if (isNetworkAvailable) {
+                navigate('ParcelScreen');
+              } else {
+                ToastService.show("You're offline. Reports feature may not work.", COLORS.ERROR);
+              }
             }
           }}
         />
@@ -486,12 +486,13 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
               cancelLabel: TEXTS.alertMessages.cancel,
               onCancel: () => setDialogConfig((prev) => ({ ...prev, visible: false })),
               onConfirm: async () => {
-                setDialogConfig((prev) => ({ ...prev, visible: false }));
-                logout();
                 // saveBaseUrl("");
                 // saveAccessToken("");
                 // saveUserRole("");
                 // saveLicenseUserRole("");
+                setDialogConfig((prev) => ({ ...prev, visible: false }));
+                logout();
+                await removeLoginCredentials();
                 stopSyncing(); // stop sync loop
                 await closeDatabase();
                 navigate('LoginScreen');

@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { TabBar, TabView } from 'react-native-tab-view';
 import DeviceInfo from 'react-native-device-info';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HistoryScreen from './history/HistoryScreen';
 import ItemToSyncScreen from './sync-items/ItemToSyncScreen';
 import AllOfflineView from './all-offline-item/AllOfflineView';
-import { RootStackParamList } from '../../navigation/Types';
+import type { RootStackParamList } from '../../navigation/Types';
 import { useOrientation } from '../../utils/useOrientation';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import { COLORS } from '../../theme/colors';
 import { height, width } from '../../utils/helper/dimensions';
-import { Scene } from 'react-native-tab-view/lib/typescript/src/types';
+import type { Scene } from 'react-native-tab-view/lib/typescript/src/types';
 import { FONT_FAMILY } from '../../theme/fonts';
+import { ANDROID_VERSION, IOS_VERSION } from '../../constants/url';
 
 interface Route {
   key: string;
@@ -84,7 +85,7 @@ const OfflineSyncScreen: React.FC<OfflineSyncScreenProps> = ({}) => {
 
             <View style={styles.footer}>
               <Text style={styles.footerText}>
-                {Platform.OS === 'ios' ? '3.1.0' : DeviceInfo.getVersion()}
+                {Platform.OS === 'ios' ? IOS_VERSION : ANDROID_VERSION}
               </Text>
             </View>
           </View>

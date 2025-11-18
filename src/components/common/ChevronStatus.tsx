@@ -1,5 +1,5 @@
 import { StyleSheet, Platform, View, Image, Text } from 'react-native';
-import { ItemType } from '../../utils/interfaces/ICase';
+import type { ItemType } from '../../utils/interfaces/ICase';
 import { COLORS } from '../../theme/colors';
 import IMAGES from '../../theme/images';
 import { memo, useMemo } from 'react';

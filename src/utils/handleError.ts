@@ -1,7 +1,7 @@
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { TEXTS } from '../constants/strings';
 import { COLORS } from '../theme/colors';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import { getFirstErrorMessage } from './validations';
 export const handleError = (error: AxiosError | any) => {
   if (error?.message == 'Network Error') {

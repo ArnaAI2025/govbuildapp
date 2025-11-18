@@ -10,7 +10,7 @@ const VersionCheckHandler = async () => {
   try {
     const updateInfo = await VersionCheck.needUpdate();
     const androidVersion = DeviceInfo.getVersion();
-    const latestAndroidVersion = "3.1.0";
+    const latestAndroidVersion = '3.1.0';
     const lastPromptDate = storage.getString('lastVersionPromptDate');
 
     if (lastPromptDate) {
@@ -30,21 +30,22 @@ const VersionCheckHandler = async () => {
           {
             text: 'Later',
             style: 'cancel',
-            onPress: async () => {
-              storage.set('lastVersionPromptDate', new Date().toISOString());
+            onPress: () => {
+              (async () => {
+               storage.set('lastVersionPromptDate', new Date().toISOString());
+              })();
             },
           },
           {
             text: 'Update',
-            onPress: () =>
+            onPress: () => {
               Linking.openURL(
-                Platform.OS === 'ios'
-                  ? updateInfo.storeUrl
-                  : 'market://details?id=com.appoffline'
-              ),
+                Platform.OS === 'ios' ? updateInfo.storeUrl : 'market://details?id=com.appoffline',
+              )
+            },
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     }
   } catch (error) {

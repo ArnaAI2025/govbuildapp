@@ -11,7 +11,7 @@ import {
 import { COLORS } from '../../../theme/colors';
 import IMAGES from '../../../theme/images';
 import { CustomTextUI } from '../../../components/common/CustomTextUI';
-import { RelatedCase } from '../../../utils/interfaces/ISubScreens';
+import type { RelatedCase } from '../../../utils/interfaces/ISubScreens';
 import globalStyles from '../../../theme/globalStyles';
 import { FONT_FAMILY } from '../../../theme/fonts';
 
@@ -34,7 +34,7 @@ const RelatedListItem = (rowData: RelatedCase) => {
               iconStyle={styles.userIcon}
               color={COLORS.BOX_COLOR}
               backgroundColor={COLORS.APP_COLOR}
-              isImage={true}
+              isImage
               imagePath={IMAGES.PERSON_ICON}
               title={`${rowData.assignedUsers} + ${rowData.assignUserCount || 0}`}
             />
@@ -57,7 +57,7 @@ const RelatedListItem = (rowData: RelatedCase) => {
             iconStyle={styles.calendarIcon}
             color={COLORS.BLACK}
             backgroundColor={COLORS.GRAY_MEDIUM}
-            isImage={true}
+            isImage
             imagePath={IMAGES.CALENDER_ICON}
             title={rowData.modifyDate ?? ''}
           />
@@ -65,7 +65,7 @@ const RelatedListItem = (rowData: RelatedCase) => {
             iconStyle={styles.authorIcon}
             color={COLORS.BLACK}
             backgroundColor={COLORS.GRAY_MEDIUM}
-            isImage={true}
+            isImage
             imagePath={IMAGES.PERSON_ICON}
             title={rowData.author ?? ''}
           />

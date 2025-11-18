@@ -1,10 +1,10 @@
-import { NavigationProp } from '@react-navigation/native';
-import { FormItem } from './IComponent';
+import type { NavigationProp } from '@react-navigation/native';
+import type { FormItem } from './IComponent';
 import { convertDate } from '../helper/helpers';
-import { SyncModelParam } from '../params/commonParams';
-import { CaseData, FilterItem } from './ICase';
-import { RootStackParamList } from '../../navigation/Types';
-import { LicenseData } from './zustand/ILicense';
+import type { SyncModelParam } from '../params/commonParams';
+import type { CaseData, FilterItem } from './ICase';
+import type { RootStackParamList } from '../../navigation/Types';
+import type { LicenseData } from './zustand/ILicense';
 
 export interface AdminAndPublicComment {
   id: string;

@@ -6,7 +6,7 @@ import { useNetworkStatus } from '../../../utils/checkNetwork';
 import Loader from '../../../components/common/Loader';
 import NoData from '../../../components/common/NoData';
 import { CaseParcelListItem } from './CaseParcelListItem';
-import { CaseParcelModel } from '../../../utils/interfaces/ISubScreens';
+import type { CaseParcelModel } from '../../../utils/interfaces/ISubScreens';
 import { useParcelStore } from '../ParcelScreen';
 import { ParcelService } from '../ParcelService';
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { StatusChangeLog } from '../../../../utils/interfaces/ISubScreens';
+import type { StatusChangeLog } from '../../../../utils/interfaces/ISubScreens';
 import { LogService } from '../LogService';
 import Loader from '../../../../components/common/Loader';
 import { CustomTextViewWithImage } from '../../../../components/common/CustomTextViewWithImage';
 import NoData from '../../../../components/common/NoData';
 import globalStyles from '../../../../theme/globalStyles';
 import { TEXTS } from '../../../../constants/strings';
+import { useNetworkStatus } from '../../../../utils/checkNetwork';
 
 const PaymentHistory: React.FC<{
   route: string;
@@ -15,10 +16,11 @@ const PaymentHistory: React.FC<{
 }> = ({ route, isCase }) => {
   const [isLoadingAPI, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<StatusChangeLog[]>([]);
+  const {isNetworkAvailable} = useNetworkStatus();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await LogService.fetchPaymentHistory(route, isCase, setLoading);
+      const result = await LogService.fetchPaymentHistory(route, isCase, setLoading, isNetworkAvailable);
       setData(result);
     };
     fetchData();
@@ -31,7 +33,7 @@ const PaymentHistory: React.FC<{
         <FlatList
           showsVerticalScrollIndicator={false}
           data={data}
-          scrollEnabled={true}
+          scrollEnabled
           renderItem={({ item: rowData }) => (
             <View style={globalStyles.cardContainer}>
               <CustomTextViewWithImage

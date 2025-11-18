@@ -20,8 +20,8 @@ import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { COLORS } from '../../theme/colors';
 import NoData from '../../components/common/NoData';
 import ImageFileUploadPic from '../../utils/helper/filePickerUtils';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { goBack } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
@@ -77,7 +77,7 @@ const FormioFileUploadScreen: React.FC<FormioFileUploadScreenProps> = ({ route }
         setAllData((prev: any) => [...prev, element]);
       }
     } catch (error) {
-      recordCrashlyticsError('Error fetching file data:',error)
+      recordCrashlyticsError('Error fetching file data:', error);
       console.error('Error fetching file data:', error);
     }
   };
@@ -94,7 +94,7 @@ const FormioFileUploadScreen: React.FC<FormioFileUploadScreenProps> = ({ route }
       const results = await Promise.all(promises);
       return results.every((result) => result);
     } catch (error) {
-      recordCrashlyticsError('Error checking required files:',error)
+      recordCrashlyticsError('Error checking required files:', error);
       console.error('Error checking required files:', error);
       return false;
     }

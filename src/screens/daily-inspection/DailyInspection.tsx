@@ -9,13 +9,13 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RootStackParamList } from '../../navigation/Types';
+import type { RootStackParamList } from '../../navigation/Types';
 import { useOrientation } from '../../utils/useOrientation';
 import { useDailyInspectionStore } from '../../store/useDailyInspectionStore';
-import { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
 import { DailyInspectionService } from './DailyInspectionService';
 import { TEXTS } from '../../constants/strings';
 import Loader from '../../components/common/Loader';
@@ -224,7 +224,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
 
         await fetchInspections(selectedTeamMember?.id || userId);
       } catch (error) {
-        recordCrashlyticsError('Error in fetching daily inpection:', error)
+        recordCrashlyticsError('Error in fetching daily inpection:', error);
         console.error('Error in initialize:', error);
       }
     };
@@ -266,7 +266,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
       setIsCreateRoute(DailyInspectionService.checkLocationForRouteCreate(result.data));
       setLoading(false);
     } catch (error) {
-      recordCrashlyticsError('Error fetching inspections:', error)
+      recordCrashlyticsError('Error fetching inspections:', error);
       console.error('Error fetching inspections:', error);
       setData([]);
     } finally {
@@ -344,7 +344,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
             }
           }
         } catch (error) {
-           recordCrashlyticsError('Invalid JSON location:',  error)
+          recordCrashlyticsError('Invalid JSON location:', error);
           console.warn('Invalid JSON location:', object?.location, error);
         }
       }
@@ -632,7 +632,7 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
                     rowData={item}
                     getCaseByCID={handleCaseByCID}
                     drag={drag}
-                    isDraggable={true}
+                    isDraggable
                     isOnline={isNetworkAvailable}
                     isShowStatus={isShowStatus}
                     caseOrLicenseNumber={caseOrLicenseNumber}

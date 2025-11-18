@@ -84,7 +84,7 @@ export const AdvanceFilterDialog: React.FC<AdvanceFilterDialogProps> = ({
         setLicenseType(dropdownData.licenseType);
         setLicenseTypeCategory(dropdownData.licenseTypeCategory);
       } catch (error) {
-        recordCrashlyticsError('Error in initialize:',error)
+        recordCrashlyticsError('Error in initialize:', error);
         console.error('Error in initialize:', error);
       }
     };
@@ -261,7 +261,7 @@ export const AdvanceFilterDialog: React.FC<AdvanceFilterDialogProps> = ({
   return (
     <Modal
       visible={openAdvanceFilter}
-      transparent={true}
+      transparent
       animationType="slide"
       supportedOrientations={['landscape', 'portrait']}
     >
@@ -275,7 +275,7 @@ export const AdvanceFilterDialog: React.FC<AdvanceFilterDialogProps> = ({
             </TouchableOpacity>
           </View>
           <KeyboardAwareScrollView
-            nestedScrollEnabled={true}
+            nestedScrollEnabled
             style={styles.scrollView}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}

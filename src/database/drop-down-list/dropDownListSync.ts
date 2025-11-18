@@ -3,7 +3,7 @@ import { getDatabase } from '../DatabaseService';
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
-import { TeamMemberData } from '../../utils/interfaces/offline/IOffllineCase';
+import type { TeamMemberData } from '../../utils/interfaces/offline/IOffllineCase';
 import {
   insertBillingStatus,
   insertDepartmentMemberList,

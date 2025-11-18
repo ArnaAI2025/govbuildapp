@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View, Text, Image } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import Loader from '../../../components/common/Loader';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
-import { SubLicense } from '../../../utils/interfaces/ISubScreens';
+import type { SubLicense } from '../../../utils/interfaces/ISubScreens';
 import { fetchRelatedLicense } from './SubLicenseService';
 import { TEXTS } from '../../../constants/strings';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

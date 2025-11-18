@@ -7,6 +7,8 @@ export const TENANT_BASE_URL = Config.LIVE_BASE_URL; // for testing
 export const SEQURE_BASE_URL = Config.SEQURE_LIVE_BASE_URL; //https url
 
 export const APP_VERSION: number = 60;
+export const IOS_VERSION: string = '3.1.0';
+export const ANDROID_VERSION: string = '3.1.8';
 
 export const TOKEN_FOR_APP_VERSION = Config.LIVE_TOKEN_FOR_APP_VERSION; // for Live
 // export const TOKEN_FOR_APP_VERSION = Config.STAGING_TOKEN_FOR_APP_VERSION; // for testing

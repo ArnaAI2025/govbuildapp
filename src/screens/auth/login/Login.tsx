@@ -26,6 +26,8 @@ import { TEXTS } from '../../../constants/strings';
 import { BiometricsPromptDialog } from '../../../components/dialogs/biometrics/BiometricsPromptDialog';
 import { useBiometricStore } from '../../../store/biometricStore';
 import useLoginStore from '../../../store/useLoginStore';
+import { saveLoginCredentials, getLoginCredentials } from '../../../utils/secureStorage';
+ 
 import {
   callLoginAPIService,
   fetchTenantList,
@@ -71,6 +73,16 @@ const LoginScreen: React.FC = () => {
   };
   useFocusEffect(
     useCallback(() => {
+      const loadSavedCredentials = async () => {
+        const creds = await getLoginCredentials();
+        if (creds) {
+          setUserEmail(creds.username);
+          setUserPassword(creds.password);
+        }
+      };
+
+      loadSavedCredentials();
+
       if (isNetworkAvailable === true) {
         getTenantList();
         if (!isSelectedTenant) {
@@ -129,7 +141,8 @@ const LoginScreen: React.FC = () => {
     // };
   };
 
-  const checkUserLogin = () => {
+  const checkUserLogin = async () => {
+    console.log('Checking user login...', userEmail, userPassword);
     if (userEmail.trim() != '' && userPassword != '') {
       if (isNetworkAvailable) {
         if (
@@ -143,9 +156,10 @@ const LoginScreen: React.FC = () => {
       } else {
         const result = handleOfflineLogin(userEmail, userPassword, offlineAuthData);
         if (result.success && result.authData) {
+          await saveLoginCredentials(userEmail, userPassword);
           setUserEmail('');
           setUserPassword('');
-          setAuthData(result.authData);
+          setAuthData(result?.authData);
           navigate('DashboardDrawerScreen');
         } else if (result.message) {
           ToastService.show(result.message, COLORS.ERROR);
@@ -168,6 +182,7 @@ const LoginScreen: React.FC = () => {
       setAuthData,
       setOfflineAuthData,
     );
+    console.log('Login Result:', result);
     if (result.success) {
       setUserEmail('');
       setUserPassword('');
@@ -222,7 +237,7 @@ const LoginScreen: React.FC = () => {
       >
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
-          enableOnAndroid={true}
+          enableOnAndroid
           keyboardShouldPersistTaps="handled"
           extraHeight={0}
           contentContainerStyle={styles.keyboardScrollView}

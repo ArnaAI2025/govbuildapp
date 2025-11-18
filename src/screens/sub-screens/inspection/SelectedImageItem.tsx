@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
-import { IImageData } from '../../../utils/interfaces/ISubScreens';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NavigationProp } from '@react-navigation/native';
+import type { IImageData } from '../../../utils/interfaces/ISubScreens';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { COLORS } from '../../../theme/colors';
 import { fontSize, height, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

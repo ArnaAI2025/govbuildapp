@@ -1,4 +1,4 @@
-import { NeatDatePickerProps, ColorOptions } from './components/NeatDatePicker.d';
+import type { NeatDatePickerProps, ColorOptions } from './components/NeatDatePicker.d';
 import DatePicker from './components/NeatDatePicker';
 import type { i18nLanguages } from './lib/lib';
 

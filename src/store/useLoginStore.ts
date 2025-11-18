@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { LoginState } from '../utils/interfaces/zustand/ILogin';
+import type { LoginState } from '../utils/interfaces/zustand/ILogin';
 
 const useLoginStore = create<LoginState>((set) => ({
   isLoading: false,

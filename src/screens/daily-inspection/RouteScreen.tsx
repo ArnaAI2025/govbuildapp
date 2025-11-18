@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import WebView from 'react-native-webview';
 import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
@@ -35,7 +35,7 @@ const RouteScreen: React.FC<RouteScreenProps> = ({ route }) => {
               borderTopRightRadius: WINDOW_WIDTH * 0.09,
             }}
             originWhitelist={['*']}
-            javaScriptEnabled={true}
+            javaScriptEnabled
             source={require('../daily-inspection/map2.html')}
             injectedJavaScript={jsCode}
           />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import { InspectionType, InspectionStatus } from '../../../utils/interfaces/ISubScreens';
+import type { InspectionType, InspectionStatus } from '../../../utils/interfaces/ISubScreens';
 import { COLORS } from '../../../theme/colors';
 import { fontSize } from '../../../utils/helper/dimensions';
 import { FONT_FAMILY } from '../../../theme/fonts';
@@ -20,7 +20,7 @@ export const renderItemStatus = ({ item }: InspectionFlagItemProps) => (
     <Image
       style={{ height: 12, width: 12, tintColor: item?.color }}
       source={require('../../../assets/images/ic_circle.png')}
-    ></Image>
+     />
     <Text style={styles.text}>{item.displayText}</Text>
   </View>
 );

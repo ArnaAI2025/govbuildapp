@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import Loader from '../../../components/common/Loader';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import { TEXTS } from '../../../constants/strings';
@@ -121,7 +121,7 @@ const OwnerScreen: React.FC<OwnerScreenProps> = ({ route }) => {
       await OwnerService.saveOwnerDetails(formData, param?.contentItemId, isNetworkAvailable);
       setLoading(false);
     } catch (error) {
-      recordCrashlyticsError('Error saveOwnerDetails:',error);
+      recordCrashlyticsError('Error saveOwnerDetails:', error);
       console.error('Error saving:', error);
     }
   };

@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import {
+import type {
   StandardComment,
   StandardCommentDialogListItemProps,
 } from '../../utils/interfaces/ISubScreens';
 import { FONT_FAMILY } from '../../theme/fonts';
 import { COLORS } from '../../theme/colors';
-import { FilterItem } from '../../utils/interfaces/ICase';
+import type { FilterItem } from '../../utils/interfaces/ICase';
 import globalStyles from '../../theme/globalStyles';
 
 const RowView: React.FC<{ title: string; value: string }> = ({ title, value }) => (

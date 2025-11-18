@@ -19,11 +19,11 @@ import {
   WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet';
 import { RecyclerListView, DataProvider, LayoutProvider, BaseScrollView } from 'recyclerlistview';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AttachedDocsItem } from './AttachedDocsItem';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { useOrientation } from '../../../utils/useOrientation';
-import { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
+import type { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
 import { DocumentService } from './AttachedDocsService';
 import Loader from '../../../components/common/Loader';
 import OpenDocPickerDialog from '../../../components/common/OpenDocPickerDialog';
@@ -69,7 +69,7 @@ const AttachedDocsSubScreen: React.FC<AttachedDocsSubScreenProps> = ({ route, na
   const [isFolderUpdate, setIsFolderUpdate] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [folderHierarchy, setFolderHierarchy] = useState<
-    { name: string; id: string; data: Array<Folder | DocumentModel> }[]
+    Array<{ name: string; id: string; data: Array<Folder | DocumentModel> }>
   >([]);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ['22%', '33%'], []);
@@ -183,7 +183,7 @@ const AttachedDocsSubScreen: React.FC<AttachedDocsSubScreenProps> = ({ route, na
         ToastService.show('Document deleted successfully', COLORS.SUCCESS_GREEN);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in handleDeleteDoc:',error);
+      recordCrashlyticsError('Error in handleDeleteDoc:', error);
       console.error('Error in handleDeleteDoc:', error);
       ToastService.show('Error deleting document', COLORS.ERROR);
     } finally {
@@ -395,7 +395,7 @@ const AttachedDocsSubScreen: React.FC<AttachedDocsSubScreenProps> = ({ route, na
                   layoutProvider={layoutProvider}
                   dataProvider={dataProvider}
                   rowRenderer={rowRenderer}
-                  canChangeSize={true}
+                  canChangeSize
                 />
               ) : (
                 <NoData />

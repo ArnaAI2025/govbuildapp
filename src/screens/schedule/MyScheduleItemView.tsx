@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text } from 'react-native';
-import { ScheduleModel } from '../../utils/interfaces/ISubScreens';
+import type { ScheduleModel } from '../../utils/interfaces/ISubScreens';
 import { formatDate } from '../../utils/helper/helpers';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY } from '../../theme/fonts';
@@ -43,7 +43,7 @@ export const MyScheduleItemView: React.FC<MyScheduleItemViewProps> = ({ rowData 
                 <Text style={styles.contentStyle}>{rowData.endTime || ''}</Text>
               </>
             ) : (
-              <View></View>
+              <View />
             )}
           </View>
 

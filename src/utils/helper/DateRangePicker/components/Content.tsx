@@ -1,10 +1,10 @@
 import { I18nManager, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { DaysArray } from '../hooks/useDaysOfMonth';
+import type { DaysArray } from '../hooks/useDaysOfMonth';
 import { getTranslation } from '../lib/lib';
 import ChangeYearModal from './ChangeYearModal';
 import Key from './Key';
-import { ColorOptions } from './NeatDatePicker.d';
+import type { ColorOptions } from './NeatDatePicker.d';
 
 import { COLORS } from '../../../../theme/colors';
 

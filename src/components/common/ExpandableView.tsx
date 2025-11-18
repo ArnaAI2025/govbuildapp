@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Added vector icons import
-import { ExpandableViewProps } from '../../utils/interfaces/IComponent';
+import type { ExpandableViewProps } from '../../utils/interfaces/IComponent';
 import { convertDateFormat } from '../../utils/helper/helpers';
 import { COLORS } from '../../theme/colors';
 import { fontSize, height, iconSize } from '../../utils/helper/dimensions';

@@ -17,7 +17,8 @@ import {
 import { navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
-import { fetchPendingSyncTasks, SyncQueueTask, SyncType } from '../../utils/syncUtils';
+import type { SyncQueueTask } from '../../utils/syncUtils';
+import { fetchPendingSyncTasks, SyncType } from '../../utils/syncUtils';
 import {
   processAdminNotesTask,
   processCaseTask,
@@ -42,7 +43,7 @@ export const getCaseByCidData = async (
 
       const response = await GET_DATA({ url });
       if (!response?.status || !response?.data?.status) {
-        ToastService.show(' ', COLORS.ERROR);
+        ToastService.show(`Unable to fetch ${type}`, COLORS.ERROR);
         throw new Error('Failed to fetch by id: Invalid response status');
       }
       if (response?.status) {
@@ -171,8 +172,15 @@ export const buildCaseArray = async () => {
       .map((d) => new Date(d).getTime())
       .filter((t) => !isNaN(t)); // ensure valid timestamps
 
-    // Get latest (max) date among all
-    const latestModifiedUtc = new Date(Math.max(...dates)).toISOString();
+    let latestModifiedUtc: string | null;
+
+    // If we have dates → get max
+    if (dates.length > 0) {
+      latestModifiedUtc = new Date(Math.max(...dates)).toISOString();
+    } else {
+      // If nothing has modifiedUtc → decide a fallback
+      latestModifiedUtc = null;
+    }
     const payload = {
       id: id,
       ListType: 'Case',
@@ -286,7 +294,15 @@ export const buildLicenseArray = async () => {
       .filter((t) => !isNaN(t)); // ensure valid timestamps
 
     // Get latest (max) date among all
-    const latestModifiedUtc = new Date(Math.max(...dates)).toISOString();
+    let latestModifiedUtc: string | null;
+
+    // If we have dates → get max
+    if (dates.length > 0) {
+      latestModifiedUtc = new Date(Math.max(...dates)).toISOString();
+    } else {
+      // If nothing has modifiedUtc → decide a fallback
+      latestModifiedUtc = null;
+    }
 
     const payload = {
       id: id,
@@ -360,46 +376,62 @@ export const processForceSyncQueue = async (rowData: any, offlineItemsCount: () 
   allTasks.sort((a, b) => a.created_at.localeCompare(b.created_at));
 
   for (const task of allTasks) {
-    if (rowData.ListType === 'Case') {
-      switch (task.type as SyncType) {
-        case SyncType.CASE:
-          console.log('CASE syncing Calling Force Sync');
-          await processCaseTask(task, offlineItemsCount, true);
-          break;
-        case SyncType.SETTINGS:
-          console.log('SETTINGS syncing Calling Force Sync');
-          await processSettingsTask(task, offlineItemsCount, true);
-          break;
-        case SyncType.CONTACTS:
-          console.log('CONTACTS syncing Calling Force Sync');
-          await processContactsTask(task, offlineItemsCount, true);
-          break;
-        case SyncType.ADMIN_NOTES:
-          console.log('ADMIN_NOTES syncing Calling Force Sync');
-          await processAdminNotesTask(task, offlineItemsCount, true);
-          break;
-        default:
-          console.warn(`No sync handler for type: ${task.type}`);
+    try {
+      if (rowData.ListType === 'Case') {
+        switch (task.type as SyncType) {
+          case SyncType.CASE:
+            console.log('CASE syncing Calling Force Sync');
+            await processCaseTask(task, offlineItemsCount, true);
+            break;
+
+          case SyncType.SETTINGS:
+            console.log('SETTINGS syncing Calling Force Sync');
+            await processSettingsTask(task, offlineItemsCount, true);
+            break;
+
+          case SyncType.CONTACTS:
+            console.log('CONTACTS syncing Calling Force Sync');
+            await processContactsTask(task, offlineItemsCount, true);
+            break;
+
+          case SyncType.ADMIN_NOTES:
+            console.log('ADMIN_NOTES syncing Calling Force Sync');
+            await processAdminNotesTask(task, offlineItemsCount, true);
+            break;
+
+          default:
+            console.warn(`No sync handler for type: ${task.type}`);
+        }
+      } else if (rowData.ListType === 'License') {
+        switch (task.type as SyncType) {
+          case SyncType.LICENSE:
+            console.log('LICENSE syncing Calling Force Sync');
+            await processLicenseTask(task, offlineItemsCount, true);
+            break;
+
+          case SyncType.CONTACTS:
+            console.log('CONTACTS License syncing Calling Force Sync');
+            await processContactsTask(task, offlineItemsCount, true);
+            break;
+
+          case SyncType.ADMIN_NOTES:
+            console.log('ADMIN_NOTES License syncing Calling Force Sync');
+            await processAdminNotesTask(task, offlineItemsCount, true);
+            break;
+
+          default:
+            console.warn(`No sync handler for type: ${task.type}`);
+        }
+      } else {
+        console.warn(`Skipping task: ${task.type}, not matching ListType: ${rowData.ListType}`);
       }
-    } else if (rowData.ListType === 'License') {
-      switch (task.type as SyncType) {
-        case SyncType.LICENSE:
-          console.log('LICENSE syncing Calling Force Sync');
-          await processLicenseTask(task, offlineItemsCount, true);
-          break;
-        case SyncType.CONTACTS:
-          console.log('CONTACTS License syncing Calling Force Sync');
-          await processContactsTask(task, offlineItemsCount, true);
-          break;
-        case SyncType.ADMIN_NOTES:
-          console.log('ADMIN_NOTES License syncing Calling Force Sync');
-          await processAdminNotesTask(task, offlineItemsCount, true);
-          break;
-        default:
-          console.warn(`No sync handler for type: ${task.type}`);
-      }
-    } else {
-      console.warn(`Skipping task: ${task.type}, not matching ListType: ${rowData.ListType}`);
+    } catch (error) {
+      // prevent full breaking
+      console.error(`Error processing task ${task.type}:`, error);
+      recordCrashlyticsError(`ForceSync failed for task ${task.type}`, error);
+
+      // Continue to next tasks
+      continue;
     }
   }
   console.log('------>Force syncing completed successfully<----------');

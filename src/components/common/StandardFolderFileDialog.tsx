@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, FlatList, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { StandardFolderFileDialogProps } from '../../utils/interfaces/IComponent';
+import type { StandardFolderFileDialogProps } from '../../utils/interfaces/IComponent';
 import { COLORS } from '../../theme/colors';
 import { fontSize, height } from '../../utils/helper/dimensions';
 import { TEXTS } from '../../constants/strings';

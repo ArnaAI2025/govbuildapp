@@ -1,4 +1,4 @@
-import { AttachedItem, LicenseType, SyncModel } from './ISubScreens';
+import type { AttachedItem, LicenseType, SyncModel } from './ISubScreens';
 
 export interface CaseData {
   id?: string;

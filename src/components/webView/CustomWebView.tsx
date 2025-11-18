@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import Loader from '../common/Loader';
-import { CustomWebViewProps } from '../../utils/interfaces/IComponent';
+import type { CustomWebViewProps } from '../../utils/interfaces/IComponent';
 import { WINDOW_WIDTH } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 

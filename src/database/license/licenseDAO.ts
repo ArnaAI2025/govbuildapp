@@ -2,7 +2,7 @@ import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 import { getNewUTCDate, toSqlVal } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
-import { License } from '../types/license';
+import type { License } from '../types/license';
 
 // Store License Data
 export const storeLicenseData = async (

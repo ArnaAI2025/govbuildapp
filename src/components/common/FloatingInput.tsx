@@ -4,7 +4,7 @@ import { StyleSheet, Image, Text, View } from 'react-native';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
 import { useColorScheme } from 'react-native';
-import { FloatingInputProps } from '../../utils/interfaces/IComponent';
+import type { FloatingInputProps } from '../../utils/interfaces/IComponent';
 
 const FloatingInput: React.FC<FloatingInputProps> = ({
   label,
@@ -78,7 +78,7 @@ const FloatingInput: React.FC<FloatingInputProps> = ({
         value={value === null || value === undefined ? undefined : String(value)}
         onChangeText={handleChangeText}
         placeholder={placeholder}
-        autoCorrect={true}
+        autoCorrect
         secureTextEntry={isPassword && !isPasswordVisible}
         keyboardType={keyboardType}
         mode="outlined"

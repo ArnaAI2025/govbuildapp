@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, Platform } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse, types } from 'react-native-document-picker';
+import type { DocumentPickerResponse} from 'react-native-document-picker';
+import DocumentPicker, { types } from 'react-native-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import CustomAlertDialog from '../../components/dialogs/CustomAlertDialog';
 import { fetchFileExtensionData } from '../../database/sub-screens/attached-docs/attachedDocsDAO';
@@ -50,7 +51,7 @@ const ImageFileUploadPic = ({ visible, onClose, setLoading, config }: ImageFileU
         config.filePattern,
       );
     } catch (error) {
-      recordCrashlyticsError('Error during camera action:',error);
+      recordCrashlyticsError('Error during camera action:', error);
       console.error('Error during camera action:', error);
       Alert.alert('Error', 'Failed to open camera. Please try again.');
     } finally {
@@ -93,7 +94,7 @@ const ImageFileUploadPic = ({ visible, onClose, setLoading, config }: ImageFileU
           break;
       }
     } catch (error) {
-      recordCrashlyticsError('Error handling action:',error);
+      recordCrashlyticsError('Error handling action:', error);
       console.error('Error handling action:', error);
       Alert.alert('Error', 'An error occurred while processing your request.');
     }
@@ -156,7 +157,7 @@ async function cameraOpen(
     }
     pageReload();
   } catch (error) {
-    recordCrashlyticsError('Camera error:',error);
+    recordCrashlyticsError('Camera error:', error);
     console.error('Camera error:', error);
     throw error;
   }
@@ -230,7 +231,7 @@ async function openDocPicker(
     if (DocumentPicker.isCancel(err)) {
       console.log('User cancelled the picker');
     } else {
-      recordCrashlyticsError('Document picker error:',err);
+      recordCrashlyticsError('Document picker error:', err);
       console.error('Document picker error:', err);
       throw err;
     }

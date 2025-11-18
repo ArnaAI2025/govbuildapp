@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
-import { RootStackParamList } from '../../../navigation/Types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useOrientation } from '../../../utils/useOrientation';
 import { fetchTaskList } from '../../../services/sub-screens-service/SubScreensCommonService';
-import { Task } from '../../../utils/interfaces/ISubScreens';
+import type { Task } from '../../../utils/interfaces/ISubScreens';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { COLORS } from '../../../theme/colors';
 import Loader from '../../../components/common/Loader';

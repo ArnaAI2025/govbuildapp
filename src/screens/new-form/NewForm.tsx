@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import type { FunctionComponent} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, View, FlatList, ActivityIndicator, Platform } from 'react-native';
 import Loader from '../../components/common/Loader';
 import { styles } from './newFormStyles';
@@ -16,7 +17,7 @@ import { fetchNewFormService, fetchTagService, fetchTypeService } from './FormSe
 import { useNewFormStore } from '../../store/useNewFormStore';
 import IMAGES from '../../theme/images';
 import FloatingInput from '../../components/common/FloatingInput';
-import { FormStatus } from '../../utils/interfaces/ISubScreens';
+import type { FormStatus } from '../../utils/interfaces/ISubScreens';
 import ManageFormListItem from './ManageFormListItem';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
@@ -80,7 +81,7 @@ const NewFormScreen: FunctionComponent<Props> = () => {
       const updatedList = [{ id: '', displayText: 'All Advanced Form types' }, ...(response ?? [])];
       setTypeList(updatedList);
     } catch (error) {
-      recordCrashlyticsError('Error in fetchTypeData --->',error)
+      recordCrashlyticsError('Error in fetchTypeData --->', error);
       console.error('Error in fetchTypeData --->', error);
     }
   };
@@ -102,7 +103,7 @@ const NewFormScreen: FunctionComponent<Props> = () => {
         NewFormApiCall(true);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in fetchTagData --->',error)
+      recordCrashlyticsError('Error in fetchTagData --->', error);
       console.error('Error in fetchTagData --->', error);
       NewFormApiCall(true);
     } finally {
@@ -155,7 +156,7 @@ const NewFormScreen: FunctionComponent<Props> = () => {
           setHasMoreData(false);
         }
       } catch (error) {
-        recordCrashlyticsError('Error loading form list --->', error)
+        recordCrashlyticsError('Error loading form list --->', error);
         console.error('Error loading form list --->', error);
       } finally {
         setLoading(false);

@@ -8,15 +8,15 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { fetchFormList, filterFormList } from '../new-form/FormService';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import Loader from '../../components/common/Loader';
 import { COLORS } from '../../theme/colors';
 import { height } from '../../utils/helper/dimensions';
 import AddFormItemView from './AddFormItemView';
-import { FormItem } from '../../utils/interfaces/IComponent';
+import type { FormItem } from '../../utils/interfaces/IComponent';
 import NoData from '../../components/common/NoData';
 import { TEXTS } from '../../constants/strings';
 import { useNetworkStatus } from '../../utils/checkNetwork';
@@ -60,7 +60,7 @@ const AddForm: React.FC<AddFormScreenProps> = ({ route, navigation }) => {
           setPageNo(2);
         }
       } catch (error) {
-        recordCrashlyticsError('Error in fetching forms:---->', error)
+        recordCrashlyticsError('Error in fetching forms:---->', error);
         console.warn('Error fetching forms:', error);
       } finally {
         setIsLoading(false);
@@ -85,7 +85,7 @@ const AddForm: React.FC<AddFormScreenProps> = ({ route, navigation }) => {
         setPageNo((prev) => prev + 1);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in loading more forms:', error)
+      recordCrashlyticsError('Error in loading more forms:', error);
       console.warn('Error loading more forms:', error);
     } finally {
       setLoadMore(false);
@@ -163,7 +163,7 @@ const AddForm: React.FC<AddFormScreenProps> = ({ route, navigation }) => {
             value={searchQuery}
             onChangeText={handleSearch}
             placeholder="Search..."
-            autoCorrect={true}
+            autoCorrect
             placeholderTextColor={COLORS.BLACK}
             style={styles.searchInput}
             autoCapitalize="none"

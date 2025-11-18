@@ -1,6 +1,6 @@
-import { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
 import { getBaseUrl, getUserRole } from '../../session/SessionManager';
-import { DELETE_API, GET_DATA, POST_DATA_WITH_TOKEN } from '../../services/ApiClient';
+import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
 import { fetchInspectionData } from '../../database/daily-inspection/DailyInspectionDAO';
 import {
@@ -132,12 +132,12 @@ export const DailyInspectionService = {
   },
 
   async fetchDropdownFilters(isNetworkAvailable: boolean): Promise<{
-    inspectionTypes: { id: string; displayText: string }[];
-    inspectionStatus: { id: string; displayText: string }[];
-    caseType: { id: string; displayText: string }[];
-    caseTypeCategory: { id: string; displayText: string }[];
-    licenseType: { id: string; displayText: string }[];
-    licenseTypeCategory: { id: string; displayText: string }[];
+    inspectionTypes: Array<{ id: string; displayText: string }>;
+    inspectionStatus: Array<{ id: string; displayText: string }>;
+    caseType: Array<{ id: string; displayText: string }>;
+    caseTypeCategory: Array<{ id: string; displayText: string }>;
+    licenseType: Array<{ id: string; displayText: string }>;
+    licenseTypeCategory: Array<{ id: string; displayText: string }>;
   }> {
     try {
       if (!isNetworkAvailable) {
@@ -190,137 +190,6 @@ export const DailyInspectionService = {
       };
     }
   },
-
-  // async applyAdvanceFilter(
-  //   teamMembers: TeamMember[],
-  //   userId: string,
-  //   setLoading: (loading: boolean) => void
-  // ): Promise<{
-  //   advanceFilter: AdvanceFilter;
-  //   filterCount: number;
-  //   selectedTeam: TeamMember[];
-  //   selectedInspectionType: { id: string; displayText: string }[];
-  //   selectedStatus: { id: string; displayText: string }[];
-  //   selectedCaseType: { id: string; displayText: string }[];
-  //   selectedCaseTypeCategory: { id: string; displayText: string }[];
-  //   selectedLicenseType: { id: string; displayText: string }[];
-  //   selectedLicenseTypeCategory: { id: string; displayText: string }[];
-  //   isIncomplete: boolean;
-  //   noInspectorAssigned: boolean;
-  // }> {
-  //   try {
-  //     setLoading(true);
-  //     let filterCount = 0;
-  //     const isIncomplete = await getInspectionIsIncomplete();
-  //     if (isIncomplete) filterCount++;
-  //     const noInspectorAssigned = await getNoInspectorAssigned();
-  //     if (noInspectorAssigned) filterCount++;
-  //     const filterStatus = await getAdvanceFilterStatus();
-  //     const statusIds =
-  //       filterStatus?.length > 0
-  //         ? filterStatus.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (statusIds) filterCount++;
-  //     const filterCaseType = await getAdvanceFilterCaseType();
-  //     const caseTypeIds =
-  //       filterCaseType?.length > 0
-  //         ? filterCaseType.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (caseTypeIds) filterCount++;
-  //     const filterCaseTypeCategory = await getAdvanceFilterCaseTypeCategory();
-  //     const caseTypeCategoryIds =
-  //       filterCaseTypeCategory?.length > 0
-  //         ? filterCaseTypeCategory.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (caseTypeCategoryIds) filterCount++;
-  //     const filterLicenseType = await getAdvanceFilterLicenseType();
-  //     const licenseTypeIds =
-  //       filterLicenseType?.length > 0
-  //         ? filterLicenseType.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (licenseTypeIds) filterCount++;
-  //     const filterLicenseTypeCategory =
-  //       await getAdvanceFilterLicenseTypeCategory();
-  //     const licenseTypeCategoryIds =
-  //       filterLicenseTypeCategory?.length > 0
-  //         ? filterLicenseTypeCategory.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (licenseTypeCategoryIds) filterCount++;
-  //     const filterInspectorType = await getAdvanceFilterInspectionType();
-  //     const typeIds =
-  //       filterInspectorType?.length > 0
-  //         ? filterInspectorType.map((item: any) => item.id).join(",")
-  //         : "";
-  //     if (typeIds) filterCount++;
-  //     const filterInspectors = await getAdvanceFilterInspector();
-  //     let teamMemberIds = "";
-  //     let selectedTeam: TeamMember[] = [];
-  //     if (filterInspectors?.length > 0) {
-  //       teamMemberIds = filterInspectors
-  //         .map((item: any) => item.value.id)
-  //         .join(",");
-  //       selectedTeam = filterInspectors;
-  //       if (teamMemberIds) filterCount++;
-  //     } else {
-  //       const userTeamMember = teamMembers.find(
-  //         (member) => member.id === userId
-  //       );
-  //       if (userTeamMember) {
-  //         teamMemberIds = userTeamMember.id;
-  //         selectedTeam = [
-  //           { label: userTeamMember.displayText, value: userTeamMember },
-  //         ];
-  //         filterCount++;
-  //       }
-  //     }
-  //     setLoading(false);
-  //     return {
-  //       advanceFilter: {
-  //         inspectorBy: teamMemberIds,
-  //         type: typeIds,
-  //         status: statusIds,
-  //         caseType: caseTypeIds,
-  //         licenseType: licenseTypeIds,
-  //         caseTypeCategory: caseTypeCategoryIds,
-  //         licenseTypeCategory: licenseTypeCategoryIds,
-  //       },
-  //       filterCount,
-  //       selectedTeam,
-  //       selectedInspectionType: filterInspectorType || [],
-  //       selectedStatus: filterStatus || [],
-  //       selectedCaseType: filterCaseType || [],
-  //       selectedCaseTypeCategory: filterCaseTypeCategory || [],
-  //       selectedLicenseType: filterLicenseType || [],
-  //       selectedLicenseTypeCategory: filterLicenseTypeCategory || [],
-  //       isIncomplete,
-  //       noInspectorAssigned,
-  //     };
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error in applyAdvanceFilter:", error);
-  //     return {
-  //       advanceFilter: {
-  //         inspectorBy: "",
-  //         type: "",
-  //         status: "",
-  //         caseType: "",
-  //         licenseType: "",
-  //         caseTypeCategory: "",
-  //         licenseTypeCategory: "",
-  //       },
-  //       filterCount: 0,
-  //       selectedTeam: [],
-  //       selectedInspectionType: [],
-  //       selectedStatus: [],
-  //       selectedCaseType: [],
-  //       selectedCaseTypeCategory: [],
-  //       selectedLicenseType: [],
-  //       selectedLicenseTypeCategory: [],
-  //       isIncomplete: false,
-  //       noInspectorAssigned: false,
-  //     };
-  //   }
-  // },
 
   async updateOrder(
     contentItemIds: string[],
@@ -545,26 +414,26 @@ export const DailyInspectionService = {
     );
   },
 
-  async deleteInspection(contentItemId: string, isNetworkAvailable: boolean): Promise<boolean> {
-    try {
-      if (isNetworkAvailable) {
-        const url = getBaseUrl();
-        await DELETE_API({
-          url: `${url}${URL.DELETE_DAILY_INSPECTION}${contentItemId}`,
-          body: {
-            contentItemId,
-          },
-        });
-        return true;
-      }
-      console.warn('No internet connection');
-      return false;
-    } catch (error) {
-      recordCrashlyticsError('Error in deleteInspection:', error);
-      console.error('Error in deleteInspection:', error);
-      return false;
-    }
-  },
+  // async deleteInspection(contentItemId: string, isNetworkAvailable: boolean): Promise<boolean> {
+  //   try {
+  //     if (isNetworkAvailable) {
+  //       const url = getBaseUrl();
+  //       await DELETE_API({
+  //         url: `${url}${URL.DELETE_DAILY_INSPECTION}${contentItemId}`,
+  //         body: {
+  //           contentItemId,
+  //         },
+  //       });
+  //       return true;
+  //     }
+  //     console.warn('No internet connection');
+  //     return false;
+  //   } catch (error) {
+  //     recordCrashlyticsError('Error in deleteInspection:', error);
+  //     console.error('Error in deleteInspection:', error);
+  //     return false;
+  //   }
+  // },
 
   async saveOrUpdateInspection(
     isEdit: boolean,
@@ -633,39 +502,6 @@ export const DailyInspectionService = {
       return false;
     }
   },
-
-  // async fetchInspectionsWithFilters(
-  //   filterDate: string,
-  //   endDate: string,
-  //   advanceFilter: AdvanceFilter,
-  //   setLoading: (loading: boolean) => void,
-  //   setIsOnline: (isOnline: boolean) => void
-  // ): Promise<DailyInspectionModel[]> {
-  //   try {
-  //     const state = await NetInfo.fetch();
-  //     if (isNetworkAvailable) {
-  //       setLoading(true);
-  //       setIsOnline(true);
-  //       const url = getBaseUrl();
-  //       const response = await GET_DATA({
-  //         url: `${url}${URL.DAILY_INSPECTION_LIST}?date=${filterDate}&endDate=${endDate}&inspectorBy=${advanceFilter.inspectorBy}&type=${advanceFilter.type}&status=${advanceFilter.status}&caseTypeIds=${advanceFilter.caseType}&licenseTypeIds=${advanceFilter.licenseType}`,
-  //       });
-  //       setLoading(false);
-  //       return response?.status && response?.data?.status
-  //         ? response?.data?.data || []
-  //         : [];
-  //     } else {
-  //       setLoading(false);
-  //       setIsOnline(false);
-  //       const localData = await fetchInspectionData("");
-  //       return localData || [];
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error("Error in fetchInspectionsWithFilters:", error);
-  //     return [];
-  //   }
-  // },
 };
 export const handleLocationPress = (location?: any, isNetworkAvailable?: boolean) => {
   if (!isNetworkAvailable) {

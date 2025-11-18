@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { useOrientation } from '../../../utils/useOrientation';
 import { InspectionService } from './InspectionService';
 import Loader from '../../../components/common/Loader';

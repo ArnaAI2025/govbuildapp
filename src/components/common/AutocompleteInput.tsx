@@ -12,7 +12,7 @@ import {
 import { TextInput, List } from 'react-native-paper';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
-import { AutocompleteInputProps } from '../../utils/interfaces/IComponent';
+import type { AutocompleteInputProps } from '../../utils/interfaces/IComponent';
 import { TEXTS } from '../../constants/strings';
 
 const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
@@ -100,7 +100,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         <TextInput
           label={label}
           value={query}
-          autoCorrect={true}
+          autoCorrect
           onChangeText={(text) => {
             if (isSearchEnabled) {
               onQueryChange(text);
@@ -138,7 +138,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               error: COLORS.ERROR,
             },
           }}
-          editable={true}
+          editable
         />
       </View>
 
@@ -161,9 +161,9 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               renderItem={renderDropdownItem}
               keyExtractor={(item, index) => index.toString()}
               keyboardShouldPersistTaps="handled"
-              nestedScrollEnabled={true}
+              nestedScrollEnabled
               contentContainerStyle={{ flexGrow: 1 }}
-              showsVerticalScrollIndicator={true}
+              showsVerticalScrollIndicator
               style={styles.list}
             />
           </View>

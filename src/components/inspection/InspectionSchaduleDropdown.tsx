@@ -1,4 +1,4 @@
-import { InspectionSchaduleDropdownProps } from '../../utils/interfaces/ICase';
+import type { InspectionSchaduleDropdownProps } from '../../utils/interfaces/ICase';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { fontSize, height, width } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';

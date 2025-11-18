@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { CaseData, FilterOptionsResponse, ItemType } from '../utils/interfaces/ICase';
-import { DefaultAdvancedFiltersInterface } from '../utils/interfaces/IComponent';
+import type { CaseData, FilterOptionsResponse, ItemType } from '../utils/interfaces/ICase';
+import type { DefaultAdvancedFiltersInterface } from '../utils/interfaces/IComponent';
 import { DEFAULT_ADVANCED_FILTERS } from '../constants/data';
 
 interface UnifiedCaseState {
@@ -87,7 +87,7 @@ export const useUnifiedCaseStore = create<UnifiedCaseState>((set, get) => ({
     set((state) => {
       const newFilters = { ...state.filters, ...filters };
       const filterCount = (
-        Object.keys(newFilters) as (keyof DefaultAdvancedFiltersInterface)[]
+        Object.keys(newFilters) as Array<keyof DefaultAdvancedFiltersInterface>
       ).reduce((count, key) => {
         if (key === 'search' || key === 'isMyCaseOnly' || key === 'isMyLicenseOnly') {
           return count; // Ignore search and toggle fields

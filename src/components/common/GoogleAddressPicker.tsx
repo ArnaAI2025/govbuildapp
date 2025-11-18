@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import type {
+  GooglePlaceDetail} from 'react-native-google-places-autocomplete';
 import {
-  GooglePlacesAutocomplete,
-  GooglePlaceDetail,
+  GooglePlacesAutocomplete
 } from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GOOGLE_PLACE_API_KEY } from '../../constants/url';
 import { height } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
-import { GooglePlacePickerProps } from '../../utils/interfaces/IComponent';
+import type { GooglePlacePickerProps } from '../../utils/interfaces/IComponent';
 
 export const GooglePlacePicker: React.FC<GooglePlacePickerProps> = ({
   reff,
@@ -86,7 +87,7 @@ export const GooglePlacePicker: React.FC<GooglePlacePickerProps> = ({
       <GooglePlacesAutocomplete
         ref={reff}
         minLength={2}
-        fetchDetails={true}
+        fetchDetails
         enablePoweredByContainer={false}
         isRowScrollable={false}
         query={{

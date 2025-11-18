@@ -86,7 +86,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ isActive }) => {
 
       setData(sortedHistory);
     } catch (error) {
-      recordCrashlyticsError('Error loading sync history:',error)
+      recordCrashlyticsError('Error loading sync history:', error);
       console.error('Error loading sync history:', error);
       setData([]);
     } finally {

@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import type { FunctionComponent} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BackHandler,
   Platform,
@@ -166,7 +167,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
         setMyCases(caseData?.length || 0);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in CountAPICall:------>', error)
+      recordCrashlyticsError('Error in CountAPICall:------>', error);
       console.error('Error in APICall:------>', error);
     }
   };
@@ -232,7 +233,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
 
       return syncCount;
     } catch (error) {
-      recordCrashlyticsError('error in OfflineItemsCount:',error)
+      recordCrashlyticsError('error in OfflineItemsCount:', error);
       console.error('error in OfflineItemsCount:', error);
       return 0;
     }
@@ -243,7 +244,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
       const offlineItemCount = await OfflineItemsCount();
       setOfflineData(offlineItemCount);
     } catch (error) {
-      recordCrashlyticsError('Error in Total Count:---->', error)
+      recordCrashlyticsError('Error in Total Count:---->', error);
       console.error('Error in Total Count:---->', error);
     }
   };
@@ -393,7 +394,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
         <Loader loading={loading} />
 
         <ScrollView
-          scrollEnabled={true}
+          scrollEnabled
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewStyle}
           scrollEventThrottle={16}
@@ -404,7 +405,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
                 <DashboardCard
                   heading={newTask ?? 0}
                   value={TEXTS.home.newAsgmts}
-                  isNew={true}
+                  isNew
                   onPress={() => {
                     if (isNetworkAvailable) {
                       navigate('MyCaseScreen', {
@@ -412,17 +413,14 @@ const HomeScreen: FunctionComponent<Props> = () => {
                         screenName: 'newTask',
                       });
                     } else {
-                      ToastService.show(
-                        TEXTS.alertMessages.notAvailableInOffline,
-                        COLORS.ERROR,
-                      );
+                      ToastService.show(TEXTS.alertMessages.notAvailableInOffline, COLORS.ERROR);
                     }
                   }}
                 />
                 <DashboardCard
                   heading={offlineData}
                   value={TEXTS.home.offlineItems}
-                  isNew={true}
+                  isNew
                   onPress={() => {
                     navigate('OfflineSyncScreen');
                   }}
@@ -454,7 +452,7 @@ const HomeScreen: FunctionComponent<Props> = () => {
               renderItem={({ item }) => (
                 <View style={[styles.cardWrapper, { flex: 1 / numColumns }]}>
                   <DashboardCard
-                    showImage={true}
+                    showImage
                     image={item.image}
                     value={item.value}
                     disabled={item.disabled}

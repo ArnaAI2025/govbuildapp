@@ -1,5 +1,5 @@
 import { COLORS } from '../theme/colors';
-import {
+import type {
   DefaultAdvancedFiltersInterface,
   filterOptionInterface,
 } from '../utils/interfaces/IComponent';

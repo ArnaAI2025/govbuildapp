@@ -1,7 +1,7 @@
 import { getDatabase } from '../DatabaseService';
 import { TABLES } from '../DatabaseConstants';
 import { addCaseLicenseData } from '../my-case/myCaseDAO';
-import { SyncModel } from '../../utils/interfaces/ISubScreens';
+import type { SyncModel } from '../../utils/interfaces/ISubScreens';
 import { getNewUTCDate } from '../../utils/helper/helpers';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 

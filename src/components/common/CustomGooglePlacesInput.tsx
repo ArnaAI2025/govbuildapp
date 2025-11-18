@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import {
-  GooglePlacesAutocomplete,
+import type {
   GooglePlaceData,
-  GooglePlaceDetail,
+  GooglePlaceDetail} from 'react-native-google-places-autocomplete';
+import {
+  GooglePlacesAutocomplete
 } from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GOOGLE_PLACE_API_KEY } from '../../constants/url';
@@ -68,7 +69,7 @@ const CustomGooglePlacesInput = forwardRef<any, Props>(
             autoCapitalize: 'none',
           }}
           listViewDisplayed="auto"
-          fetchDetails={true}
+          fetchDetails
           renderDescription={(row) => row.description}
           onPress={(data: GooglePlaceData, details: GooglePlaceDetail | null) => {
             const address = details?.formatted_address || data.description || '';

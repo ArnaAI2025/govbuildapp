@@ -9,10 +9,10 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import Loader from '../../../components/common/Loader';
@@ -20,7 +20,7 @@ import IMAGES from '../../../theme/images';
 import { getUserRole } from '../../../session/SessionManager';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
-import { CommentsState } from '../../../utils/interfaces/ISubScreens';
+import type { CommentsState } from '../../../utils/interfaces/ISubScreens';
 import {
   applyPublicComment,
   applySetAsAlert,
@@ -104,7 +104,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
         setState((prev) => ({ ...prev, comments: [] }));
       }
     } catch (error) {
-      recordCrashlyticsError('Error fetching admin comments:',error)
+      recordCrashlyticsError('Error fetching admin comments:', error);
       console.error('Error fetching admin comments:', error);
       setState((prev) => ({ ...prev, comments: [] }));
     } finally {
@@ -156,7 +156,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
         ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
       }
     } catch (error) {
-      recordCrashlyticsError('Error saving comment:',error)
+      recordCrashlyticsError('Error saving comment:', error);
       console.error('Error saving comment:', error);
       ToastService.show(TEXTS.subScreens.adminNotes.commentError, COLORS.ERROR);
     } finally {
@@ -192,7 +192,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
           ToastService.show(TEXTS.subScreens.adminNotes.commentUpdateError, COLORS.ERROR);
         }
       } catch (error) {
-        recordCrashlyticsError('Error setting comment as alert:', error)
+        recordCrashlyticsError('Error setting comment as alert:', error);
         console.error('Error setting comment as alert:', error);
       }
     },
@@ -216,7 +216,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
           ToastService.show(TEXTS.subScreens.adminNotes.commentUpdateError, COLORS.ERROR);
         }
       } catch (error) {
-        recordCrashlyticsError('Error making comment public:',error);
+        recordCrashlyticsError('Error making comment public:', error);
         console.error('Error making comment public:', error);
       }
     },
@@ -331,7 +331,7 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
 
   // Update RichEditor
   <RichEditor
-    useContainer={true}
+    useContainer
     ref={richText}
     androidLayerType="software"
     initialContentHTML={state.newComment}
@@ -483,9 +483,9 @@ const AdminNotes: React.FC<AdminNotesScreenProps> = ({ route, navigation }) => {
               ]}
               pointerEvents={caseData?.isStatusReadOnly || isForceSync ? 'none' : 'auto'}
             >
-              <ScrollView showsVerticalScrollIndicator={true} keyboardShouldPersistTaps="handled">
+              <ScrollView showsVerticalScrollIndicator keyboardShouldPersistTaps="handled">
                 <RichEditor
-                  useContainer={true}
+                  useContainer
                   ref={richText}
                   androidLayerType="software"
                   initialContentHTML={state.newComment}

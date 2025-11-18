@@ -3,8 +3,8 @@ import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Checkbox } from 'expo-checkbox';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { RootStackParamList } from '../../../navigation/Types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { convertDateToISO, formatAllTypesDate, formatDate } from '../../../utils/helper/helpers';
 import Loader from '../../../components/common/Loader';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
@@ -26,6 +26,7 @@ import { DatePickerInput } from '../../../components/common/DatePickerInput';
 import { GOOGLE_PLACE_API_KEY } from '../../../constants/url';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import PublishButton from '../../../components/common/PublishButton';
+import { useNetworkStatus } from '../../../utils/checkNetwork';
 
 type AddContactsScreenProps = NativeStackScreenProps<RootStackParamList, 'AddMultiLocation'>;
 
@@ -55,6 +56,7 @@ const AddLocationScreen: React.FC<AddContactsScreenProps> = ({ route, navigation
       : '',
   );
   const [endDatePickerOpen, setEndDatePickerOpen] = useState<boolean>(false);
+  const { isNetworkAvailable} = useNetworkStatus();
   const contentId = route.params.contentId;
   const ref = useRef<any>(null);
 
@@ -92,6 +94,7 @@ const AddLocationScreen: React.FC<AddContactsScreenProps> = ({ route, navigation
         longitude || '0',
         route.params.data?.contentItemId || '',
         setLoading,
+        isNetworkAvailable
       );
       if (success) {
         //   ToastService.show("Location save successfully", COLORS.SUCCESS_GREEN);
@@ -130,10 +133,10 @@ const AddLocationScreen: React.FC<AddContactsScreenProps> = ({ route, navigation
       >
         <View style={{ flex: 1 }}>
           <KeyboardAwareScrollView
-            nestedScrollEnabled={true}
+            nestedScrollEnabled
             extraScrollHeight={150}
             contentContainerStyle={{ flexGrow: 1 }}
-            enableOnAndroid={true}
+            enableOnAndroid
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
@@ -153,7 +156,7 @@ const AddLocationScreen: React.FC<AddContactsScreenProps> = ({ route, navigation
               <GooglePlacesAutocomplete
                 ref={ref}
                 placeholder={TEXTS.subScreens.location.googlePlacesPlaceholder}
-                fetchDetails={true}
+                fetchDetails
                 query={{
                   key: GOOGLE_PLACE_API_KEY,
                   language: 'en',

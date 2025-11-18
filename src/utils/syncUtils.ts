@@ -123,7 +123,7 @@ export const getPendingSyncTasksCount = async (): Promise<number> => {
     const [{ count }] = (await db.getAllAsync<{ count: number }>(
       `SELECT COUNT(*) as count FROM ${TABLES.SYNC_QUEUE} WHERE status = ?`,
       ['pending'],
-    )) as { count: number }[];
+    )) as Array<{ count: number }>;
 
     return count;
   } catch (error) {

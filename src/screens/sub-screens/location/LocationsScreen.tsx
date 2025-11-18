@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { RootStackParamList } from '../../../navigation/Types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useOrientation } from '../../../utils/useOrientation';
 import { useIsFocused } from '@react-navigation/native';
 import { LocationService } from './LocationService';
-import { AdressModel } from '../../../utils/interfaces/ISubScreens';
+import type { AdressModel } from '../../../utils/interfaces/ISubScreens';
 import Loader from '../../../components/common/Loader';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import NoData from '../../../components/common/NoData';
@@ -20,7 +20,6 @@ type LocationsScreenProps = NativeStackScreenProps<RootStackParamList, 'Location
 const Locations: React.FC<LocationsScreenProps> = ({ route, navigation }) => {
   const orientation = useOrientation();
   const [isLoadingAPI, setLoading] = useState<boolean>(false);
-  const [, setIsOnline] = useState<boolean>(false);
   const [data, setData] = useState<AdressModel[]>([]);
   const { isNetworkAvailable } = useNetworkStatus();
   const isFocused = useIsFocused();
@@ -29,7 +28,7 @@ const Locations: React.FC<LocationsScreenProps> = ({ route, navigation }) => {
 
   const callDeleteLocationApi = async (contentId: string) => {
     setLoading(true);
-    const success = await LocationService.deleteLocation(contentId, setLoading);
+    const success = await LocationService.deleteLocation(contentId, setLoading, isNetworkAvailable);
     if (success) {
       setData((prevData) => {
         const newData = prevData.filter((item) => item.contentItemId !== contentId);
@@ -44,7 +43,7 @@ const Locations: React.FC<LocationsScreenProps> = ({ route, navigation }) => {
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
-      const result = await LocationService.fetchLocations(contentItemId, setLoading, setIsOnline);
+      const result = await LocationService.fetchLocations(contentItemId, setLoading, isNetworkAvailable);
       if (isMounted) {
         setData(result);
       }

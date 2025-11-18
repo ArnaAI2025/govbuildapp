@@ -1,7 +1,7 @@
 import React from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import globalStyles from '../../../theme/globalStyles';
 import { cardBorder, fontSize, height } from '../../../utils/helper/dimensions';
 import TextHeadingAndValue from '../../../components/common/TextHeadingAndTitleView';

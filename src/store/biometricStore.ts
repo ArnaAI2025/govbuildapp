@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { zustandMMKVStorage } from '../session/SessionManager';
-import { BiometricState } from '../utils/interfaces/zustand/IAuth';
+import type { BiometricState } from '../utils/interfaces/zustand/IAuth';
 
 export const useBiometricStore = create<BiometricState>()(
   persist(

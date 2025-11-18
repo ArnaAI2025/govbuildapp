@@ -12,8 +12,8 @@ import {
   View,
 } from 'react-native';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { TEXTS } from '../../../constants/strings';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
@@ -183,7 +183,7 @@ const CommentWithFileAttached: React.FC<CommentWithFileAttachedProps> = ({ route
             <View style={styles.inputContainer}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 <RichEditor
-                  useContainer={true}
+                  useContainer
                   ref={richTextRef}
                   androidLayerType="software"
                   initialContentHTML={comment}
@@ -200,7 +200,7 @@ const CommentWithFileAttached: React.FC<CommentWithFileAttachedProps> = ({ route
                 disabled={saveDisable}
                 onPress={() => {
                   setSaveDisable(true);
-                  saveComment();
+                  void saveComment();
                 }}
               >
                 <Image source={IMAGES.SEND_ICON} style={styles.sendIcon} />

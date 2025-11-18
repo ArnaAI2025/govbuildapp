@@ -12,9 +12,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import RadioGroup from 'react-native-radio-buttons-group';
 import Checkbox from 'expo-checkbox';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import moment from 'moment';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { COLORS } from '../../../theme/colors';
 import { InspectionService } from './InspectionService';
 import {
@@ -57,7 +57,7 @@ import { radioButtons } from '../../../constants/data';
 import { goBack } from '../../../navigation/Index';
 import OpenDocPickerDialog from '../../../components/common/OpenDocPickerDialog';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
-import { IImageData } from '../../../utils/interfaces/ISubScreens';
+import type { IImageData } from '../../../utils/interfaces/ISubScreens';
 import PublishButton from '../../../components/common/PublishButton';
 import { useDailyInspectionStore } from '../../../store/useDailyInspectionStore';
 import { useFocusEffect } from '@react-navigation/native';
@@ -197,9 +197,10 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
     const members = await InspectionService.fetchTeamMembers(
       caseOrLicenseData ?? route.params.param,
       '',
+      isNetworkAvailable
     );
     setTeamMembers(members);
-    const sig = await InspectionService.fetchTeamMemberSignature();
+    const sig = await InspectionService.fetchTeamMemberSignature(isNetworkAvailable);
     setSignature(sig ?? '');
     setIsHideSign(!sig);
   };
@@ -219,14 +220,15 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
     const members = await InspectionService.fetchTeamMembers(
       caseOrLicenseData ?? route.params.param,
       getInspectionTypeIds(selectedTypes),
+      isNetworkAvailable
     );
     setTeamMembers(members);
-    const signature = await InspectionService.fetchTeamMemberSignature();
+    const signature = await InspectionService.fetchTeamMemberSignature(isNetworkAvailable);
     setSignature(signature ?? '');
     setIsHideSign(!signature);
 
     if (inspectionId) {
-      const inspection = await InspectionService.fetchInspectionById(inspectionId);
+      const inspection = await InspectionService.fetchInspectionById(inspectionId, isNetworkAvailable);
       if (inspection) {
         setLocation(inspection.location ?? '');
         setMsCalendarId(inspection.msCalendarId ?? '');
@@ -306,6 +308,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
           getInspectionTypeIds(selectedTypes),
           combineDateTime(inspection.appointmentDate, inspection.startTime),
           combineDateTime(inspection.appointmentDate, inspection.endTime),
+          isNetworkAvailable
         );
         setDefaultTime(defaultTime);
         setTimeDif(timeDifference);
@@ -335,12 +338,14 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
       const members = await InspectionService.fetchTeamMembers(
         caseOrLicenseData ?? route.params.param,
         getInspectionTypeIds(tempTypes),
+        isNetworkAvailable
       );
       setTeamMembers(members);
       const { defaultTime, timeDifference } = await InspectionService.fetchInspectionDefaultTime(
         getInspectionTypeIds(tempTypes),
         startDateTime,
         endDateTime,
+        isNetworkAvailable
       );
       setDefaultTime(defaultTime);
       setTimeDif(timeDifference);
@@ -441,6 +446,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
         inspectionDate,
         convertTime24Hours(startDateTime),
         convertTime24Hours(endDateTime),
+        isNetworkAvailable
       );
       if (bookedTeamMembers.length === 0) {
         saveInspection(false);
@@ -460,6 +466,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
     const duration = startDateTime && endDateTime ? getTimeDuration(startDateTime, endDateTime) : 0;
     const subject = await InspectionService.fetchInspectionTitle(
       getInspectionTypeIds(selectedTypes),
+      isNetworkAvailable
     );
     const success = await InspectionService.saveInspection(
       {
@@ -498,6 +505,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
         isCase: type === 'Case',
       },
       setLoading,
+      isNetworkAvailable
     );
 
     if (success) {
@@ -603,7 +611,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
           <KeyboardAwareScrollView
             contentContainerStyle={styles.scrollContent}
             extraScrollHeight={50}
-            enableOnAndroid={true}
+            enableOnAndroid
             enableResetScrollToCoords={false}
             showsVerticalScrollIndicator={false}
           >
@@ -691,11 +699,13 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
                           InspectionService.fetchTeamMembers(
                             caseOrLicenseData ?? route.params.param,
                             getInspectionTypeIds([...selectedTypes, item.value]),
+                            isNetworkAvailable
                           ).then(setTeamMembers);
                           InspectionService.fetchInspectionDefaultTime(
                             getInspectionTypeIds([...selectedTypes, item.value]),
                             startDateTime,
                             endDateTime,
+                            isNetworkAvailable
                           ).then(({ defaultTime, timeDifference }) => {
                             setDefaultTime(defaultTime);
                             setTimeDif(timeDifference);
@@ -819,7 +829,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
                         mode="time"
                         label="Start time"
                         value={startTime}
-                        required={true}
+                        required
                         onChange={(date) => {
                           const formattedDate = formatDate(date.toISOString(), 'YYYY-MM-DD HH:mm');
 
@@ -860,7 +870,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
                         mode="time"
                         label="End Time"
                         value={endTime}
-                        required={true}
+                        required
                         onChange={(date) => {
                           const formattedDate = formatDate(date.toISOString(), 'YYYY-MM-DD HH:mm');
                           const datePart = formatDate(inspectionDate, 'YYYY-MM-DD');
@@ -1047,7 +1057,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
                     ref={isGeneral ? RichText : RichTextAdmin}
                     initialContentHTML={isGeneral ? fullEditorBody : adminNotesBody}
                     //  androidLayerType="software"
-                    useContainer={true}
+                    useContainer
                     placeholder="Please enter note"
                     onChange={(value) => {
                       if (isGeneral) setFullEditorBody(value);
@@ -1151,7 +1161,7 @@ const InspectionSchedule: React.FC<InspectionScheduleProps> = ({ route, navigati
                     ref={RichTextAdmin}
                     initialContentHTML={adminNotesBody}
                     // androidLayerType="software"
-                    useContainer={true}
+                    useContainer
                     placeholder="Please enter note"
                     onChange={(value) => setAdminNotesBody(value)}
                     disabled={normalizeBool(caseOrLicenseData?.isStatusReadOnly)}

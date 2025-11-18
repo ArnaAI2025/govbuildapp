@@ -1,5 +1,5 @@
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
-import { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../utils/interfaces/ISubScreens';
 import { getDatabase } from '../DatabaseService';
 import { DAILY_INSPECTION_TABLE } from './DailyInspectionSchema';
 

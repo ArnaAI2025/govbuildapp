@@ -87,7 +87,7 @@ const ItemToSyncScreen: React.FC<ItemToSyncScreenProps> = ({ isActive }) => {
       const itemToSyncData = combinedArray.map((item) => [item]);
       setData(itemToSyncData);
     } catch (error) {
-      recordCrashlyticsError('Error loading sync data:', error)
+      recordCrashlyticsError('Error loading sync data:', error);
       console.error('Error loading sync data:', error);
     } finally {
       setLoading(false);
@@ -113,7 +113,7 @@ const ItemToSyncScreen: React.FC<ItemToSyncScreenProps> = ({ isActive }) => {
       );
       return combinedArray[0]?.modifiedUtc || null;
     } catch (error) {
-      recordCrashlyticsError('Error checking modifiedUtc:', error)
+      recordCrashlyticsError('Error checking modifiedUtc:', error);
       console.error('Error checking modifiedUtc:', error);
       return null;
     }

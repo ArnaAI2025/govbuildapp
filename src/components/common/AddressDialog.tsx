@@ -55,7 +55,7 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
         visible={visible}
         animationType="none"
         supportedOrientations={['landscape', 'portrait']}
-        transparent={true}
+        transparent
       >
         <SafeAreaView
           style={{
@@ -75,10 +75,10 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
               {title}
             </Text>
             <KeyboardAwareScrollView
-              nestedScrollEnabled={true}
+              nestedScrollEnabled
               extraScrollHeight={-150}
               contentContainerStyle={{ flexGrow: 1 }}
-              enableOnAndroid={true}
+              enableOnAndroid
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               style={{ paddingHorizontal: 10 }}
@@ -89,7 +89,7 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
                     label="Street Address"
                     value={fields.street}
                     numberOfLines={1}
-                    multiline={true}
+                    multiline
                     onChangeText={(value: string) => setFields({ ...fields, street: value })}
                     placeholder="Street Address"
                     keyboardType="default"

@@ -89,34 +89,72 @@ export const syncServerToOfflineDatabase = async (
 export const syncOfflineToServerDatabase = async (
   OfflineItemsCount: () => void,
   isNetworkAvailable: boolean,
-  setProgress: (progress: number) => void,
+  setProgress: (progress: number | null) => void,
   setTotal: (total: number) => void,
-) => {
-  const tasks = [
-    () => syncEditCase(OfflineItemsCount, isNetworkAvailable),
-    () => syncSettings(OfflineItemsCount, isNetworkAvailable),
-    () => syncEditLicense(OfflineItemsCount, isNetworkAvailable),
-    () => syncContacts(OfflineItemsCount, isNetworkAvailable),
-    () => syncAdminNotesFiles(OfflineItemsCount, isNetworkAvailable),
-    () => syncAdminNotes(OfflineItemsCount, isNetworkAvailable),
-    () => syncAttachments(OfflineItemsCount, isNetworkAvailable),
-    () => syncAttachedDocs(OfflineItemsCount, isNetworkAvailable),
-    () => syncFormFiles(OfflineItemsCount, isNetworkAvailable),
-    () => syncForms(OfflineItemsCount, isNetworkAvailable),
-    () => syncEditedForms(OfflineItemsCount, isNetworkAvailable),
+): Promise<{ success: boolean; errors: string[] }> => {
+  // 1. Short-circuit if offline
+  if (!isNetworkAvailable) {
+    ToastService.show('No network connection. Cannot sync offline items.', COLORS.ORANGE);
+    return { success: false, errors: ['No network connection'] };
+  }
+
+  // 2. Define tasks with names for better error reporting
+  const tasks: { name: string; run: () => Promise<void> }[] = [
+    { name: 'Cases', run: () => syncEditCase(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Settings', run: () => syncSettings(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Licenses', run: () => syncEditLicense(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Contacts', run: () => syncContacts(OfflineItemsCount, isNetworkAvailable) },
+    {
+      name: 'Admin note files',
+      run: () => syncAdminNotesFiles(OfflineItemsCount, isNetworkAvailable),
+    },
+    { name: 'Admin notes', run: () => syncAdminNotes(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Attachments', run: () => syncAttachments(OfflineItemsCount, isNetworkAvailable) },
+    {
+      name: 'Attached documents',
+      run: () => syncAttachedDocs(OfflineItemsCount, isNetworkAvailable),
+    },
+    { name: 'Form files', run: () => syncFormFiles(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Forms', run: () => syncForms(OfflineItemsCount, isNetworkAvailable) },
+    { name: 'Edited forms', run: () => syncEditedForms(OfflineItemsCount, isNetworkAvailable) },
   ];
 
   setTotal(tasks.length);
-  let completed = 0;
+  setProgress(0);
 
+  let completed = 0;
+  const errors: string[] = [];
+
+  // 3. Run tasks sequentially, but don’t stop the entire sync on one failure
   for (const task of tasks) {
-    await task();
-    completed++;
-    setProgress(Math.round((completed / tasks.length) * 100));
+    try {
+      await task.run();
+    } catch (error: any) {
+      const msg = `Failed to sync ${task.name}`;
+      errors.push(task.name);
+      recordCrashlyticsError(msg, error);
+      console.error(msg, error);
+    } finally {
+      completed += 1;
+      const percent = Math.round((completed / tasks.length) * 100);
+      setProgress(percent);
+    }
   }
 
+  // 4. Reset progress after a short delay
   setTimeout(() => {
     setProgress(null);
   }, 1000);
-  return true;
+
+  // 5. Overall result + user feedback
+  if (errors.length > 0) {
+    ToastService.show(
+      `Sync finished with errors in: ${errors.join(', ')}. Please review and try again.`,
+      COLORS.ERROR,
+    );
+    return { success: false, errors };
+  }
+
+  ToastService.show('Offline items synced successfully.', COLORS.SUCCESS_GREEN);
+  return { success: true, errors: [] };
 };

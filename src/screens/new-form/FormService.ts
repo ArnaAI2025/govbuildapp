@@ -1,7 +1,7 @@
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
-import { FormItem } from '../../utils/interfaces/IComponent';
+import type { FormItem } from '../../utils/interfaces/IComponent';
 import { fetchAddFormListFromDB } from '../../database/sub-screens/attached-items/attachedItemsDAO';
 import {
   fetchFormFilterTags,
@@ -19,7 +19,6 @@ export const fetchFormList = async (
   isInitialFetch: boolean,
 ): Promise<FormItem[]> => {
   try {
-    console.log('Functon alled');
     if (isNetworkAvailable) {
       const url = getBaseUrl();
       const apiUrl = `${url}${URL.ADVANCE_FORM_LIST}${pageNo}`;

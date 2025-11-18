@@ -1,5 +1,4 @@
-import NetInfo from '@react-native-community/netinfo';
-import { FormStatus } from '../../utils/interfaces/ISubScreens';
+import type { FormStatus } from '../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
@@ -8,13 +7,12 @@ import {
   fetchSubmissionData,
 } from '../../database/form-submission/formSubmissionDAO';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { TEXTS } from '../../constants/strings';
 
 export const FormSubmissionService = {
-  async fetchFormStatus() {
+  async fetchFormStatus(isNetworkAvailable: boolean): Promise<FormStatus[]> {
     try {
-      const state = await NetInfo.fetch();
-
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         const url = getBaseUrl();
 
         const response = await GET_DATA({
@@ -25,35 +23,50 @@ export const FormSubmissionService = {
           const filteredData = response.data?.data?.filter(
             (item: FormStatus) => item.displayText && item.displayText !== '',
           );
-          return [{ id: '', displayText: 'All Advanced Form Status' }, ...filteredData];
+          return [
+            { id: '', displayText: TEXTS.subScreens.advanceFormSubmission.placeholder.dropdown },
+            ...filteredData,
+          ];
         }
-        return [{ id: '', displayText: 'All Advanced Form Status' }];
+        return [
+          { id: '', displayText: TEXTS.subScreens.advanceFormSubmission.placeholder.dropdown },
+        ];
       } else {
         const localData = await fetchFormStatusData();
         const filteredData = localData?.filter(
           (item: FormStatus) => item?.displayText && item?.displayText !== '',
         );
-        return [{ id: '', displayText: 'All Advanced Form Status' }, ...filteredData];
+        return [
+          { id: '', displayText: TEXTS.subScreens.advanceFormSubmission.placeholder.dropdown },
+          ...filteredData,
+        ];
       }
     } catch (error) {
       // setLoading(false);
       recordCrashlyticsError('Error in fetchFormStatus:', error);
       console.error('Error in fetchFormStatus:', error);
-      return [{ id: '', displayText: 'All Advanced Form Status' }];
+      return [{ id: '', displayText: TEXTS.subScreens.advanceFormSubmission.placeholder.dropdown }];
     }
   },
 
   async fetchSubmissions(
+    isNetworkAvailable: boolean,
     page: number,
     searchText: string,
     statusId: string,
     mySubmission: boolean,
   ) {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         const url = getBaseUrl();
-        const payload = `${url}${URL.GET_SUBMISSIONS_ONLINE}?pagenum=${page}&displayText=${searchText}&statusId=${statusId}&mySubmission=${mySubmission}`;
+        const params = new URLSearchParams({
+          pagenum: page.toString(),
+          displayText: searchText,
+          statusId,
+          mySubmission: String(mySubmission),
+        });
+
+        const payload = `${url}${URL.GET_SUBMISSIONS_ONLINE}?${params.toString()}`;
         const response = await GET_DATA({
           url: payload,
         });

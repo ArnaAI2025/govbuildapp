@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { zustandMMKVStorage } from '../session/SessionManager';
-import { AuthData, AuthState, OfflineAuthData } from '../utils/interfaces/zustand/IAuth';
+import type { AuthData, AuthState, OfflineAuthData } from '../utils/interfaces/zustand/IAuth';
 
 const useAuthStore = create<AuthState>()(
   persist(

@@ -12,7 +12,6 @@ import { createDailyInspectionTables } from './daily-inspection/DailyInspectionS
 import { createFormSelectionListTab } from './new-form/newFormSchema';
 
 let db: SQLite.SQLiteDatabase | null = null;
-let dbInstance: SQLite.SQLiteDatabase | null = null;
 export const dbEventEmitter = new EventEmitter();
 
 let isInitialized = false;
@@ -73,13 +72,11 @@ export const closeDatabase = async (): Promise<void> => {
 
 // Get current database instance safely
 export const getDatabase = (): SQLite.SQLiteDatabase => {
-  if (!dbInstance) {
-    dbInstance = SQLite.openDatabaseSync(DATABASE_NAME, {
-      useNewConnection: true,
-    }); // Use sync for initial connection
-    dbInstance.execAsync('PRAGMA busy_timeout = 10000;');
+  if (!db) {
+    db = SQLite.openDatabaseSync(DATABASE_NAME, { useNewConnection: false });
+    db.execAsync('PRAGMA busy_timeout = 10000;');
   }
-  return dbInstance;
+  return db;
 };
 
 // Initialize schema/tables
@@ -199,9 +196,16 @@ export const logDatabaseStats = async (): Promise<void> => {
 };
 
 export const deleteAllRecords = async () => {
-  const db = await getDatabase();
-  Promise.all([
-    db.runAsync('DELETE FROM ' + TABLES.CASES),
-    db.runAsync('DELETE FROM ' + TABLES.LICENSE), //For License list
-  ]);
+  const db = getDatabase();
+  try {
+    await Promise.all([
+      db.runAsync(`DELETE FROM ${TABLES.CASES}`),
+      db.runAsync(`DELETE FROM ${TABLES.LICENSE}`),
+    ]);
+    console.log('All records deleted successfully');
+  } catch (error) {
+    console.error('Error deleting records:', error);
+    recordCrashlyticsError('Error deleting records', error);
+    throw error;
+  }
 };

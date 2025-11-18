@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { StatusChangeLog } from '../../../../utils/interfaces/ISubScreens';
+import type { StatusChangeLog } from '../../../../utils/interfaces/ISubScreens';
 import { LogService } from '../LogService';
 import Loader from '../../../../components/common/Loader';
 import { CustomTextViewWithImage } from '../../../../components/common/CustomTextViewWithImage';
 import NoData from '../../../../components/common/NoData';
 import { TEXTS } from '../../../../constants/strings';
 import globalStyles from '../../../../theme/globalStyles';
+import { useNetworkStatus } from '../../../../utils/checkNetwork';
 
 const CaseStatus: React.FC<{ route: string; navigation: any }> = ({ route }) => {
   const [isLoadingAPI, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<StatusChangeLog[]>([]);
+  const {isNetworkAvailable} = useNetworkStatus();
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await LogService.fetchStatusChangeLog(route, 'Status', setLoading);
+      const result = await LogService.fetchStatusChangeLog(route, 'Status', setLoading, isNetworkAvailable);
       setData(result);
     };
     fetchData();

@@ -1,4 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { handleError } from './../utils/handleError';
+import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios from 'axios';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import qs from 'qs';
 import { getAccessToken } from '../session/SessionManager';
@@ -268,6 +270,3 @@ export const GETAPI_FOR_DOWNLOAD = async (url: string, token: string) => {
     throw error;
   }
 };
-function handleError(axiosError: AxiosError<unknown, any>) {
-  throw new Error('Function not implemented.');
-}

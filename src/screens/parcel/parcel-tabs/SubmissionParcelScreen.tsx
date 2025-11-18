@@ -5,7 +5,7 @@ import { useOrientation } from '../../../utils/useOrientation';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import Loader from '../../../components/common/Loader';
 import NoData from '../../../components/common/NoData';
-import { SubmissionParcelModel } from '../../../utils/interfaces/ISubScreens';
+import type { SubmissionParcelModel } from '../../../utils/interfaces/ISubScreens';
 import { useParcelStore } from '../ParcelScreen';
 import { ParcelService } from '../ParcelService';
 import { CaseParcelListItem } from './CaseParcelListItem';
@@ -48,7 +48,7 @@ const SubmissionParcelScreen: React.FC<{
             <CaseParcelListItem
               rowData={item as SubmissionParcelModel}
               orientation={orientation}
-              isForSubmission={true}
+              isForSubmission
             />
           )}
           keyExtractor={(item, index) => index.toString() || ''}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
-import { ScheduleModel } from '../../utils/interfaces/ISubScreens';
+import type { ScheduleModel } from '../../utils/interfaces/ISubScreens';
 import { convertDate, convertDateToISO, formatDate } from '../../utils/helper/helpers';
 import { create } from 'zustand';
-import { RootStackParamList } from '../../navigation/Types';
+import type { RootStackParamList } from '../../navigation/Types';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
 import { ScheduleService } from './ScheduleService';
@@ -82,6 +82,7 @@ const MyScheduleScreen: React.FC<MyScheduleScreenProps> = ({ route, navigation }
       paramData === 'All' ? start : convertDate(new Date().toISOString()),
       paramData === 'All' ? end : convertDate(new Date().toISOString()),
       setLoading,
+      isNetworkAvailable
     );
     console.log('Fetched schedules:', result);
 

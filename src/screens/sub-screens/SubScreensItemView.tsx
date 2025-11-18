@@ -1,4 +1,4 @@
-import { TabData } from '../../utils/interfaces/ISubScreens';
+import type { TabData } from '../../utils/interfaces/ISubScreens';
 
 // Interface for tab data (matches the DATA array structure)
 

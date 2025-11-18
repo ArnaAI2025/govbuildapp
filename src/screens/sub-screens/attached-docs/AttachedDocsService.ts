@@ -18,7 +18,7 @@ import {
   UPLOAD_API,
 } from '../../../services/ApiClient';
 import { URL } from '../../../constants/url';
-import { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
+import type { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
 import {
   fetchAttachedDocsByFolderID,
   fetchAttachedDocsFolderFilesFromDB,

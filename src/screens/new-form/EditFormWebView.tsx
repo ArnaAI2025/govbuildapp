@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import uuid from 'react-native-uuid';
-import WebView, { WebView as RNWebView } from 'react-native-webview';
+import type { WebView as RNWebView } from 'react-native-webview';
+import WebView from 'react-native-webview';
 import { DateFormates, replaceAllDateFormat } from '../../utils/helper/helpers';
 import {
   deleteImageKeyAndFormId,
@@ -13,8 +14,8 @@ import Loader from '../../components/common/Loader';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { COLORS } from '../../theme/colors';
 import { fontSize, height, iconSize, WINDOW_WIDTH } from '../../utils/helper/dimensions';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { editFormSubmission, storeFormFilesUrls } from '../../database/new-form/newFormDAO';
@@ -367,7 +368,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
       try {
         message = JSON.parse(raw);
       } catch (e) {
-        recordCrashlyticsError('Could not parse message from webview:',e)
+        recordCrashlyticsError('Could not parse message from webview:', e);
         console.error('Could not parse message from webview:', e, raw);
         return;
       }
@@ -508,7 +509,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
         console.log('Form change:---->>>', message.data);
       }
     } catch (err) {
-      recordCrashlyticsError('Error in onMessage:', err)
+      recordCrashlyticsError('Error in onMessage:', err);
       console.error('Error in onMessage:', err);
     }
   };
@@ -533,7 +534,7 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
         navigation.goBack(null);
       }
     } catch (error) {
-      recordCrashlyticsError('Error saving submission:',error)
+      recordCrashlyticsError('Error saving submission:', error);
       console.error('Error saving submission:', error);
     }
   };
@@ -549,21 +550,21 @@ const EditFormWebView: React.FC<EditFormWebViewProps> = ({ route, navigation }) 
             onLoad={() => setLoading(false)}
             onError={(error: any) => ToastService.show(error.nativeEvent.description, COLORS.ERROR)}
             javaScriptCanOpenWindowsAutomatically={false}
-            setBuiltInZoomControls={true}
+            setBuiltInZoomControls
             originWhitelist={['*']}
             source={
               Platform.OS === 'android'
                 ? { uri: 'file:///android_asset/myHtml.html' }
                 : { uri: 'Web.bundle/formIo.html' }
             }
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
+            javaScriptEnabled
+            domStorageEnabled
             scalesPageToFit
-            scrollEnabled={true}
-            webviewDebuggingEnabled={true}
-            allowFileAccessFromFileURLs={true}
-            allowUniversalAccessFromFileURLs={true}
-            allowFileAccess={true}
+            scrollEnabled
+            webviewDebuggingEnabled
+            allowFileAccessFromFileURLs
+            allowUniversalAccessFromFileURLs
+            allowFileAccess
             injectedJavaScript={jsCode}
             injectedJavaScriptBeforeContentLoaded={jsCode}
             onMessage={onMessage}

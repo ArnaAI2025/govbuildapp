@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, ColorValue } from 'react-native';
+import type { ColorValue } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import type { Dispatch, FC, SetStateAction } from 'react';
 
 type Day = {

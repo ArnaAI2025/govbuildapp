@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '../../theme/colors';
 import { fontSize } from '../../utils/helper/dimensions';
-import { CustomTextUIProps } from '../../utils/interfaces/IComponent';
+import type { CustomTextUIProps } from '../../utils/interfaces/IComponent';
 import { FONT_FAMILY } from '../../theme/fonts';
 
 export const CustomTextUI = memo(

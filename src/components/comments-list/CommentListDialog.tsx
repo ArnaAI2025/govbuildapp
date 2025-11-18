@@ -10,7 +10,7 @@ import {
   Keyboard,
 } from 'react-native';
 
-import { FilterItem } from '../../utils/interfaces/ICase';
+import type { FilterItem } from '../../utils/interfaces/ICase';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY } from '../../theme/fonts';
 import { height } from '../../utils/helper/dimensions';
@@ -20,7 +20,7 @@ import CustomDropdown from '../common/CustomDropdown';
 import IMAGES from '../../theme/images';
 import { fetchStandardComments } from '../../services/sub-screens-service/SubScreensCommonService';
 import FloatingInput from '../common/FloatingInput';
-import { CommentType, StandardComment } from '../../utils/interfaces/ISubScreens';
+import type { CommentType, StandardComment } from '../../utils/interfaces/ISubScreens';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PublishButton from '../common/PublishButton';
 import Loader from '../common/Loader';

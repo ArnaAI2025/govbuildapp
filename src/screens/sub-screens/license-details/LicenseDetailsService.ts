@@ -9,7 +9,7 @@ import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { COLORS } from '../../../theme/colors';
 import { formatToTwoDecimals, sortByKey } from '../../../utils/helper/helpers';
-import { TeamMember } from '../../../utils/interfaces/ISubScreens';
+import type { TeamMember } from '../../../utils/interfaces/ISubScreens';
 import { licenseDetailsFormData } from '../../../utils/params/commonParams';
 
 export const LicenseDetailsService = {

@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabBar, TabView } from 'react-native-tab-view';
 import { useOrientation } from '../../../utils/useOrientation';
 import { fontSize, marginTop, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { COLORS } from '../../../theme/colors';
-import { RootStackParamList } from '../../../navigation/Types';
-import { Route, Scene } from 'react-native-tab-view/lib/typescript/src/types';
+import type { RootStackParamList } from '../../../navigation/Types';
+import type { Route, Scene } from 'react-native-tab-view/lib/typescript/src/types';
 import AccountingDetailScreen from './accountingDetailsTab/AccountingDetailScreen';
 import PaymentScreen from './paymentTab/PaymentScreen';
 import { TEXTS } from '../../../constants/strings';

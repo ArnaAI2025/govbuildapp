@@ -1,4 +1,4 @@
-import { SyncModel } from './ISubScreens';
+import type { SyncModel } from './ISubScreens';
 
 export interface Folder {
   id: number;

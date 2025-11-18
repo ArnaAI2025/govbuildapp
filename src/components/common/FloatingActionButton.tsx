@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../../theme/colors';
 import { iconSize } from '../../utils/helper/dimensions';
-import { FABProps } from '../../utils/interfaces/IComponent';
+import type { FABProps } from '../../utils/interfaces/IComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const FloatingActionButton: React.FC<FABProps> = ({

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { ParcelService } from './ParcelService';
 import { create } from 'zustand';
-import { RootStackParamList } from '../../navigation/Types';
-import { ParcelModel } from '../../utils/interfaces/ISubScreens';
+import type { RootStackParamList } from '../../navigation/Types';
+import type { ParcelModel } from '../../utils/interfaces/ISubScreens';
 import { useOrientation } from '../../utils/useOrientation';
 import { useNetworkStatus } from '../../utils/checkNetwork';
 import Loader from '../../components/common/Loader';
@@ -81,7 +81,7 @@ const ParcelScreen: React.FC<ParcelScreenProps> = (navigation) => {
   }, [isFocused, isNetworkAvailable]);
   const fetchParcels = async () => {
     setLoading(true);
-    const result = await ParcelService.fetchParcels(parcelNumber, address, setLoading);
+    const result = await ParcelService.fetchParcels(parcelNumber, address, setLoading, isNetworkAvailable);
     setParcels(result);
     setLoading(false);
   };

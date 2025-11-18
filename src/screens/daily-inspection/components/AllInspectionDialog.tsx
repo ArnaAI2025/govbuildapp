@@ -9,10 +9,11 @@ import {
   Alert,
 } from 'react-native';
 import InspectionDialogListItem from './InspectionDialogListItem';
-import { FC, memo } from 'react';
+import type { FC} from 'react';
+import { memo } from 'react';
 import { height } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';
-import { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FONT_FAMILY } from '../../../theme/fonts';
 import PublishButton from '../../../components/common/PublishButton';
@@ -83,7 +84,7 @@ const redirectToDefaultMap = (
           }
         }
       } catch (error) {
-        recordCrashlyticsError('Error parsing location:',error)
+        recordCrashlyticsError('Error parsing location:', error);
         console.error('Error parsing location:', error);
       }
     }

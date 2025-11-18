@@ -1,4 +1,4 @@
-import { SettingsFormData, SettingsModel, TeamMember } from '../../../utils/interfaces/ISubScreens';
+import type { SettingsFormData, SettingsModel, TeamMember } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../../services/ApiClient';
 import { sortByKey } from '../../../utils/helper/helpers';

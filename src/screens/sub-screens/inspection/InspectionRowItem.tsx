@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { InspectionRowItemProps } from '../../../utils/interfaces/ISubScreens';
+import type { InspectionRowItemProps } from '../../../utils/interfaces/ISubScreens';
 import { COLORS } from '../../../theme/colors';
 import { convertFrom24To12Format, formatDate } from '../../../utils/helper/helpers';
 import { fontSize, height, iconSize, width } from '../../../utils/helper/dimensions';

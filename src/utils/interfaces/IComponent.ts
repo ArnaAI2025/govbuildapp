@@ -1,7 +1,7 @@
-import { CaseData } from './ICase';
-import { ImageSourcePropType, TextStyle } from 'react-native';
-import { RelatedCase, StatusChangeLog, Task } from './ISubScreens';
-import { NavigationProp } from '@react-navigation/native';
+import type { CaseData } from './ICase';
+import type { ImageSourcePropType, TextStyle } from 'react-native';
+import type { RelatedCase, StatusChangeLog, Task } from './ISubScreens';
+import type { NavigationProp } from '@react-navigation/native';
 
 export type Status =
   | 'Closed'
@@ -58,7 +58,7 @@ export interface FloatingInputProps {
 }
 
 export interface AutocompleteInputProps {
-  data: { displayText: string; [key: string]: any }[];
+  data: Array<{ displayText: string; [key: string]: any }>;
   query: string;
   onQueryChange: (text: string) => void;
   onSelect: (item: { displayText: string; [key: string]: any }) => void;
@@ -133,7 +133,7 @@ export interface MultiSelectDropdownProps {
   error?: boolean;
   hintText?: string;
   alldata?: any[];
-  editable?:boolean
+  editable?: boolean;
 }
 
 export interface FABProps {

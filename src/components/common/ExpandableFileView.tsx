@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
+import type {
+  ListRenderItemInfo} from 'react-native';
 import {
   View,
   Text,
   TouchableOpacity,
   Animated,
   FlatList,
-  ListRenderItemInfo,
   StyleSheet,
 } from 'react-native';
 import { navigate } from '../../navigation/Index';

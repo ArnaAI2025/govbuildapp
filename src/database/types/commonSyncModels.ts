@@ -1,4 +1,4 @@
-import { SyncModel } from '../../utils/interfaces/ISubScreens';
+import type { SyncModel } from '../../utils/interfaces/ISubScreens';
 
 // Interface for settings data
 export interface SettingsSyncData {

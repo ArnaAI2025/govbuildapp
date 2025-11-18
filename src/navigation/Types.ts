@@ -1,6 +1,6 @@
-import { DocumentModel, Folder } from '../utils/interfaces/IAttachedDocs';
-import { CaseData } from '../utils/interfaces/ICase';
-import { LicenseData } from '../utils/interfaces/zustand/ILicense';
+import type { DocumentModel, Folder } from '../utils/interfaces/IAttachedDocs';
+import type { CaseData } from '../utils/interfaces/ICase';
+import type { LicenseData } from '../utils/interfaces/zustand/ILicense';
 export interface NewFormData {
   DisplayText: string;
   AutoroutePart: string;

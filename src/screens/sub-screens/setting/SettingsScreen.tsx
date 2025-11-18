@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Alert, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AutocompleteInput } from 'react-native-autocomplete-input';
 import Checkbox from 'expo-checkbox';
 import { MenuProvider } from 'react-native-popup-menu';
 
-import { SettingsModel, TeamMember } from '../../../utils/interfaces/ISubScreens';
+import type { SettingsModel, TeamMember } from '../../../utils/interfaces/ISubScreens';
 import { settingsFormData, SyncModelParam } from '../../../utils/params/commonParams';
 import { generateUniqueID, getNewUTCDate, normalizeBool } from '../../../utils/helper/helpers';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
@@ -16,7 +16,7 @@ import { DatePickerInput } from '../../../components/common/DatePickerInput';
 import FloatingInput from '../../../components/common/FloatingInput';
 import CustomMultiSelectDropdown from '../../../components/common/MultiSelectDropdown';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import useAuthStore from '../../../store/useAuthStore';
 import { FONT_FAMILY, FONT_SIZE } from '../../../theme/fonts';
 import { SettingsService } from './SettingService';
@@ -110,7 +110,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
         const results = await SettingsService.searchCaseOwner(query, isNetworkAvailable);
         setCaseOwnerSuggestions(results || []);
       } catch (error) {
-        recordCrashlyticsError('Case owner search error:',error);
+        recordCrashlyticsError('Case owner search error:', error);
         console.error('Case owner search error:', error);
       }
     }
@@ -293,7 +293,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ route, navigation }) =>
                     <AutocompleteInput
                       autoCapitalize="none"
                       autoCorrect={false}
-                      scrollEnabled={true}
+                      scrollEnabled
                       style={styles.autocompleteInput}
                       inputContainerStyle={styles.autocompleteContainer}
                       data={caseOwnerSuggestions}

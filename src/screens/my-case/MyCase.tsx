@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useNetworkStatus } from '../../utils/checkNetwork';
 import Loader from '../../components/common/Loader';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { fetchCases } from './CaseService';
 import { useUnifiedCaseStore } from '../../store/caseStore';
 import { useOrientation } from '../../utils/useOrientation';
-import { RootStackParamList } from '../../navigation/Types';
-import { CaseData } from '../../utils/interfaces/ICase';
+import type { RootStackParamList } from '../../navigation/Types';
+import type { CaseData } from '../../utils/interfaces/ICase';
 import { styles } from './myCaseStyles';
 import { TEXTS } from '../../constants/strings';
 import { ListHeader } from '../../components/filters/CaseLicenseFilterHeader';
@@ -150,7 +150,7 @@ const MyCaseScreen: React.FC<MyCaseScreenProps> = (route) => {
           setHasMoreData(false); // no more data to load
         }
       } catch (error) {
-        recordCrashlyticsError('Error loading cases:', error)
+        recordCrashlyticsError('Error loading cases:', error);
         console.error('Error loading cases:', error);
       } finally {
         setIsLoading(false);

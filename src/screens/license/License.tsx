@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import type { FunctionComponent} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { styles } from './licenseStyles';
 import { useNetworkStatus } from '../../utils/checkNetwork';
@@ -14,7 +15,7 @@ import NoData from '../../components/common/NoData';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import Loader from '../../components/common/Loader';
 import { ListHeader } from '../../components/filters/CaseLicenseFilterHeader';
-import { LicenseData } from '../../utils/interfaces/zustand/ILicense';
+import type { LicenseData } from '../../utils/interfaces/zustand/ILicense';
 import { goBack, navigate } from '../../navigation/Index';
 import { useLicenseStore } from '../../store/useLicenseStore';
 import { getNavigationState, getUserRole, saveNavigationState } from '../../session/SessionManager';
@@ -152,7 +153,7 @@ const LicenseScreen: FunctionComponent<Props> = () => {
           setHasMoreData(false);
         }
       } catch (error) {
-        recordCrashlyticsError('Error loading license --->',error)
+        recordCrashlyticsError('Error loading license --->', error);
         console.error('Error loading license --->', error);
       } finally {
         setLoading(false);

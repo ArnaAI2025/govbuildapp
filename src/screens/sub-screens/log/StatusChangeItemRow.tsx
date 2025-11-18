@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Card } from 'react-native-paper';
 import { cardBorder, height } from '../../../utils/helper/dimensions';
 import { CustomTextViewWithImage } from '../../../components/common/CustomTextViewWithImage';
-import { StatusChangeItemRowProps } from '../../../utils/interfaces/IComponent';
+import type { StatusChangeItemRowProps } from '../../../utils/interfaces/IComponent';
 import { TEXTS } from '../../../constants/strings';
 
 export const StatusChangeItemRow = ({ rowData }: StatusChangeItemRowProps) => {

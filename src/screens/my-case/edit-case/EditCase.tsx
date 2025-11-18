@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Image, Text, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import Loader from '../../../components/common/Loader';
 import FloatingInput from '../../../components/common/FloatingInput';
@@ -18,7 +18,7 @@ import { fontSize, height } from '../../../utils/helper/dimensions';
 import { TEXTS } from '../../../constants/strings';
 import { styles } from '../myCaseStyles';
 import { SubScreensItemView } from '../../sub-screens/SubScreensItemView';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import {
   convertDate,
@@ -42,7 +42,7 @@ import {
 import { caseEditFormData, SyncModelParam } from '../../../utils/params/commonParams';
 import { useUnifiedCaseStore } from '../../../store/caseStore';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import { CaseData } from '../../../utils/interfaces/ICase';
+import type { CaseData } from '../../../utils/interfaces/ICase';
 import { OFFLINE_TITLES, TABS } from '../../../constants/data';
 import { AlertMessageSection } from '../../../components/common/AlertMessageSection';
 import { goBack } from '../../../navigation/Index';
@@ -134,7 +134,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
             }, 200);
           });
         } catch (error) {
-          recordCrashlyticsError('Error fetching data:',error)
+          recordCrashlyticsError('Error fetching data:', error);
           console.error('Error fetching data:', error);
           setAlertPopup({
             title: 'Error',
@@ -172,7 +172,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       try {
         await fetchCaseDropdown(); // this function uses caseData.caseTypeId internally
       } catch (error) {
-        recordCrashlyticsError('Error fetching dropdown data:',error)
+        recordCrashlyticsError('Error fetching dropdown data:', error);
         console.error('Error fetching dropdown data:', error);
         setAlertPopup({
           title: 'Error',
@@ -245,7 +245,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
         casesDetails?.data?.selectedInspectionCaseStatus,
       );
     } catch (error) {
-      recordCrashlyticsError('Error fetching case details:',error)
+      recordCrashlyticsError('Error fetching case details:', error);
       console.error('Error fetching case details:', error);
       setAlertPopup({
         title: 'Error',
@@ -276,7 +276,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       setIsAllowMultipleAddress(isMultipleAddress);
       console.log('selectedCaseType.isMultipleLocation -->', isMultipleAddress);
     } catch (error) {
-      recordCrashlyticsError('Error fetching dropdown data:', error)
+      recordCrashlyticsError('Error fetching dropdown data:', error);
       console.error('Error fetching dropdown data:', error);
       setAlertPopup({
         title: 'Error',
@@ -355,7 +355,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
           ToastService.show(updatedLocation?.message || 'Error updating address', COLORS.ERROR);
         }
       } catch (error) {
-        recordCrashlyticsError('Error updating location:',error)
+        recordCrashlyticsError('Error updating location:', error);
         console.error('Error updating location:', error);
       } finally {
         setIsLoading(false);
@@ -416,7 +416,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
           );
         }
       } catch (error) {
-        recordCrashlyticsError('Error updating mailing address:',error)
+        recordCrashlyticsError('Error updating mailing address:', error);
         console.error('Error updating mailing address:', error);
       } finally {
         setIsLoading(false);
@@ -519,7 +519,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
         goBack();
       }
     } catch (error) {
-      recordCrashlyticsError('Error updating case:',error)
+      recordCrashlyticsError('Error updating case:', error);
       console.error('Error updating case:', error);
     } finally {
       setIsLoading(false);
@@ -543,7 +543,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
       }
     } catch (error) {
       setIsLoading(false);
-      recordCrashlyticsError('Error fetching case number:',error)
+      recordCrashlyticsError('Error fetching case number:', error);
       console.error('Error fetching case number:', error);
     }
   };
@@ -613,7 +613,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
         scrollEventThrottle={16}
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        nestedScrollEnabled={true}
+        nestedScrollEnabled
         keyboardShouldPersistTaps="handled"
       >
         <View pointerEvents={isForceSync ? 'none' : 'auto'}>
@@ -653,7 +653,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 }}
                 error={fieldErrors.number}
                 disabled={caseData?.isLockCaseNumber || readOnly}
-                required={true}
+                required
               />
             </View>
 
@@ -673,7 +673,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
 
             {(!isNetworkAvailable && Object.keys(caseSettingData).length === 0) ||
@@ -692,7 +692,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
             <View style={styles.dropdownStyle}>
               {(!isNetworkAvailable && Object.keys(caseSettingData).length === 0) ||
@@ -765,7 +765,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 zIndexPriority={3}
                 hintText="The status of the case."
                 error={fieldErrors.statusId}
-                required={true}
+                required
               />
             </View>
 
@@ -793,7 +793,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
 
             {(!isNetworkAvailable && Object.keys(caseSettingData || {}).length === 0) ||
@@ -827,7 +827,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                   hintText="The case type of the case."
                   error={fieldErrors.caseTypeId}
                   disabled={readOnly || caseSettingData?.isLockCaseType}
-                  required={true}
+                  required
                 />
               </View>
             ) : null}
@@ -917,7 +917,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                             <FloatingInput
                               label="Location"
                               value={caseData?.location ?? ''}
-                              multiline={true}
+                              multiline
                               editable={false}
                               required
                               pointerEvents="none"
@@ -987,7 +987,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                         <FloatingInput
                           label="Location"
                           value={caseData?.location ?? ''}
-                          multiline={true}
+                          multiline
                           editable={false}
                           required
                           pointerEvents="none"
@@ -1008,7 +1008,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                       <FloatingInput
                         label="Location"
                         value={caseData?.location ?? ''}
-                        multiline={true}
+                        multiline
                         required
                         onChangeText={(value) =>
                           setCaseData({
@@ -1101,7 +1101,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                         label="Mailing Address"
                         value={caseData?.mailingAddress ?? ''}
                         numberOfLines={1}
-                        multiline={true}
+                        multiline
                         editable={false}
                         pointerEvents="none"
                         style={{ backgroundColor: COLORS.GRAY_LIGHT }}
@@ -1126,7 +1126,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 )}
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
             {(!isNetworkAvailable && Object.keys(caseSettingData).length === 0) ||
             (caseSettingData?.isHideParcelNumber != undefined &&
@@ -1145,7 +1145,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
             {(!isNetworkAvailable && Object.keys(caseSettingData).length === 0) ||
             (caseSettingData?.isHideQuickRefNumber != undefined &&
@@ -1164,7 +1164,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
             {(!isNetworkAvailable && Object.keys(caseSettingData).length === 0) ||
             (caseSettingData?.isHideDescription != undefined &&
@@ -1186,7 +1186,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                     ref={richText}
                     androidLayerType="software"
                     initialContentHTML={caseData?.description}
-                    useContainer={true}
+                    useContainer
                     placeholder={TEXTS.caseScreen.descriptionPlaceholder}
                     onChange={(value) => {
                       setCaseData({ ...caseData, description: value });
@@ -1197,7 +1197,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
                 <HintText hintText="The Description of the Case." />
               </View>
             ) : (
-              <View></View> // optional empty fallback
+              <View /> // optional empty fallback
             )}
           </View>
           <PublishButton disabled={isForceSync} onPress={updateCaseApi} />
@@ -1314,7 +1314,7 @@ const EditCaseScreen: React.FC<EditCaseScreenProps> = ({ route, navigation }) =>
             setShowLocationEditDialog(false);
           }
         }}
-        showCoordinates={true}
+        showCoordinates
         isManualLocation={caseData?.isManualAddress}
         setManualLocation={(value) => setCaseData({ ...caseData, isManualAddress: value })}
       />

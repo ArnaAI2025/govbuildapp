@@ -4,8 +4,9 @@ import NetInfo from '@react-native-community/netinfo';
 import { getDatabase } from '../DatabaseService';
 import { GET_DATA } from '../../services/ApiClient';
 import { getAccessToken, getBaseUrl } from '../../session/SessionManager';
+import type {
+  AdminNote} from './subScreenDAO';
 import {
-  AdminNote,
   insertInspectionRecord,
   storeAttachedItems,
   syncAdminNotesWithDatabase,
@@ -20,7 +21,7 @@ import {
 import { updateContractorListIfExist, updatePaymentsIfIDExist } from '../sub-screens/subScreenDAO';
 import { contactService } from '../../screens/sub-screens/contact-contract/ContactAndContractService';
 import { updateAttachedDocsIfIDExist } from './attached-docs/attachedDocsDAO';
-import { InspectionData } from '../types/inpection';
+import type { InspectionData } from '../types/inpection';
 import { OwnerService } from '../../screens/sub-screens/owner/OwnerService';
 import { LicenseDetailsService } from '../../screens/sub-screens/license-details/LicenseDetailsService';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';

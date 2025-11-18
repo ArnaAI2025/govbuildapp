@@ -1,4 +1,4 @@
-import { StatusColors } from '../utils/interfaces/IComponent';
+import type { StatusColors } from '../utils/interfaces/IComponent';
 
 export const Colors: StatusColors = {
   Closed: '#FF0000',

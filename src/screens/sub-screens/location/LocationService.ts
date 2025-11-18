@@ -1,4 +1,3 @@
-import NetInfo from '@react-native-community/netinfo';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../../services/ApiClient';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
@@ -8,7 +7,7 @@ import {
   SyncModelParam,
 } from '../../../utils/params/commonParams';
 import { URL } from '../../../constants/url';
-import { AdressModel } from '../../../utils/interfaces/ISubScreens';
+import type { AdressModel } from '../../../utils/interfaces/ISubScreens';
 import { fetchLocationData } from '../../../database/sub-screens/subScreenDAO';
 import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
@@ -16,13 +15,11 @@ export const LocationService = {
   async fetchLocations(
     contentItemId: string,
     setLoading: (loading: boolean) => void,
-    setIsOnline: (isOnline: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<AdressModel[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
-        setIsOnline(true);
         const url = getBaseUrl();
         const response = await GET_DATA({
           url: `${url}${URL.MULTI_LOCATION_LIST}${contentItemId}`,
@@ -50,10 +47,10 @@ export const LocationService = {
   async deleteLocation(
     contentItemId: string,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<boolean> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         await POST_DATA_WITH_TOKEN({
@@ -90,10 +87,10 @@ export const LocationService = {
     longitude: string,
     existingContentItemId: string,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<boolean> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const newId = '';

@@ -12,7 +12,7 @@ import {
 } from './myCaseDAO';
 import { URL } from '../../constants/url';
 
-import { Case } from '../types/case';
+import type { Case } from '../types/case';
 import { getAccessToken, getBaseUrl, getUserRole } from '../../session/SessionManager';
 import { TABLES } from '../DatabaseConstants';
 import { GET_DATA } from '../../services/ApiClient';
@@ -24,7 +24,7 @@ import {
   syncPaymentsWithDatabase,
   syncSubScreenData,
 } from '../sub-screens/subScreensSync';
-import { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
+import type { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
 import { useUnifiedCaseStore } from '../../store/caseStore';
 import { syncAllCaseFoldersFilesAPI } from '../sub-screens/attached-docs/attachedDocsSync';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
@@ -117,7 +117,7 @@ export const myCaseAPICall = async (): Promise<void> => {
       }
 
       const summaries: ContentItemSummary[] = data1?.data?.data?.contentItemSummaries ?? [];
-      const syncTasks: Promise<void>[] = summaries.map(async (summary: ContentItemSummary) => {
+      const syncTasks: Array<Promise<void>> = summaries.map(async (summary: ContentItemSummary) => {
         const contentItemId: string | undefined = summary?.contentItemId;
         newCaseIds.push(contentItemId);
         try {

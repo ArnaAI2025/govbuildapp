@@ -1,6 +1,6 @@
-import { ColorValue, ViewStyle } from 'react-native';
-import { i18nLanguages } from '../lib/lib';
-import { Mode } from './Key';
+import type { ColorValue, ViewStyle } from 'react-native';
+import type { i18nLanguages } from '../lib/lib';
+import type { Mode } from './Key';
 
 export type ColorOptions = {
   /** The background color of date picker and that of change year modal. */

@@ -5,7 +5,7 @@ import IMAGES from '../../theme/images';
 import { fontSize, height, iconSize, marginTopAndBottom } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY } from '../../theme/fonts';
-import { CustomHeaderProps } from '../../utils/interfaces/IComponent';
+import type { CustomHeaderProps } from '../../utils/interfaces/IComponent';
 import { DateTimeInfoToolTip } from './DateTimeInfoTooltip';
 import { formatUTCDate } from '../../utils/helper/helpers';
 

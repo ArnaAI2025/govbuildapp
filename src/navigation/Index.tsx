@@ -1,14 +1,11 @@
-import React, { FunctionComponent, useEffect } from "react";
-import { AppState, AppStateStatus } from "react-native";
-import {
-  NavigationContainer,
-  NavigationContainerRefWithCurrent,
-  StackActions,
-} from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import type { FunctionComponent } from 'react';
+import React, { useEffect, useRef } from 'react';
+import type { AppStateStatus } from 'react-native';
+import { AppState } from 'react-native';
+import type { NavigationContainerRefWithCurrent } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../screens/splash/Splash';
 import LoginScreen from '../screens/auth/login/Login';
 import HomeScreen from '../screens/dashboard/home/Home';
@@ -16,7 +13,7 @@ import MyCaseScreen from '../screens/my-case/MyCase';
 import ForgotPasswordScreen from '../screens/auth/forgot-password/ForgotPassword';
 import EditCaseScreen from '../screens/my-case/edit-case/EditCase';
 import DashboardDrawerScreen from '../screens/dashboard/dashboard-drawer/DashboardDrawer';
-import { RootStackParamList } from './Types';
+import type { RootStackParamList } from './Types';
 import { useNetworkStatus } from '../utils/checkNetwork';
 import { isTokenTimeOut, TokenRefreshGlobal } from '../session/TokenRefresh';
 import LicenseScreen from '../screens/license/License';
@@ -34,40 +31,40 @@ import Locations from '../screens/sub-screens/location/LocationsScreen';
 import AddLocationScreen from '../screens/sub-screens/location/AddLocationScreen';
 import PublicComments from '../screens/sub-screens/public-comment/PublicComment';
 
-import SettingsScreen from "../screens/sub-screens/setting/SettingsScreen";
-import { ToastService } from "../components/common/GlobalSnackbar";
-import { COLORS } from "../theme/colors";
-import InspectionsScreen from "../screens/sub-screens/inspection/InspectionsScreen";
-import InspectionSchedule from "../screens/sub-screens/inspection/InspectionSchedule";
-import WebViewForForm from "../components/webView/WebViewforform";
-import AttachedItems from "../screens/sub-screens/attached-item/AttachedItems";
-import AdminNotes from "../screens/sub-screens/admin-notes/AdminNotes";
-import AddContacts from "../screens/sub-screens/contact-contract/contactTab/AddCaseAndLicenseContact";
-import AddCaseAndLicenseContractor from "../screens/sub-screens/contact-contract/contractorTab/AddCaseAndLicenseContractor";
-import SendMailScreen from "../screens/sub-screens/send-email/SendMailScreen";
-import ContactMain from "../screens/sub-screens/contact-contract/ContactMain";
-import CommentWithFileAttached from "../screens/sub-screens/admin-notes/CommentWithFileAttached";
-import { closeDatabase, initializeDatabase, openDatabase } from "../database/DatabaseService";
-import AttachedDocs from "../screens/sub-screens/attached-docs/AttachedDocs";
-import AttachedDocsSubScreen from "../screens/sub-screens/attached-docs/AttachedDocsSubScreen";
-import AttachDocPreview from "../screens/sub-screens/attached-docs/AttachDocPreview";
-import AttachedDocsUpdateAndAdd from "../screens/sub-screens/attached-docs/AttachedDocsUpdateAndAdd";
-import AdvanceFormSubmission from "../screens/form-submission/AdvanceFormSubmission";
-import NewFormWebView from "../screens/form/NewFormWebView";
-import FormioFileUploadScreen from "../screens/form/FormioFileUploadView";
-import LicenseDetailsScreen from "../screens/sub-screens/license-details/LicenseDetailsScreen";
-import OwnerScreen from "../screens/sub-screens/owner/OwnerScreen";
-import SubLicenseScreen from "../screens/sub-screens/sub-license/SubLicenseScreen";
-import ShowLicenseScreen from "../screens/sub-screens/show-license/ShowLicenseScreen";
-import EditAttachItem from "../screens/form/EditAttachItem";
-import OfflineSyncScreen from "../screens/offline-item/OfflineSyncScreen";
-import DailyInspection from "../screens/daily-inspection/DailyInspection";
-import RouteScreen from "../screens/daily-inspection/RouteScreen";
-import EditInspection from "../screens/daily-inspection/EditInspection";
-import EditFormWebView from "../screens/new-form/EditFormWebView";
-import ParcelScreen from "../screens/parcel/ParcelScreen";
-import ParcelDetailScreen from "../screens/parcel/parcel-tabs/ParcelDetailScreen";
-import MyScheduleScreen from "../screens/schedule/MyScheduleScreen";
+import SettingsScreen from '../screens/sub-screens/setting/SettingsScreen';
+import { ToastService } from '../components/common/GlobalSnackbar';
+import { COLORS } from '../theme/colors';
+import InspectionsScreen from '../screens/sub-screens/inspection/InspectionsScreen';
+import InspectionSchedule from '../screens/sub-screens/inspection/InspectionSchedule';
+import WebViewForForm from '../components/webView/WebViewforform';
+import AttachedItems from '../screens/sub-screens/attached-item/AttachedItems';
+import AdminNotes from '../screens/sub-screens/admin-notes/AdminNotes';
+import AddContacts from '../screens/sub-screens/contact-contract/contactTab/AddCaseAndLicenseContact';
+import AddCaseAndLicenseContractor from '../screens/sub-screens/contact-contract/contractorTab/AddCaseAndLicenseContractor';
+import SendMailScreen from '../screens/sub-screens/send-email/SendMailScreen';
+import ContactMain from '../screens/sub-screens/contact-contract/ContactMain';
+import CommentWithFileAttached from '../screens/sub-screens/admin-notes/CommentWithFileAttached';
+import { closeDatabase, initializeDatabase, openDatabase } from '../database/DatabaseService';
+import AttachedDocs from '../screens/sub-screens/attached-docs/AttachedDocs';
+import AttachedDocsSubScreen from '../screens/sub-screens/attached-docs/AttachedDocsSubScreen';
+import AttachDocPreview from '../screens/sub-screens/attached-docs/AttachDocPreview';
+import AttachedDocsUpdateAndAdd from '../screens/sub-screens/attached-docs/AttachedDocsUpdateAndAdd';
+import AdvanceFormSubmission from '../screens/form-submission/AdvanceFormSubmission';
+import NewFormWebView from '../screens/form/NewFormWebView';
+import FormioFileUploadScreen from '../screens/form/FormioFileUploadView';
+import LicenseDetailsScreen from '../screens/sub-screens/license-details/LicenseDetailsScreen';
+import OwnerScreen from '../screens/sub-screens/owner/OwnerScreen';
+import SubLicenseScreen from '../screens/sub-screens/sub-license/SubLicenseScreen';
+import ShowLicenseScreen from '../screens/sub-screens/show-license/ShowLicenseScreen';
+import EditAttachItem from '../screens/form/EditAttachItem';
+import OfflineSyncScreen from '../screens/offline-item/OfflineSyncScreen';
+import DailyInspection from '../screens/daily-inspection/DailyInspection';
+import RouteScreen from '../screens/daily-inspection/RouteScreen';
+import EditInspection from '../screens/daily-inspection/EditInspection';
+import EditFormWebView from '../screens/new-form/EditFormWebView';
+import ParcelScreen from '../screens/parcel/ParcelScreen';
+import ParcelDetailScreen from '../screens/parcel/parcel-tabs/ParcelDetailScreen';
+import MyScheduleScreen from '../screens/schedule/MyScheduleScreen';
 
 export type RootNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -129,23 +126,30 @@ export const handleTokenRefresh = async () => {
 
 const Navigation: FunctionComponent<Props> = ({}: Props) => {
   const { isNetworkAvailable } = useNetworkStatus();
-  
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
-    // Show toast when network changes
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
     ToastService.show(
       isNetworkAvailable ? 'You are online' : 'You are offline',
       isNetworkAvailable ? COLORS.SUCCESS_GREEN : COLORS.ERROR,
     );
   }, [isNetworkAvailable]);
 
+  // Network change -> token refresh
   useEffect(() => {
-    // Initialize database & token handling
-    initializeDatabase();
     if (isNetworkAvailable) {
       handleTokenRefresh();
     }
+  }, [isNetworkAvailable]);
 
+  // App lifecycle + DB
+  useEffect(() => {
+    initializeDatabase();
     let isClosed = false;
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
       if (nextAppState === 'active') {

@@ -5,8 +5,8 @@ import {
   getNewUTCDate,
   StatusColorCodes,
 } from '../helper/helpers';
-import { CaseEditFormDataParams, CaseEditSyncModel, LocationDetails } from '../interfaces/ICase';
-import {
+import type { CaseEditFormDataParams, CaseEditSyncModel, LocationDetails } from '../interfaces/ICase';
+import type {
   AdminCommentLocalParams,
   AdminCommentParams,
   SetAlertParams,

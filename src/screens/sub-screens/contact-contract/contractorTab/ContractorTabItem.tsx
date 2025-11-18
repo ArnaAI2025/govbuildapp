@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { fontSize, height, width } from '../../../../utils/helper/dimensions';
 import { COLORS } from '../../../../theme/colors';
 import { formatDate } from '../../../../utils/helper/helpers';
-import { ContractorTabItemProps } from '../../../../utils/interfaces/ISubScreens';
+import type { ContractorTabItemProps } from '../../../../utils/interfaces/ISubScreens';
 import { TEXTS } from '../../../../constants/strings';
 import { CustomTextViewWithImage } from '../../../../components/common/CustomTextViewWithImage';
 import globalStyles from '../../../../theme/globalStyles';

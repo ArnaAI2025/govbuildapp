@@ -2,7 +2,7 @@ import { getAuthToken } from '@mcci/govbuilt-client';
 import { useBiometricStore } from '../store/biometricStore';
 import useAuthStore from '../store/useAuthStore';
 import { saveAccessToken } from './SessionManager';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import NetInfo from '@react-native-community/netinfo';
 import { recordCrashlyticsError } from '../services/CrashlyticsService';
 

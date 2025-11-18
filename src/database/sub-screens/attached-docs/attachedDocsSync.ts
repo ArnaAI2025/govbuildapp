@@ -7,7 +7,7 @@ import { updateSyncTaskStatus } from '../../../utils/syncUtils';
 import { CASE, LICENSE, TAB, TABLES } from '../../DatabaseConstants';
 import { getDatabase } from '../../DatabaseService';
 import { updateOfflineHistoryIfIdExist } from '../../sync-history/syncHistorySync';
-import { SyncQueueTask } from '../../types/commonSyncModels';
+import type { SyncQueueTask } from '../../types/commonSyncModels';
 import {
   deleteRowsByCaseID,
   fetchAllDocDataToSync,

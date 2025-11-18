@@ -13,8 +13,8 @@ import {
   getNewUTCDate,
   getTimeDifference,
 } from '../../utils/helper/helpers';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { useDailyInspectionStore } from '../../store/useDailyInspectionStore';
 import { COLORS } from '../../theme/colors';
 import { getBaseUrl } from '../../session/SessionManager';
@@ -132,11 +132,11 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
   const fetchTeamMembers = async () => {
     try {
       if (isNetworkAvailable) {
-        const members = await InspectionService.fetchAllTeamMembers();
+        const members = await InspectionService.fetchAllTeamMembers(isNetworkAvailable);
         setTeamMember(members);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in fetchTeamMembers:',error)
+      recordCrashlyticsError('Error in fetchTeamMembers:', error);
       console.error('Error in fetchTeamMembers:', error);
     }
   };
@@ -144,11 +144,11 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
   const fetchStatusList = async () => {
     try {
       if (isNetworkAvailable) {
-        const status = await InspectionService.fetchAllStatus();
+        const status = await InspectionService.fetchAllStatus(isNetworkAvailable);
         setStatusList(status);
       }
     } catch (error) {
-      recordCrashlyticsError('Error in fetchStatusList:',error)
+      recordCrashlyticsError('Error in fetchStatusList:', error);
       console.error('Error in fetchStatusList:', error);
     }
   };
@@ -157,7 +157,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
     try {
       if (isNetworkAvailable) {
         setLoading(true);
-        const inspectionData = await InspectionService.fetchInspectionById(inspectionId);
+        const inspectionData = await InspectionService.fetchInspectionById(inspectionId, isNetworkAvailable);
         if (inspectionData) {
           setInspectionDate(inspectionData.appointmentDate);
           setSelectPreferredTime(
@@ -193,7 +193,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       }
     } catch (error) {
       setLoading(false);
-      recordCrashlyticsError('Error in fetchInspectionData:',error)
+      recordCrashlyticsError('Error in fetchInspectionData:', error);
       console.error('Error in fetchInspectionData:', error);
     }
   };
@@ -291,7 +291,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       }
     } catch (error) {
       setLoading(false);
-      recordCrashlyticsError('Error in saveInspection:', error)
+      recordCrashlyticsError('Error in saveInspection:', error);
       console.error('Error in saveInspection:', error);
     }
   };
@@ -301,7 +301,7 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
       tempArray.splice(index, 1);
       setSelectedTeamMember(tempArray);
     } catch (error) {
-      recordCrashlyticsError('Error in deleteInspectionType:',error)
+      recordCrashlyticsError('Error in deleteInspectionType:', error);
       console.error('Error in deleteInspectionType:', error);
     }
   }

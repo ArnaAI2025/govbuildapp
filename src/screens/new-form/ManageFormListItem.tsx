@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SubmissionModel } from '../../utils/interfaces/ISubScreens';
+import type { SubmissionModel } from '../../utils/interfaces/ISubScreens';
 import { height, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';

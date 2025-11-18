@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MenuProvider } from 'react-native-popup-menu';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import Loader from '../../../components/common/Loader';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import { TEXTS } from '../../../constants/strings';
@@ -18,7 +18,7 @@ import { FONT_FAMILY, FONT_SIZE } from '../../../theme/fonts';
 import { LicenseDetailsService } from './LicenseDetailsService';
 import { useIsFocused } from '@react-navigation/native';
 import { show2Decimals } from '../../../utils/helper/helpers';
-import { TeamMember } from '../../../utils/interfaces/ISubScreens';
+import type { TeamMember } from '../../../utils/interfaces/ISubScreens';
 import PublishButton from '../../../components/common/PublishButton';
 import AutocompleteInput from 'react-native-autocomplete-input';
 import CustomMultiSelectDropdown from '../../../components/common/MultiSelectDropdown';
@@ -274,7 +274,7 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
                 <AutocompleteInput
                   autoCapitalize="none"
                   autoCorrect={false}
-                  scrollEnabled={true}
+                  scrollEnabled
                   style={styles.autocompleteInput}
                   inputContainerStyle={styles.autocompleteContainer}
                   data={caseOwnerSuggestions}
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   assignedView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical:15,
+    paddingVertical: 15,
   },
   checkBox: { borderRadius: 5 },
   flexStyle: { flexDirection: 'row', alignItems: 'center' },

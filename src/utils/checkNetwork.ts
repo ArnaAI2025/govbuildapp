@@ -1,6 +1,8 @@
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
+import type { NetInfoState } from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import { useEffect, useRef } from 'react';
-import { AppState, AppStateStatus } from 'react-native';
+import type { AppStateStatus } from 'react-native';
+import { AppState } from 'react-native';
 import useNetworkStore from '../store/networkStore';
 import { recordCrashlyticsError } from '../services/CrashlyticsService';
 

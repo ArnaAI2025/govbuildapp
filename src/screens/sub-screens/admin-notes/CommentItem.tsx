@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import Checkbox from 'expo-checkbox';
-import { CommentItemProps } from '../../../utils/interfaces/ISubScreens';
+import type { CommentItemProps } from '../../../utils/interfaces/ISubScreens';
 import { formatDate, convertTime } from '../../../utils/helper/helpers';
 import { COLORS } from '../../../theme/colors';
 import { TEXTS } from '../../../constants/strings';
@@ -180,38 +180,36 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </View>
         {/* Edit/Delete Buttons */}
         {/* Need to discuss with the dev team userId === item.author?.toLowerCase() && */}
-        {
-          item.text !== TEXTS.subScreens.adminNotes.moderatorComment &&
-          isNetworkAvailable && (
-            <View style={[styles.buttonContainer, { opacity: isStatusReadOnly ? 0.4 : 1 }]}>
+        {item.text !== TEXTS.subScreens.adminNotes.moderatorComment && isNetworkAvailable && (
+          <View style={[styles.buttonContainer, { opacity: isStatusReadOnly ? 0.4 : 1 }]}>
+            <TouchableOpacity
+              onPress={() =>
+                onEditComment(item.id, item.text, item.attachment ?? '', item.fileName ?? '')
+              }
+              disabled={isStatusReadOnly}
+              accessibilityLabel="Edit comment"
+            >
+              <Icon name="pencil" size={25} color={COLORS.BLUE_COLOR} />
+            </TouchableOpacity>
+            {permissions?.allowRemoveAdminComments && (
               <TouchableOpacity
                 onPress={() =>
-                  onEditComment(item.id, item.text, item.attachment ?? '', item.fileName ?? '')
+                  confirmAction(
+                    `Are you sure to want to delete the ${
+                      !item.isPublic ? 'admin' : 'public'
+                    } comment?`,
+                    () => onDeleteComment(item.id),
+                    `Delete Comment`,
+                  )
                 }
                 disabled={isStatusReadOnly}
-                accessibilityLabel="Edit comment"
+                accessibilityLabel="Delete comment"
               >
-                <Icon name="pencil" size={25} color={COLORS.BLUE_COLOR} />
+                <Icon name="delete" size={25} color={COLORS.APP_COLOR} />
               </TouchableOpacity>
-              {permissions?.allowRemoveAdminComments && (
-                <TouchableOpacity
-                  onPress={() =>
-                    confirmAction(
-                      `Are you sure to want to delete the ${
-                        !item.isPublic ? 'admin' : 'public'
-                      } comment?`,
-                      () => onDeleteComment(item.id),
-                      `Delete Comment`,
-                    )
-                  }
-                  disabled={isStatusReadOnly}
-                  accessibilityLabel="Delete comment"
-                >
-                  <Icon name="delete" size={25} color={COLORS.APP_COLOR} />
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
+            )}
+          </View>
+        )}
       </View>
     </Animated.View>
   );

@@ -17,8 +17,8 @@ import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { COLORS } from '../../theme/colors';
 import { fontSize, height, iconSize, WINDOW_WIDTH } from '../../utils/helper/dimensions';
 import useAuthStore from '../../store/useAuthStore';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { navigate } from '../../navigation/Index';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
@@ -424,7 +424,7 @@ const EditAttachItem: React.FC<EditAttachItemProps> = ({ navigation, route }) =>
             navigation.goBack();
           }
         } catch (error) {
-          recordCrashlyticsError('Failed to save data: ', error)
+          recordCrashlyticsError('Failed to save data: ', error);
           ToastService.show('Failed to save data: ' + error?.message, COLORS.ERROR);
         }
       };
@@ -485,21 +485,21 @@ const EditAttachItem: React.FC<EditAttachItemProps> = ({ navigation, route }) =>
             onLoad={() => setLoading(false)}
             onError={(error) => ToastService.show(error.nativeEvent.description, COLORS.ERROR)}
             javaScriptCanOpenWindowsAutomatically={false}
-            setBuiltInZoomControls={true}
+            setBuiltInZoomControls
             originWhitelist={['*']}
             source={
               Platform.OS === 'android'
                 ? { uri: 'file:///android_asset/myHtml.html' }
                 : { uri: 'Web.bundle/formIo.html' }
             }
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
+            javaScriptEnabled
+            domStorageEnabled
             scalesPageToFit
-            scrollEnabled={true}
-            webviewDebuggingEnabled={true}
-            allowFileAccessFromFileURLs={true}
-            allowUniversalAccessFromFileURLs={true}
-            allowFileAccess={true}
+            scrollEnabled
+            webviewDebuggingEnabled
+            allowFileAccessFromFileURLs
+            allowUniversalAccessFromFileURLs
+            allowFileAccess
             injectedJavaScript={jsCode}
             injectedJavaScriptBeforeContentLoaded={jsCode}
             onMessage={onMessage}

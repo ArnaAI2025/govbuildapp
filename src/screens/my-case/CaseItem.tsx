@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { TouchableOpacity, View, Text, Image, Alert } from 'react-native';
 import { COLORS } from '../../theme/colors';
-import { CaseItemProps } from '../../utils/interfaces/ICase';
+import type { CaseItemProps } from '../../utils/interfaces/ICase';
 import TextHeadingAndTitleView from '../../components/common/TextHeadingAndTitleView';
 import IMAGES from '../../theme/images';
 import globalStyles from '../../theme/globalStyles';

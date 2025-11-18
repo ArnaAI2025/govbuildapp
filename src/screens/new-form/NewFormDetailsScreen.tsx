@@ -6,8 +6,8 @@ import { styles } from './newFormStyles';
 import { useNetworkStatus } from '../../utils/checkNetwork';
 import { goBack } from '../../navigation/Index';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
 import { getBaseUrl } from '../../session/SessionManager';
 import { URL } from '../../constants/url';
 import useAuthStore from '../../store/useAuthStore';
@@ -150,8 +150,8 @@ const NewFormDetailsScreen: React.FC<NewFormDetailsScreenProps> = ({ route }) =>
           setSupportMultipleWindows={false} // prevent losing session on redirect
           domStorageEnabled
           cacheEnabled={false}
-          sharedCookiesEnabled={true}
-          thirdPartyCookiesEnabled={true}
+          sharedCookiesEnabled
+          thirdPartyCookiesEnabled
         />
       </View>
     </ScreenWrapper>

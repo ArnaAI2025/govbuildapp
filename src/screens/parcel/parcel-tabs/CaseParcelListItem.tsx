@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { CaseParcelModel } from '../../../utils/interfaces/ISubScreens';
+import type { CaseParcelModel } from '../../../utils/interfaces/ISubScreens';
 import { COLORS } from '../../../theme/colors';
 import { height, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import { FONT_FAMILY, FONT_SIZE } from '../../../theme/fonts';

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { PaymentItemRow } from './PaymentItemRow';
-import { Payment, PaymentScreenProps } from '../../../../utils/interfaces/ISubScreens';
+import type { Payment, PaymentScreenProps } from '../../../../utils/interfaces/ISubScreens';
 import { PaymentAndAccountingDetailsService } from '../PaymentAndAccountingDetailsService';
 import NoData from '../../../../components/common/NoData';
 import Loader from '../../../../components/common/Loader';

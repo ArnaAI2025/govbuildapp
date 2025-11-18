@@ -4,7 +4,7 @@ import { useOrientation } from '../../utils/useOrientation';
 import CustomHeader from './CustomHeader';
 import { COLORS } from '../../theme/colors';
 import { goBack } from '../../navigation/Index';
-import { ScreenWrapperProps } from '../../utils/interfaces/IComponent';
+import type { ScreenWrapperProps } from '../../utils/interfaces/IComponent';
 import { height } from '../../utils/helper/dimensions';
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   title,

@@ -10,17 +10,15 @@ import { getApp, getApps, initializeApp } from '@react-native-firebase/app';
 import { initializeCrashlytics } from './src/services/CrashlyticsService';
 import Config from 'react-native-config';
 import { COLORS } from './src/theme/colors';
-import { getIsUpdateLater, getIsVersionUpdateOffline, storage } from './src/session/SessionManager';
+import { getIsUpdateLater, getIsVersionUpdateOffline, initializeSecureStorage } from './src/session/SessionManager';
 import { useNetworkStatus } from './src/utils/checkNetwork';
 import { checkAppVersion, mandatoryUpdateDialog } from './src/utils/checkAppVersion';
 
-const VERSION_CHECK_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
 const App = () => {
-  if(__DEV__) LogBox.ignoreAllLogs(true);
+  if (__DEV__) LogBox.ignoreAllLogs(true);
   const [isAppReady, setAppReady] = useState(false);
   const { isNetworkAvailable } = useNetworkStatus();
-
+  initializeSecureStorage()
   useEffect(() => {
     const prepare = async () => {
       try {
@@ -74,33 +72,23 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const handleVersionCheck = async () => {
-      const lastCheckTimestamp = storage.getNumber('lastVersionCheckTimestamp') || 0;
-      const now = Date.now();
-      const isUpdate = getIsUpdateLater();
-      if (now - lastCheckTimestamp < VERSION_CHECK_INTERVAL) {
-        return;
-      }
-      if (typeof isUpdate !== 'undefined') {
-        if (isNetworkAvailable) {
-          try {
-            await checkAppVersion(isUpdate);
-            storage.set('lastVersionCheckTimestamp', now);
-          } catch (error) {
-            ToastService.show(`Failed to check for updates ${error}`, COLORS.ERROR);
-          }
-        } else {
-          const isVersion = getIsVersionUpdateOffline();
-          if (isVersion) {
-            mandatoryUpdateDialog();
-          }
-        }
-      }
-    };
+useEffect(() => {
+  const handleVersionCheckOnAppStart = async () => {
+    const isUpdateLater = getIsUpdateLater();
+    const isMandatoryOffline = getIsVersionUpdateOffline();
 
-    handleVersionCheck();
-  }, [isNetworkAvailable]);
+    if (!isNetworkAvailable && isMandatoryOffline) {
+      mandatoryUpdateDialog();
+      return;
+    }
+
+    if (isNetworkAvailable) {
+      await checkAppVersion(isUpdateLater);
+    }
+  };
+
+  handleVersionCheckOnAppStart();
+}, []);
 
   if (!isAppReady) return null;
 

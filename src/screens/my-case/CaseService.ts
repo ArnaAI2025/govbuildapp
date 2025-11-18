@@ -1,4 +1,4 @@
-import { CaseData, CaseResponse, EditCaseResponse } from '../../utils/interfaces/ICase';
+import type { CaseData, CaseResponse, EditCaseResponse } from '../../utils/interfaces/ICase';
 import { getAccessToken, getBaseUrl, getUserRole } from '../../session/SessionManager';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
@@ -7,10 +7,10 @@ import {
   fetchLocalCasebyId,
   updateCaseIfIdExist,
 } from '../../database/my-case/myCaseSync';
-import { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
+import type { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
-import { AdressModel } from '../../utils/interfaces/ISubScreens';
+import type { AdressModel } from '../../utils/interfaces/ISubScreens';
 import { editAddress } from '../../utils/params/commonParams';
 import {
   fetchBillingStatus,

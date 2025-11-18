@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {
+import type {
   AccountingDetailRowItemProps,
   AccountingDetailTitle,
 } from '../../../../utils/interfaces/ISubScreens';
@@ -8,7 +8,7 @@ import { cardBorder, fontSize, height } from '../../../../utils/helper/dimension
 import { formatToCustomDateTimeUTC } from '../../../../utils/helper/helpers';
 import { COLORS } from '../../../../theme/colors';
 import { CustomTextViewWithImage } from '../../../../components/common/CustomTextViewWithImage';
-import { ExpandableTextViewProps } from '../../../../utils/interfaces/IComponent';
+import type { ExpandableTextViewProps } from '../../../../utils/interfaces/IComponent';
 import { TEXTS } from '../../../../constants/strings';
 import globalStyles from '../../../../theme/globalStyles';
 

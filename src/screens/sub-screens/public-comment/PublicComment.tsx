@@ -9,10 +9,10 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { useNetworkStatus } from '../../../utils/checkNetwork';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import Loader from '../../../components/common/Loader';
@@ -20,7 +20,7 @@ import IMAGES from '../../../theme/images';
 import { getUserRole } from '../../../session/SessionManager';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { COLORS } from '../../../theme/colors';
-import { CommentsState } from '../../../utils/interfaces/ISubScreens';
+import type { CommentsState } from '../../../utils/interfaces/ISubScreens';
 import {
   fetchAdminAndPublicComment,
   saveComment,
@@ -102,7 +102,7 @@ const PublicComments: React.FC<PublicCommentsScreenProps> = ({ route, navigation
         setState((prev) => ({ ...prev, comments: [] }));
       }
     } catch (error) {
-      recordCrashlyticsError('Error fetching admin comments:',error);
+      recordCrashlyticsError('Error fetching admin comments:', error);
       console.error('Error fetching admin comments:', error);
       setState((prev) => ({ ...prev, comments: [] }));
     } finally {
@@ -338,7 +338,7 @@ const PublicComments: React.FC<PublicCommentsScreenProps> = ({ route, navigation
               <CommentItem
                 item={item}
                 userId={getUserRole()?.toLowerCase() || ''}
-                isFromPublicComment={true}
+                isFromPublicComment
                 isNetworkAvailable={isNetworkAvailable}
                 permissions={permissions}
                 isStatusReadOnly={caseData.isStatusReadOnly}
@@ -418,7 +418,7 @@ const PublicComments: React.FC<PublicCommentsScreenProps> = ({ route, navigation
             >
               <ScrollView showsVerticalScrollIndicator={false}>
                 <RichEditor
-                  useContainer={true}
+                  useContainer
                   ref={richText}
                   //  androidLayerType="software"
                   initialContentHTML={state.newComment}

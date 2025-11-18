@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
-import { RootStackParamList } from '../../navigation/Types';
+import type { RootStackParamList } from '../../navigation/Types';
 import { useNetworkStatus } from '../../utils/checkNetwork';
-import { FormStatus, SubmissionModel } from '../../utils/interfaces/ISubScreens';
+import type { FormStatus, SubmissionModel } from '../../utils/interfaces/ISubScreens';
 import { FormSubmissionService } from './FormSubmissionService';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
 import { TEXTS } from '../../constants/strings';
@@ -63,7 +63,7 @@ const AdvanceFormSubmission: React.FC<AdvanceFormSubmissionProps> = ({}) => {
   // Fetch form status
   useEffect(() => {
     const fetchFormStatus = async () => {
-      const result = await FormSubmissionService.fetchFormStatus();
+      const result = await FormSubmissionService.fetchFormStatus(isNetworkAvailable);
       setFormStatusList(result ?? []);
     };
     fetchFormStatus();
@@ -98,6 +98,7 @@ const AdvanceFormSubmission: React.FC<AdvanceFormSubmissionProps> = ({}) => {
 
       try {
         const result = await FormSubmissionService.fetchSubmissions(
+          isNetworkAvailable,
           page,
           search,
           statusId,
@@ -117,7 +118,7 @@ const AdvanceFormSubmission: React.FC<AdvanceFormSubmissionProps> = ({}) => {
           setHasMoreData(false);
         }
       } catch (error) {
-        recordCrashlyticsError('Failed to fetch submissions:',error)
+        recordCrashlyticsError('Failed to fetch submissions:', error);
         console.error('Failed to fetch submissions:', error);
       } finally {
         if (reset) {

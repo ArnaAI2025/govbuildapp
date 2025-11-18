@@ -1,6 +1,5 @@
 import { URL } from '../../../constants/url';
-import NetInfo from '@react-native-community/netinfo';
-import { StatusChangeLog } from '../../../utils/interfaces/ISubScreens';
+import type { StatusChangeLog } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA } from '../../../services/ApiClient';
 import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
@@ -10,10 +9,10 @@ export const LogService = {
     contentItemId: string,
     type: 'BillingStatus' | 'Status' | 'AssignedUsers' | 'TaskStatus',
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const urlPath = {
@@ -41,10 +40,10 @@ export const LogService = {
     contentItemId: string,
     isCase: boolean,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const caseOrLicenseId = isCase ? `?caseId=${contentItemId}` : `?licenseId=${contentItemId}`;
@@ -73,10 +72,10 @@ export const LogService = {
     contentItemId: string,
     isCase: boolean,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const urlPath = {
@@ -105,10 +104,10 @@ export const LogService = {
   async fetchLicenseStatus(
     contentItemId: string,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const urlPath = {

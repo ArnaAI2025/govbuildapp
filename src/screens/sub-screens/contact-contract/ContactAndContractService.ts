@@ -1,4 +1,3 @@
-import NetInfo from '@react-native-community/netinfo';
 import { getBaseUrl } from '../../../session/SessionManager';
 import {
   contactFormData,
@@ -8,14 +7,14 @@ import {
 import { generateUniqueID, getNewUTCDate } from '../../../utils/helper/helpers';
 import { URL } from '../../../constants/url';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../../services/ApiClient';
-import {
-  addContractorParams,
+import type {
   Contact,
   Contractor,
   License,
   LicenseForContract,
   ResponsiblePartyFormData,
 } from '../../../utils/interfaces/ISubScreens';
+import { addContractorParams } from '../../../utils/interfaces/ISubScreens';
 import { ToastService } from '../../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../../constants/strings';
 import { COLORS } from '../../../theme/colors';
@@ -149,12 +148,11 @@ export const contactService = {
     contractorData: Contractor,
     caseLicenseId: string,
     type: 'Case' | 'License',
+    isNetworkAvailable?: boolean,
   ): Promise<boolean> {
     try {
-      const state = await NetInfo.fetch();
       const newID = generateUniqueID();
-
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         if (!contractorData.licenseTypeIds || !contractorData.contractorId) {
           ToastService.show(
             TEXTS.subScreens.contactAndContract.licenseValidate,
@@ -219,7 +217,7 @@ export const contactService = {
         //   getNewUTCDate(),
         //   caseData
         // );
-        return true;
+        return true; // Currenlty we have not use this area becouse it is for the offline.
       }
     } catch (error) {
       recordCrashlyticsError('Error saving contractor:', error);
@@ -269,11 +267,11 @@ export const contactService = {
         });
 
         setLoading(false);
-        if (response.status) {
+        if (response?.status) {
           ToastService.show(TEXTS.subScreens.contactAndContract.saveSuccess, COLORS.SUCCESS_GREEN);
           navigation.goBack(null);
         } else {
-          console.log('Response error---->>>', response.message);
+          console.log('Response error---->>>', response?.message);
         }
       } else {
         const payloadOffline = contactFormDataOffline(
@@ -293,7 +291,6 @@ export const contactService = {
           type,
           addNew,
         );
-        // Offline handling
         const response =
           type === 'Case'
             ? await fetchCaseDataByCaseIdFromDb(caseLicenseId)
@@ -351,10 +348,7 @@ export const contactService = {
             }
           }
         } else {
-          // ToastService.show(
-          //   "Something went wrong. Please try again.",
-          //   COLORS.WARNING_ORANGE
-          // );
+          ToastService.show(`There is not ${type}`, COLORS.WARNING_ORANGE);
         }
       }
     } catch (error) {

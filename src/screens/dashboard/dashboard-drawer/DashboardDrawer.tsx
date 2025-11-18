@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '../home/Home';
 import { Image, ImageBackground, TouchableOpacity } from 'react-native';
@@ -7,7 +8,7 @@ import { useOrientation } from '../../../utils/useOrientation';
 import DeviceInfo from 'react-native-device-info';
 import { styles } from './dashboarddrawerStyles';
 import DrawerContent from './DrawerContent';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
+import type { DrawerNavigationProp } from '@react-navigation/drawer';
 import { COLORS } from '../../../theme/colors';
 import { height } from '../../../utils/helper/dimensions';
 

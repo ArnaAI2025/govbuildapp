@@ -3,7 +3,7 @@ import { Modal, FlatList, TouchableOpacity, Text, StyleSheet, View } from 'react
 import Checkbox from 'expo-checkbox';
 import { COLORS } from '../../theme/colors';
 import { fontSize, height } from '../../utils/helper/dimensions';
-import { StandardFormDialogProps } from '../../utils/interfaces/IComponent';
+import type { StandardFormDialogProps } from '../../utils/interfaces/IComponent';
 import { TEXTS } from '../../constants/strings';
 import { FONT_FAMILY } from '../../theme/fonts';
 

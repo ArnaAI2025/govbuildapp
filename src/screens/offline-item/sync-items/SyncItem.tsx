@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { BaseScrollView, DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview';
 
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 import { useOrientation } from '../../../utils/useOrientation';
 import { WINDOW_HEIGHT, WINDOW_WIDTH } from '@gorhom/bottom-sheet';
@@ -74,7 +74,7 @@ const SyncItem: React.FC<SyncItemProps> = ({ navigation }) => {
           more ? [...data, ...(safeResult as SyncItemData[])] : (safeResult as SyncItemData[]),
         );
       } catch (error) {
-        recordCrashlyticsError('Error loading sync items:',error)
+        recordCrashlyticsError('Error loading sync items:', error);
         console.error('Error loading sync items:', error);
       } finally {
         setIsLoading(false);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../../../theme/colors';
 import { fontSize, iconSize, width, WINDOW_WIDTH } from '../../../../utils/helper/dimensions';
-import { ContactItemRowProps } from '../../../../utils/interfaces/ISubScreens';
+import type { ContactItemRowProps } from '../../../../utils/interfaces/ISubScreens';
 import IMAGES from '../../../../theme/images';
 import { doCall } from '../../../../utils/helper/helpers';
 import globalStyles from '../../../../theme/globalStyles';
@@ -73,15 +73,15 @@ export const ContactItemRow: React.FC<ContactItemRowProps> = ({
         </TouchableOpacity>
 
         <View style={styles.infoContainer}>
-             <View style={{ flex: 1, flexDirection: 'row'}}>
-          <Image
-            tintColor={COLORS.APP_COLOR}
-            style={styles.icon}
-            source={IMAGES.LOCATION_ICON}
-            resizeMode="contain"
-          />
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <Image
+              tintColor={COLORS.APP_COLOR}
+              style={styles.icon}
+              source={IMAGES.LOCATION_ICON}
+              resizeMode="contain"
+            />
             <Text style={styles.infoText}>{rowData.mailingAddress || 'N/A'}</Text>
-            </View>
+          </View>
           <TouchableOpacity
             style={styles.editIcon}
             onPress={() => {

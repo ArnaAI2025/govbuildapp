@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { HeadingViewWithListProps } from '../../../utils/interfaces/ISubScreens';
+import type { HeadingViewWithListProps } from '../../../utils/interfaces/ISubScreens';
 import RelatedListItem from './RelatedListItem';
 import { fontSize, height, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';

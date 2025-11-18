@@ -1,4 +1,4 @@
-import { InspectionModel, InspectionTeamMember, InspectionType } from '../interfaces/ISubScreens';
+import type { InspectionModel, InspectionTeamMember, InspectionType } from '../interfaces/ISubScreens';
 import { convertFrom24To12Format, convertTime24Hours, formatDate } from './helpers';
 
 export const parseDate = (dateStr: string | undefined): Date | null => {

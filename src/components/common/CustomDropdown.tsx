@@ -10,7 +10,7 @@ import {
 import { TextInput, List } from 'react-native-paper';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
-import { DropdownProps } from '../../utils/interfaces/IComponent';
+import type { DropdownProps } from '../../utils/interfaces/IComponent';
 import { TEXTS } from '../../constants/strings';
 import { height } from '../../utils/helper/dimensions';
 
@@ -164,7 +164,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
           }
         }}
         error={error}
-        scrollEnabled={true}
+        scrollEnabled
       />
       {isLoading ? (
         <ActivityIndicator size="small" style={styles.loader} />
@@ -185,7 +185,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
               keyExtractor={(_, index) => index.toString()}
               renderItem={renderItem}
               keyboardShouldPersistTaps="handled"
-              nestedScrollEnabled={true}
+              nestedScrollEnabled
               style={{ maxHeight: 180 }}
             />
           </View>

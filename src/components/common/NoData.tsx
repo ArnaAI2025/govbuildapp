@@ -4,7 +4,7 @@ import { Button, Text } from 'react-native-paper';
 import IMAGES from '../../theme/images';
 import { COLORS } from '../../theme/colors';
 import { fontSize } from '../../utils/helper/dimensions';
-import { NoDataProps } from '../../utils/interfaces/IComponent';
+import type { NoDataProps } from '../../utils/interfaces/IComponent';
 import { TEXTS } from '../../constants/strings';
 import { FONT_FAMILY } from '../../theme/fonts';
 

@@ -1,8 +1,10 @@
 import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { Alert, View, StyleSheet, Text, TouchableOpacity, BackHandler } from 'react-native';
-import { WebView, WebViewNavigation } from 'react-native-webview';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
+import type { WebViewNavigation } from 'react-native-webview';
+import { WebView } from 'react-native-webview';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NetInfoState } from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import Loader from '../common/Loader';
 import ScreenWrapper from '../common/ScreenWrapper';
 import { COLORS } from '../../theme/colors';
@@ -16,8 +18,8 @@ import {
   URL,
 } from '../../constants/url';
 import { fetchCaseOrLicenseById } from '../../services/WebViewService';
-import { RootStackParamList } from '../../navigation/Types';
-import { WebViewState } from '../../utils/interfaces/IComponent';
+import type { RootStackParamList } from '../../navigation/Types';
+import type { WebViewState } from '../../utils/interfaces/IComponent';
 import { isTokenTimeOut, TokenRefreshGlobal } from '../../session/TokenRefresh';
 import { ToastService } from '../common/GlobalSnackbar';
 import { goBack } from '../../navigation/Index';
@@ -47,7 +49,7 @@ const checkConnectionQuality = async (): Promise<boolean> => {
     console.log('Connection duration:', duration);
     return duration > CONNECTIVITY_THRESHOLD;
   } catch (error) {
-    recordCrashlyticsError('Network check error:',error);
+    recordCrashlyticsError('Network check error:', error);
     console.error('Network check error:', error);
     return true; // Assume low connectivity on error
   }
@@ -170,7 +172,7 @@ const OpenInWebView: React.FC<OpenInWebViewScreenProps> = ({ navigation, route }
         isWebViewLoading: true,
       }));
     } catch (error) {
-      recordCrashlyticsError('Initialization error:',error);
+      recordCrashlyticsError('Initialization error:', error);
       console.error('Initialization error:', error);
       setState((prev) => ({ ...prev, isLoadingAPI: false, showError: true }));
       Alert.alert('Error', 'Failed to load content. Please try again.');
@@ -317,7 +319,7 @@ const OpenInWebView: React.FC<OpenInWebViewScreenProps> = ({ navigation, route }
                   isLoadingAPI: false,
                 }));
               }}
-              javaScriptEnabled={true}
+              javaScriptEnabled
               onNavigationStateChange={handleNavigationStateChange}
               javaScriptCanOpenWindowsAutomatically={false}
               setBuiltInZoomControls={false}

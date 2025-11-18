@@ -13,7 +13,7 @@ import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
 import NetInfo from '@react-native-community/netinfo';
-import { FileItem, OpenDocPickerDialogProps } from '../../utils/interfaces/IComponent';
+import type { FileItem, OpenDocPickerDialogProps } from '../../utils/interfaces/IComponent';
 import DocumentPicker from 'react-native-document-picker';
 import { fetchFileExtensionData } from '../../database/sub-screens/attached-docs/attachedDocsDAO';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
@@ -70,7 +70,7 @@ const OpenDocPickerDialog: React.FC<OpenDocPickerDialogProps> = ({ visible, onCl
       }
     } catch (error: any) {
       if (error.message !== 'USER_CANCELLED') {
-        recordCrashlyticsError(`${action} error:`,error);
+        recordCrashlyticsError(`${action} error:`, error);
         console.error(`${action} error:`, error);
         ToastService.show(
           error.message || TEXTS.subScreens.commentWithFileAttached.fileSelectionError,
@@ -297,7 +297,7 @@ async function commentOpenDocPicker() {
     if (DocumentPicker.isCancel(err)) {
       console.log('User cancelled the picker operation.');
     } else {
-      recordCrashlyticsError('Error in CommentOpenDocPicker:',err);
+      recordCrashlyticsError('Error in CommentOpenDocPicker:', err);
       console.error('Error in CommentOpenDocPicker:', err);
     }
   } finally {
@@ -325,9 +325,8 @@ export const fileExtensionDataAPI = async () => {
       return response?.data?.data;
     }
   } catch (error) {
-    recordCrashlyticsError('Error in FileExtensionDataAPI:',error);
+    recordCrashlyticsError('Error in FileExtensionDataAPI:', error);
     console.error('Error in FileExtensionDataAPI:', error);
-    
   }
 };
 
@@ -382,7 +381,7 @@ async function commentCameraOpen(comment: any, FileUploadApi: any) {
     //     return pickerResult.uri;
     // }
   } catch (error) {
-    recordCrashlyticsError("error in open camera", error);
+    recordCrashlyticsError('error in open camera', error);
     console.error(error);
   }
 }

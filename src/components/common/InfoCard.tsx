@@ -8,7 +8,7 @@ import { height, WINDOW_HEIGHT, WINDOW_WIDTH } from '../../utils/helper/dimensio
 import { openMaps } from '../../utils/helper/helpers';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
 import globalStyles from '../../theme/globalStyles';
-import { CaseLicenseItemProps } from '../../utils/interfaces/ISubScreens';
+import type { CaseLicenseItemProps } from '../../utils/interfaces/ISubScreens';
 
 const InfoCard: React.FC<CaseLicenseItemProps> = ({
   item,

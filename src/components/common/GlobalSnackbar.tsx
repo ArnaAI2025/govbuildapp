@@ -1,4 +1,5 @@
-import React, { useState, ReactNode, useEffect, useRef } from 'react';
+import type { ReactNode} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Animated, PanResponder, Text } from 'react-native';
 import { Snackbar, Portal } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

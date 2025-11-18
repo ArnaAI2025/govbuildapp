@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { AccountingDetailRowItem } from './AccountingDetailRowItem';
-import {
+import type {
   AccountingDetail,
   AccountingDetailScreenProps,
   AccountingDetailTitle,

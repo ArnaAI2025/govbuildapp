@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import Orientation, { OrientationType } from 'react-native-orientation-locker';
+import type { OrientationType } from 'react-native-orientation-locker';
+import Orientation from 'react-native-orientation-locker';
 import { Dimensions, Platform } from 'react-native';
 
 export function useOrientation(): 'PORTRAIT' | 'LANDSCAPE' {

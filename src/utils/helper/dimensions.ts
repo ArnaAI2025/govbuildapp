@@ -1,4 +1,5 @@
-import { Dimensions, PixelRatio, Platform, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
+import { Dimensions, PixelRatio, Platform } from 'react-native';
 
 export const { height: deviceHeight, width: deviceWidth } = Dimensions.get('window');
 

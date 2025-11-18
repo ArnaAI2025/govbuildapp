@@ -8,7 +8,7 @@ interface CustomAlertDialogProps {
 }
 const CustomAlertDialog = ({ visible, onClose, onAction }: CustomAlertDialogProps) => {
   return (
-    <Modal transparent={true} animationType="fade" visible={visible} onRequestClose={onClose}>
+    <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
         <View style={styles.alertContainer}>
           <Text style={styles.alertTitle}>Select Doc from</Text>

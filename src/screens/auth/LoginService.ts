@@ -7,7 +7,7 @@ import {
 import { getAuthToken, GovbuiltClientCaseService } from '@mcci/govbuilt-client';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../constants/strings';
-import { AuthPayload, Tenant, TenantData } from '../../utils/interfaces/IAuth';
+import type { AuthPayload, Tenant, TenantData } from '../../utils/interfaces/IAuth';
 import { COLORS } from '../../theme/colors';
 import {
   saveAccessToken,
@@ -18,6 +18,7 @@ import {
 } from '../../session/SessionManager';
 import { navigate } from '../../navigation/Index';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { getLoginCredentials } from '../../utils/secureStorage';
 
 export const fetchTenantList = async (): Promise<Tenant[]> => {
   try {
@@ -69,7 +70,7 @@ export const fetchTenantList = async (): Promise<Tenant[]> => {
   }
 };
 
-export const handleOfflineLogin = (
+export const handleOfflineLogin = async (
   email: string,
   password: string,
   offlineAuthData: TenantData,
@@ -80,8 +81,15 @@ export const handleOfflineLogin = (
       message: TEXTS.apiServiceFile.noOfflineDataFound,
     };
   }
-  if (offlineAuthData.username === email.trim() && offlineAuthData.password === password) {
+  const keychainData = await getLoginCredentials();
+
+  if (
+    keychainData &&
+    keychainData.username.toUpperCase() === email.trim().toUpperCase() &&
+    keychainData.password === password
+  ) {
     return { success: true, authData: offlineAuthData };
+
     // setAuthData({
     //           access_token: offlineAuthData?.access_token,
     //           refresh_token: offlineAuthData?.refresh_token,
@@ -317,6 +325,6 @@ export const handleLoginNavigation = ({
   } catch (error) {
     recordCrashlyticsError('Error navigating to dashboard:', error);
     console.error('Error navigating to dashboard:', error);
-    ToastService.show(TEXTS.apiServiceFile.loginSetupFailed, 'red');
+    ToastService.show(TEXTS.apiServiceFile.loginSetupFailed, COLORS.ERROR);
   }
 };

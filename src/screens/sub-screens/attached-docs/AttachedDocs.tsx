@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { RecyclerListView, DataProvider, LayoutProvider, BaseScrollView } from 'recyclerlistview';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { useOrientation } from '../../../utils/useOrientation';
-import { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
+import type { DocumentModel, Folder } from '../../../utils/interfaces/IAttachedDocs';
 import { DocumentService } from './AttachedDocsService';
 import { AttachedDocsItem } from './AttachedDocsItem';
 import OpenDocPickerDialog from '../../../components/common/OpenDocPickerDialog';
@@ -333,7 +333,7 @@ const AttachedDocs: React.FC<AttachedDocsProps> = ({ route, navigation }) => {
                 layoutProvider={layoutProvider}
                 dataProvider={dataProvider}
                 rowRenderer={rowRenderer}
-                canChangeSize={true}
+                canChangeSize
               />
             ) : (
               <NoData />

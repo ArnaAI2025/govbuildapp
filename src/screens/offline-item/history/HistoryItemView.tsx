@@ -43,7 +43,7 @@ const HistoryItemView: React.FC<HistoryItemViewProps> = ({ data }) => {
       .join(' ');
   };
 
-  const buildSyncedAreasItem = (areas: { subTypeTitle: string }[] = []) => {
+  const buildSyncedAreasItem = (areas: Array<{ subTypeTitle: string }> = []) => {
     const uniqueNames = new Set<string>();
 
     areas.forEach((s) => {

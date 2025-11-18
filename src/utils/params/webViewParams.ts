@@ -1,5 +1,5 @@
 import { URL } from '../../constants/url';
-import { WebViewUrlParams } from '../interfaces/IComponent';
+import type { WebViewUrlParams } from '../interfaces/IComponent';
 
 export const constructWebViewUrl = ({ baseUrl, path }: WebViewUrlParams): string => {
   const webUrl = URL.WEB_URL; // Replace with actual WEBURL constant or import

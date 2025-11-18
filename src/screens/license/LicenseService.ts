@@ -6,8 +6,8 @@ import {
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../services/ApiClient';
 import { getBaseUrl, getLicenseUserRole } from '../../session/SessionManager';
 import { generateUniqueID, getNewUTCDate, sortByKey } from '../../utils/helper/helpers';
-import { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
-import {
+import type { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/IComponent';
+import type {
   EditLicenseDropdownResponse,
   EditLicenseResponse,
   LicenseData,
@@ -134,37 +134,35 @@ export const fetchLicenseService = async (
 };
 export const fetchLicenseTypeFieldSetting = async (
   licenseTypeId: string,
-  isNetworkAvailable: boolean
+  isNetworkAvailable: boolean,
 ): Promise<any> => {
   if (isNetworkAvailable) {
     const baseUrl = getBaseUrl();
-    const url =  `${baseUrl}${URL.GET_LICENSE_TYPE_FIELDS_SETTING}${licenseTypeId}`
-    
+    const url = `${baseUrl}${URL.GET_LICENSE_TYPE_FIELDS_SETTING}${licenseTypeId}`;
+
     try {
       // For the case type fields
       const licenseTypeFieldSetting = await GET_DATA({
-        url:url,
+        url: url,
       });
-      
+
       if (!licenseTypeFieldSetting?.status) {
-        throw new Error(
-          "Failed to fetch cases type field setting: Invalid response status"
-        );
+        throw new Error('Failed to fetch cases type field setting: Invalid response status');
       }
       const serverData = licenseTypeFieldSetting?.data?.data;
       return serverData;
     } catch (error) {
-      console.error("Error in fetchCases:", error);
+      console.error('Error in fetchCases:', error);
       if (error instanceof Error) {
         throw new Error(`Failed to fetch cases: ${error.message}`);
       } else {
-        throw new Error("Failed to fetch cases: An unknown error occurred");
+        throw new Error('Failed to fetch cases: An unknown error occurred');
       }
     }
   } else {
     // const responseCaseData = await getOfflineCaseTypeSettingsById(licenseTypeId);
     // return responseCaseData ?? {};
-     return {}
+    return {};
   }
 };
 export const fetchLicenseByID = async (

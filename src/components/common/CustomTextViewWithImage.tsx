@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { CustomTextViewProps } from '../../utils/interfaces/ISubScreens';
+import type { CustomTextViewProps } from '../../utils/interfaces/ISubScreens';
 import { fontSize, height } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY } from '../../theme/fonts';

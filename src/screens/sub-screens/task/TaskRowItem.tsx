@@ -2,7 +2,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { CustomTextViewWithImage } from '../../../components/common/CustomTextViewWithImage';
-import { TaskRowItemProps } from '../../../utils/interfaces/IComponent';
+import type { TaskRowItemProps } from '../../../utils/interfaces/IComponent';
 import { TEXTS } from '../../../constants/strings';
 import globalStyles from '../../../theme/globalStyles';
 

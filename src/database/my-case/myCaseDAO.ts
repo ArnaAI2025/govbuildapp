@@ -3,7 +3,7 @@ import { useUnifiedCaseStore } from '../../store/caseStore';
 import { getNewUTCDate, toSqlVal } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
-import { Case } from '../types/case';
+import type { Case } from '../types/case';
 
 export const storeCaseData = async (
   data: Partial<Case>,

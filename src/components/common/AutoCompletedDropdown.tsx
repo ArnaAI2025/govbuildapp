@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Autocomplete from 'react-native-autocomplete-input';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { TeamMember } from '../../utils/interfaces/ISubScreens';
+import type { TeamMember } from '../../utils/interfaces/ISubScreens';
 import { SettingsService } from '../../screens/sub-screens/setting/SettingService';
 import { COLORS } from '../../theme/colors';
 import { fontSize } from '../../utils/helper/dimensions';

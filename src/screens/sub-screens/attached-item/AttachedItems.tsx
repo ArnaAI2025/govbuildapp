@@ -1,15 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { downloadForm, fetchAttachedItems, getOfflineDataById } from './AttachedItemsService';
 import Loader from '../../../components/common/Loader';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import AttechedItemsRowView from './AttachedItemsRowView';
 import { COLORS } from '../../../theme/colors';
 import { FONT_SIZE } from '../../../theme/fonts';
-import { AttachedItem } from '../../../utils/interfaces/ISubScreens';
+import type { AttachedItem } from '../../../utils/interfaces/ISubScreens';
 import FloatingActionButton from '../../../components/common/FloatingActionButton';
 import { TEXTS } from '../../../constants/strings';
 import NoData from '../../../components/common/NoData';

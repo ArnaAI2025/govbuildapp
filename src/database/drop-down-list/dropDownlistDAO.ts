@@ -1,5 +1,5 @@
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
-import { SelectionListData, TeamMemberData } from '../../utils/interfaces/offline/IOffllineCase';
+import type { SelectionListData, TeamMemberData } from '../../utils/interfaces/offline/IOffllineCase';
 import { TABLES } from '../DatabaseConstants';
 import { getDatabase } from '../DatabaseService';
 

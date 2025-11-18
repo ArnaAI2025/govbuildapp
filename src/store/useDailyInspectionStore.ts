@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DailyInspectionModel } from '../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../utils/interfaces/ISubScreens';
 
 interface TeamMember {
   id: string;
@@ -39,18 +39,18 @@ interface DailyInspectionState {
   caseOrLicenseType: boolean;
   onDragEnd: boolean;
   isCreateRoute: boolean;
-  inspectionTypes: { id: string; displayText: string }[];
-  inspectionStatus: { id: string; displayText: string }[];
-  caseType: { id: string; displayText: string }[];
-  caseTypeCategory: { id: string; displayText: string }[];
-  licenseType: { id: string; displayText: string }[];
-  licenseTypeCategory: { id: string; displayText: string }[];
-  selectedInspectionType: { id: string; displayText: string }[];
-  selectedStatus: { id: string; displayText: string }[];
-  selectedCaseType: { id: string; displayText: string }[];
-  selectedCaseTypeCategory: { id: string; displayText: string }[];
-  selectedLicenseType: { id: string; displayText: string }[];
-  selectedLicenseTypeCategory: { id: string; displayText: string }[];
+  inspectionTypes: Array<{ id: string; displayText: string }>;
+  inspectionStatus: Array<{ id: string; displayText: string }>;
+  caseType: Array<{ id: string; displayText: string }>;
+  caseTypeCategory: Array<{ id: string; displayText: string }>;
+  licenseType: Array<{ id: string; displayText: string }>;
+  licenseTypeCategory: Array<{ id: string; displayText: string }>;
+  selectedInspectionType: Array<{ id: string; displayText: string }>;
+  selectedStatus: Array<{ id: string; displayText: string }>;
+  selectedCaseType: Array<{ id: string; displayText: string }>;
+  selectedCaseTypeCategory: Array<{ id: string; displayText: string }>;
+  selectedLicenseType: Array<{ id: string; displayText: string }>;
+  selectedLicenseTypeCategory: Array<{ id: string; displayText: string }>;
   createRouteList: [];
   isInspectionUpdated: boolean;
   setData: (data: DailyInspectionModel[]) => void;
@@ -75,23 +75,23 @@ interface DailyInspectionState {
   setCaseOrLicenseType: (caseOrLicenseType: boolean) => void;
   setOnDragEnd: (onDragEnd: boolean) => void;
   setIsCreateRoute: (isCreateRoute: boolean) => void;
-  setInspectionTypes: (inspectionTypes: { id: string; displayText: string }[]) => void;
-  setInspectionStatus: (inspectionStatus: { id: string; displayText: string }[]) => void;
-  setCaseType: (caseType: { id: string; displayText: string }[]) => void;
-  setCaseTypeCategory: (caseTypeCategory: { id: string; displayText: string }[]) => void;
-  setLicenseType: (licenseType: { id: string; displayText: string }[]) => void;
-  setLicenseTypeCategory: (licenseTypeCategory: { id: string; displayText: string }[]) => void;
+  setInspectionTypes: (inspectionTypes: Array<{ id: string; displayText: string }>) => void;
+  setInspectionStatus: (inspectionStatus: Array<{ id: string; displayText: string }>) => void;
+  setCaseType: (caseType: Array<{ id: string; displayText: string }>) => void;
+  setCaseTypeCategory: (caseTypeCategory: Array<{ id: string; displayText: string }>) => void;
+  setLicenseType: (licenseType: Array<{ id: string; displayText: string }>) => void;
+  setLicenseTypeCategory: (licenseTypeCategory: Array<{ id: string; displayText: string }>) => void;
   setSelectedInspectionType: (
-    selectedInspectionType: { id: string; displayText: string }[],
+    selectedInspectionType: Array<{ id: string; displayText: string }>,
   ) => void;
-  setSelectedStatus: (selectedStatus: { id: string; displayText: string }[]) => void;
-  setSelectedCaseType: (selectedCaseType: { id: string; displayText: string }[]) => void;
+  setSelectedStatus: (selectedStatus: Array<{ id: string; displayText: string }>) => void;
+  setSelectedCaseType: (selectedCaseType: Array<{ id: string; displayText: string }>) => void;
   setSelectedCaseTypeCategory: (
-    selectedCaseTypeCategory: { id: string; displayText: string }[],
+    selectedCaseTypeCategory: Array<{ id: string; displayText: string }>,
   ) => void;
-  setSelectedLicenseType: (selectedLicenseType: { id: string; displayText: string }[]) => void;
+  setSelectedLicenseType: (selectedLicenseType: Array<{ id: string; displayText: string }>) => void;
   setSelectedLicenseTypeCategory: (
-    selectedLicenseTypeCategory: { id: string; displayText: string }[],
+    selectedLicenseTypeCategory: Array<{ id: string; displayText: string }>,
   ) => void;
   setCreateRouteList: (createRouteList: any) => void;
   setIsInspectionUpdated: (isInspectionUpdated: boolean) => void;

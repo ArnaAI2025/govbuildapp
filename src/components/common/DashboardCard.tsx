@@ -4,7 +4,7 @@ import { Card, Text, TouchableRipple } from 'react-native-paper';
 import { fontSize, height } from '../../utils/helper/dimensions';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
-import { DashboardCardProps } from '../../utils/interfaces/IComponent';
+import type { DashboardCardProps } from '../../utils/interfaces/IComponent';
 import { ToastService } from './GlobalSnackbar';
 import { TEXTS } from '../../constants/strings';
 

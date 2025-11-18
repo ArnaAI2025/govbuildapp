@@ -5,7 +5,7 @@ import { generateUniqueID, logBlue } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
 import NetInfo from '@react-native-community/netinfo';
 import { getDatabase } from '../DatabaseService';
-import { LicenseData } from '../../utils/interfaces/zustand/ILicense';
+import type { LicenseData } from '../../utils/interfaces/zustand/ILicense';
 import {
   deleteLicenseFromDBIfNotFormTheApi,
   fetchAllLicenseFromDB,
@@ -15,7 +15,7 @@ import {
   updateLicensePermission,
   updateOnlyLicenseData,
 } from './licenseDAO';
-import { License } from '../types/license';
+import type { License } from '../types/license';
 import {
   syncContractorWithDatabase,
   syncInspectionWithDatabase,
@@ -89,7 +89,7 @@ export const licenseAPICall = async (): Promise<void> => {
       }
 
       const summaries: ContentItemSummary[] = licenseData;
-      const syncTasks: Promise<void>[] = summaries.map(async (summary: ContentItemSummary) => {
+      const syncTasks: Array<Promise<void>> = summaries.map(async (summary: ContentItemSummary) => {
         const contentItemId: string | undefined = summary?.contentItemId;
         newLicenseIds.push(contentItemId);
         try {

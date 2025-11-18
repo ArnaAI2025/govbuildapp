@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Linking, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { COLORS } from '../../../theme/colors';
 import {
   height,
@@ -11,7 +11,7 @@ import {
   WINDOW_WIDTH,
 } from '../../../utils/helper/dimensions';
 import { checkFileDomain, downloadFile } from '../../../utils/helper/fileHandlers';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import Loader from '../../../components/common/Loader';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { useOrientation } from '../../../utils/useOrientation';
@@ -33,7 +33,7 @@ const AttachDocPreview: React.FC<AttachDocPreviewProps> = ({ route }) => {
         `const meta = document.createElement('meta'); meta.setAttribute('content', 'width=width, initial-scale=1.1, maximum-scale=1.5, user-scalable=1.0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta);`,
       );
     }
-    checkFileDomain(route?.params?.url).then((result) => {
+   void checkFileDomain(route?.params?.url).then((result) => {
       setFullUrl(result);
       // } else if (
       //   Array.isArray(result) &&
@@ -77,7 +77,7 @@ const AttachDocPreview: React.FC<AttachDocPreviewProps> = ({ route }) => {
           <WebView
             style={{ margin: 10 }}
             source={{ uri: fullUrl }}
-            scalesPageToFit={true}
+            scalesPageToFit
             injectedJavaScript={injectData}
             javaScriptCanOpenWindowsAutomatically={false}
             setBuiltInZoomControls={false}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { CustomTextViewWithImage } from '../../../components/common/CustomTextViewWithImage';
-import { AdressModel } from '../../../utils/interfaces/ISubScreens';
+import type { AdressModel } from '../../../utils/interfaces/ISubScreens';
 import { formatDate, normalizeBool } from '../../../utils/helper/helpers';
 import { fontSize, height, iconSize, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';

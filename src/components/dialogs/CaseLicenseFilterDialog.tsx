@@ -17,7 +17,7 @@ import IMAGES from '../../theme/images';
 import globalStyles from '../../theme/globalStyles';
 import { TEXTS } from '../../constants/strings';
 import { useLicenseStore } from '../../store/useLicenseStore';
-import {
+import type {
   DefaultAdvancedFiltersInterface,
   FilterItemInterface,
   filterOptionInterface,
@@ -93,7 +93,7 @@ const CaseLicenseFilterDialog: React.FC<CaseLicenseFilterDialogProps> = ({
         filterType: filterObject?.filterType ?? [],
       });
     } catch (error) {
-      recordCrashlyticsError('Error fetching filter options:',error);
+      recordCrashlyticsError('Error fetching filter options:', error);
       console.error('Error fetching filter options:', error);
     }
   }, []);

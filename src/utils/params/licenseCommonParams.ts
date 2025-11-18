@@ -1,5 +1,5 @@
 import { getNewUTCDate, StatusColorCodes } from '../helper/helpers';
-import { licenseDataPostPayload } from '../interfaces/zustand/ILicense';
+import type { licenseDataPostPayload } from '../interfaces/zustand/ILicense';
 
 export const buildLicensePayload = ({
   contentItemId,

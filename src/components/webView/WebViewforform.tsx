@@ -1,4 +1,5 @@
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
+import type { NetInfoState } from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import React, { useEffect, useState, useRef } from 'react';
 import { Alert, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -8,8 +9,8 @@ import { COLORS } from '../../theme/colors';
 import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import { getAccessToken, getBaseUrl } from '../../session/SessionManager';
 import { URL } from '../../constants/url';
-import { RootStackParamList } from '../../navigation/Types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { fetchCaseOrLicenseById } from '../../services/WebViewService';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
@@ -180,17 +181,17 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
                   setURL(newUrl);
                 }
               } catch (error) {
-                recordCrashlyticsError('Navigation state change error:',error);
+                recordCrashlyticsError('Navigation state change error:', error);
                 console.error('Navigation state change error:', error);
               }
             }}
             onError={(event) => {
-              recordCrashlyticsError('WebView error:',error);
+              recordCrashlyticsError('WebView error:', error);
               console.error('WebView error:', event.nativeEvent);
               setError('Failed to load WebView');
             }}
             onHttpError={(event) => {
-              recordCrashlyticsError('WebView HTTP error:',event.nativeEvent);
+              recordCrashlyticsError('WebView HTTP error:', event.nativeEvent);
               console.error('WebView HTTP error:', event.nativeEvent);
               if (event.nativeEvent.statusCode === 401) {
                 setError('Authentication failed. Please try again.');

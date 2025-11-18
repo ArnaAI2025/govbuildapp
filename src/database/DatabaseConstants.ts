@@ -59,14 +59,14 @@ export const TABLES = {
   CASE_PAYMENT_TABLE_NAME: 'payments',
 
   // case Contacts & Contractors
-  CASE_CONTRACTS_TABLE_NAME: "caseContract",
-  CASE_CONTACT_TABLE_NAME: "caseContact",
+  CASE_CONTRACTS_TABLE_NAME: 'caseContract',
+  CASE_CONTACT_TABLE_NAME: 'caseContact',
   // license Details & Owner
-  LICENSE_OWNER_TABLE_NAME: "licenseOwner",
-  LICENSE_DETAILS_TABLE_NAME: "licenseDetails",
+  LICENSE_OWNER_TABLE_NAME: 'licenseOwner',
+  LICENSE_DETAILS_TABLE_NAME: 'licenseDetails',
 
   //  offline_forms
-  OFFLINE_FORMS_CACHED_DATA: "offlineFormCached",
+  OFFLINE_FORMS_CACHED_DATA: 'offlineFormCached',
 };
 
 export const CREATE_TABLES = {

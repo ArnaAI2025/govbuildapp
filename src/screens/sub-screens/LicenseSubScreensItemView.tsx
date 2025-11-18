@@ -1,5 +1,5 @@
 import { normalizeBool } from '../../utils/helper/helpers';
-import { TabData } from '../../utils/interfaces/ISubScreens';
+import type { TabData } from '../../utils/interfaces/ISubScreens';
 
 export const LicenseSubScreensItemView = (
   tabData: TabData,

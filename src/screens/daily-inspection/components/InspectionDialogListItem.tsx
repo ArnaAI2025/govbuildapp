@@ -1,10 +1,11 @@
-import { FC, memo } from 'react';
+import type { FC} from 'react';
+import { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { fontSize, height, iconSize } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';
 import { convertFrom24To12Format, formatDate } from '../../../utils/helper/helpers';
-import { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
 import globalStyles from '../../../theme/globalStyles';
 import { FONT_FAMILY } from '../../../theme/fonts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -70,7 +71,7 @@ const InspectionDialogListItem: FC<InspectionDialogListItemProps> = ({
         </View>
       );
     } catch (error) {
-      recordCrashlyticsError('Error parsing location:', error)
+      recordCrashlyticsError('Error parsing location:', error);
       console.error('Error parsing location:', error);
       return <View />;
     }

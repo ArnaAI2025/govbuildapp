@@ -1,5 +1,4 @@
-import NetInfo from '@react-native-community/netinfo';
-import { ParcelModel } from '../../utils/interfaces/ISubScreens';
+import type { ParcelModel } from '../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
@@ -12,10 +11,10 @@ export const ParcelService = {
     parcelNumber: string,
     address: string,
     setLoading: (loading: boolean) => void,
+    isNetworkAvailable: boolean,
   ): Promise<ParcelModel[]> {
     try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
+      if (isNetworkAvailable) {
         setLoading(true);
         const url = getBaseUrl();
         const response = await GET_DATA({
@@ -34,6 +33,9 @@ export const ParcelService = {
 
           return sortedParcels;
         }
+
+        // If response is not successful or data is not an array, return an empty array
+        return [];
       } else {
         ToastService.show('No internet connection', COLORS.ERROR);
         return [];
@@ -47,110 +49,110 @@ export const ParcelService = {
     }
   },
 
-  async fetchParcelDetails(
-    parcelNumber: string,
-    setLoading: (loading: boolean) => void,
-  ): Promise<ParcelModel[]> {
-    try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.GET_PARCEL_DETAILS}${parcelNumber}`,
-        });
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
-      } else {
-        ToastService.show('No internet connection', COLORS.ERROR);
-        return [];
-      }
-    } catch (error) {
-      setLoading(false);
-      recordCrashlyticsError('Error fetching parcels details', error);
-      ToastService.show('Error fetching parcels details', COLORS.ERROR);
-      console.error('Error in fetchParcelDetails:', error);
-      return [];
-    }
-  },
+  // async fetchParcelDetails(
+  //   parcelNumber: string,
+  //   setLoading: (loading: boolean) => void,
+  // ): Promise<ParcelModel[]> {
+  //   try {
+  //     const state = await NetInfo.fetch();
+  //     if (state.isConnected) {
+  //       setLoading(true);
+  //       const url = getBaseUrl();
+  //       const response = await GET_DATA({
+  //         url: `${url}${URL.GET_PARCEL_DETAILS}${parcelNumber}`,
+  //       });
+  //       setLoading(false);
+  //       return response?.status ? response?.data?.data || [] : [];
+  //     } else {
+  //       ToastService.show('No internet connection', COLORS.ERROR);
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     recordCrashlyticsError('Error fetching parcels details', error);
+  //     ToastService.show('Error fetching parcels details', COLORS.ERROR);
+  //     console.error('Error in fetchParcelDetails:', error);
+  //     return [];
+  //   }
+  // },
 
-  async fetchCaseParcels(
-    parcelNumber: string,
-    setLoading: (loading: boolean) => void,
-  ): Promise<ParcelModel[]> {
-    try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.GET_CASE_BY_PARCEL_NUMBER}${parcelNumber}`,
-        });
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
-      } else {
-        ToastService.show('No internet connection', COLORS.ERROR);
-        return [];
-      }
-    } catch (error) {
-      setLoading(false);
-      recordCrashlyticsError('Error fetching case parcels', error);
-      ToastService.show('Error fetching case parcels', COLORS.ERROR);
-      console.error('Error in fetchCaseParcels:', error);
-      return [];
-    }
-  },
-  async fetchChildParcels(
-    parcelNumber: string,
-    setLoading: (loading: boolean) => void,
-  ): Promise<ParcelModel[]> {
-    try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.GET_CHILD_PARCELS}${parcelNumber}`,
-        });
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
-      } else {
-        ToastService.show('No internet connection', COLORS.ERROR);
-        return [];
-      }
-    } catch (error) {
-      setLoading(false);
-      recordCrashlyticsError('Error fetching child parcels', error);
-      ToastService.show('Error fetching child parcels', COLORS.ERROR);
-      console.error('Error in fetchChildParcels:', error);
-      return [];
-    }
-  },
+  // async fetchCaseParcels(
+  //   parcelNumber: string,
+  //   setLoading: (loading: boolean) => void,
+  // ): Promise<ParcelModel[]> {
+  //   try {
+  //     const state = await NetInfo.fetch();
+  //     if (state.isConnected) {
+  //       setLoading(true);
+  //       const url = getBaseUrl();
+  //       const response = await GET_DATA({
+  //         url: `${url}${URL.GET_CASE_BY_PARCEL_NUMBER}${parcelNumber}`,
+  //       });
+  //       setLoading(false);
+  //       return response?.status ? response?.data?.data || [] : [];
+  //     } else {
+  //       ToastService.show('No internet connection', COLORS.ERROR);
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     recordCrashlyticsError('Error fetching case parcels', error);
+  //     ToastService.show('Error fetching case parcels', COLORS.ERROR);
+  //     console.error('Error in fetchCaseParcels:', error);
+  //     return [];
+  //   }
+  // },
+  // async fetchChildParcels(
+  //   parcelNumber: string,
+  //   setLoading: (loading: boolean) => void,
+  // ): Promise<ParcelModel[]> {
+  //   try {
+  //     const state = await NetInfo.fetch();
+  //     if (state.isConnected) {
+  //       setLoading(true);
+  //       const url = getBaseUrl();
+  //       const response = await GET_DATA({
+  //         url: `${url}${URL.GET_CHILD_PARCELS}${parcelNumber}`,
+  //       });
+  //       setLoading(false);
+  //       return response?.status ? response?.data?.data || [] : [];
+  //     } else {
+  //       ToastService.show('No internet connection', COLORS.ERROR);
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     recordCrashlyticsError('Error fetching child parcels', error);
+  //     ToastService.show('Error fetching child parcels', COLORS.ERROR);
+  //     console.error('Error in fetchChildParcels:', error);
+  //     return [];
+  //   }
+  // },
 
-  async fetchSubmissionParcels(
-    parcelNumber: string,
-    setLoading: (loading: boolean) => void,
-  ): Promise<ParcelModel[]> {
-    try {
-      const state = await NetInfo.fetch();
-      if (state.isConnected) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.GET_SUBMMISSION_BY_PARCEL_NUMBER}${parcelNumber}`,
-        });
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
-      } else {
-        ToastService.show('No internet connection', COLORS.ERROR);
-        return [];
-      }
-    } catch (error) {
-      setLoading(false);
-      recordCrashlyticsError('Error fetching submission for parcel', error);
-      ToastService.show('Error fetching submission for parcel', COLORS.ERROR);
-      console.error('Error in fetchSubmissionParcels:', error);
-      return [];
-    }
-  },
+  // async fetchSubmissionParcels(
+  //   parcelNumber: string,
+  //   setLoading: (loading: boolean) => void,
+  // ): Promise<ParcelModel[]> {
+  //   try {
+  //     const state = await NetInfo.fetch();
+  //     if (state.isConnected) {
+  //       setLoading(true);
+  //       const url = getBaseUrl();
+  //       const response = await GET_DATA({
+  //         url: `${url}${URL.GET_SUBMMISSION_BY_PARCEL_NUMBER}${parcelNumber}`,
+  //       });
+  //       setLoading(false);
+  //       return response?.status ? response?.data?.data || [] : [];
+  //     } else {
+  //       ToastService.show('No internet connection', COLORS.ERROR);
+  //       return [];
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     recordCrashlyticsError('Error fetching submission for parcel', error);
+  //     ToastService.show('Error fetching submission for parcel', COLORS.ERROR);
+  //     console.error('Error in fetchSubmissionParcels:', error);
+  //     return [];
+  //   }
+  // },
 };

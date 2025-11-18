@@ -9,14 +9,14 @@ import Checkbox from 'expo-checkbox';
 import { COLORS } from '../../../../theme/colors';
 import { fontSize, height, iconSize, modalProps } from '../../../../utils/helper/dimensions';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {
+import type {
   Contractor,
   LicenseForContract,
   LicenseType,
 } from '../../../../utils/interfaces/ISubScreens';
 import { TEXTS } from '../../../../constants/strings';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../../navigation/Types';
 import { FONT_FAMILY, FONT_SIZE } from '../../../../theme/fonts';
 import { DatePickerInput } from '../../../../components/common/DatePickerInput';
 import { HintText } from '../../../../components/common/EditCaseLicenseInfo';
@@ -118,7 +118,9 @@ const AddCaseAndLicenseContractor: React.FC<AddContractScreenProps> = ({ navigat
           }
         }
       })
-      .catch((err) => {console.error('Error loading licenses:', err)} );
+      .catch((err) => {
+        console.error('Error loading licenses:', err);
+      });
   };
 
   const updateContractorDataFromLicense = (license: LicenseForContract) => {
@@ -148,6 +150,7 @@ const AddCaseAndLicenseContractor: React.FC<AddContractScreenProps> = ({ navigat
       },
       caseLicenseId,
       type,
+      isNetworkAvailable
     );
     setLoading(false);
   };
@@ -167,10 +170,10 @@ const AddCaseAndLicenseContractor: React.FC<AddContractScreenProps> = ({ navigat
           modalPropsIOS={modalProps}
         />
         <KeyboardAwareScrollView
-          nestedScrollEnabled={true}
+          nestedScrollEnabled
           extraScrollHeight={150}
           contentContainerStyle={{ flexGrow: 1 }}
-          enableOnAndroid={true}
+          enableOnAndroid
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           style={{ paddingHorizontal: 10 }}

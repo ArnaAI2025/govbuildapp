@@ -3,7 +3,7 @@ import { fontSize, marginTopAndBottom, WINDOW_WIDTH } from '../../utils/helper/d
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY } from '../../theme/fonts';
 import RelatedListItem from '../../screens/sub-screens/related/RelatedListItem';
-import { HeadingViewWithListProps } from '../../utils/interfaces/ISubScreens';
+import type { HeadingViewWithListProps } from '../../utils/interfaces/ISubScreens';
 
 const HeadingViewWithList: React.FC<HeadingViewWithListProps> = ({ title, list }) => {
   return (

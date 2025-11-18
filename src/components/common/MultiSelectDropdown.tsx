@@ -13,7 +13,7 @@ import {
 import { List, TextInput } from 'react-native-paper';
 import { COLORS } from '../../theme/colors';
 import { FONT_FAMILY, FONT_SIZE } from '../../theme/fonts';
-import { MultiSelectDropdownProps } from '../../utils/interfaces/IComponent';
+import type { MultiSelectDropdownProps } from '../../utils/interfaces/IComponent';
 import { height } from '../../utils/helper/dimensions';
 import { normalizeBool } from '../../utils/helper/helpers';
 
@@ -38,7 +38,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const disableData= normalizeBool(disabled);
+  const disableData = normalizeBool(disabled);
   const safeSearchText = searchText?.toLowerCase() || '';
 
   //  Logic to determine selected items:
@@ -95,8 +95,8 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       : [...value, itemValue];
     onChange(updatedValues);
 
-    if (Platform.OS === "android" && scrollRef.current) {
-      console.log("android scroll calling...");
+    if (Platform.OS === 'android' && scrollRef.current) {
+      console.log('android scroll calling...');
       InteractionManager.runAfterInteractions(() => {
         scrollRef.current?.scrollToEnd({ animated: true });
       });
@@ -200,7 +200,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                       titleStyle={styles.chipText}
                       style={styles.chipItem}
                       right={() =>
-                            !disableData && (
+                        !disableData && (
                           <TouchableOpacity onPress={() => handleSelect(item)}>
                             <List.Icon icon="close-circle" color={COLORS.WHITE} />
                           </TouchableOpacity>
@@ -214,7 +214,7 @@ const CustomMultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           </View>
 
           <TouchableOpacity
-              disabled={disableData}
+            disabled={disableData}
             style={{ backgroundColor: COLORS.WHITE }}
             hitSlop={{ left: 15, right: 15, top: 12, bottom: 12 }}
             onPress={toggleDropdown}

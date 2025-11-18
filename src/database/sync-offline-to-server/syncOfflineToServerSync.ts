@@ -15,7 +15,7 @@ import {
   updateCommentURLReady,
   updateSettingsSyncStatus,
 } from './syncOfflineToServerDAO';
-import { AdminNoteSyncData, SettingsSyncData } from '../types/commonSyncModels';
+import type { AdminNoteSyncData, SettingsSyncData } from '../types/commonSyncModels';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { COLORS } from '../../theme/colors';
 import { getBaseUrl, getOfflineUtcDate } from '../../session/SessionManager';
@@ -36,12 +36,8 @@ import {
   updateContactDataForceSync,
   updateContactDataSync,
 } from '../sub-screens/subScreenDAO';
-import {
-  addToSyncQueue,
-  fetchPendingSyncTasks,
-  updateSyncTaskStatus,
-  SyncQueueTask,
-} from '../../utils/syncUtils';
+import type { SyncQueueTask } from '../../utils/syncUtils';
+import { addToSyncQueue, fetchPendingSyncTasks, updateSyncTaskStatus } from '../../utils/syncUtils';
 import { TEXTS } from '../../constants/strings';
 import { CASE, FORM, LICENSE, TAB, TABLES } from '../DatabaseConstants';
 import {
@@ -52,7 +48,7 @@ import {
 } from '../../utils/params/commonParams';
 import { updateCaseIfIdExist } from '../my-case/myCaseSync';
 import { updateLocation, updateMailingAdress } from '../../screens/my-case/CaseService';
-import { CaseData } from '../../utils/interfaces/ICase';
+import type { CaseData } from '../../utils/interfaces/ICase';
 import { getDatabase } from '../DatabaseService';
 import { buildLicensePayload } from '../../utils/params/licenseCommonParams';
 import { updateLicenseIfIdExist } from '../license/licenseSync';
@@ -79,7 +75,7 @@ import {
   updateSubmissionJSON,
 } from '../sub-screens/attached-items/attachedItemsDAO';
 import { updateOfflineHistoryIfIdExist } from '../sync-history/syncHistorySync';
-import { SyncModel } from '../../utils/interfaces/ISubScreens';
+import type { SyncModel } from '../../utils/interfaces/ISubScreens';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
 
 // Enum for supported sync types
@@ -138,88 +134,93 @@ export const processBatch = async (
   tasks: SyncQueueTask[],
   offlineItemsCount: () => void,
 ): Promise<void> => {
-  const chunks = [];
+  const chunks: SyncQueueTask[][] = [];
   for (let i = 0; i < tasks.length; i += CHUNK_SIZE) {
     chunks.push(tasks.slice(i, i + CHUNK_SIZE));
   }
-  console.log('Batch Process is start --->');
-  for (const chunk of chunks) {
-    const promises = chunk.map(async (task) => {
-      if (task.status === 'completed' || task.status === 'force_sync') return; // Skip already completed tasks
-      await updateSyncTaskStatus(task.id, 'processing', task.retry_count);
-      try {
-        await retry(async () => {
-          console.log('Process Type', task.type);
-          switch (task.type as SyncType) {
-            case SyncType.CASE:
-              console.log('CASE syncing Calling');
-              await processCaseTask(task, offlineItemsCount);
-              break;
-            case SyncType.SETTINGS:
-              console.log('SETTINGS syncing Calling');
-              await processSettingsTask(task, offlineItemsCount);
-              break;
-            case SyncType.CONTACTS:
-              console.log('CONTACTS syncing Calling');
-              await processContactsTask(task, offlineItemsCount);
-              break;
-            case SyncType.ADMIN_NOTES_FILE:
-              console.log('ADMIN_NOTES syncing Calling');
-              await processAdminNotesFileTask(task, offlineItemsCount);
-              break;
-            case SyncType.ADMIN_NOTES:
-              console.log('ADMIN_NOTES syncing Calling');
-              await processAdminNotesTask(task, offlineItemsCount);
-              break;
-            case SyncType.LICENSE:
-              console.log('LICENSE syncing Calling');
-              await processLicenseTask(task, offlineItemsCount);
-              break;
-            case SyncType.ATTACHMENT:
-              console.log('ATTACHMENT syncing Calling');
-              await processAttachmentTask(task, offlineItemsCount);
-              break;
-            case SyncType.ATTACHED_DOC:
-              console.log('ATTACHED_DOC syncing Calling');
-              await processAttachedDocTask(task, offlineItemsCount);
-              break;
-            case SyncType.FORM_FILE:
-              console.log('FORM_FILE syncing Calling');
-              await processFormFileTask(task, offlineItemsCount);
-              break;
-            case SyncType.FORM:
-              console.log('FORM syncing Calling');
-              await processFormTask(task, offlineItemsCount);
-              break;
-            case SyncType.EDITFORM:
-              console.log('FORM_FILE syncing Calling');
-              await processEditedFormTask(task, offlineItemsCount);
-              break;
-            // case SyncType.COMMENT:
-            //   await processCommentTask(task, offlineItemsCount);
-            //   break;
-            default:
-              throw new Error(`Unsupported sync type: ${task.type}`);
-          }
-        });
-      } catch (error) {
-        recordCrashlyticsError(`Error processing task ${task.id}:`, error);
-        console.error(`Error processing task ${task.id}:`, error);
-        await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
-        if (task.retry_count >= MAX_RETRIES) {
-          ToastService.show(`Failed to sync ${task.type} after retries.`, COLORS.ERROR);
-        }
-      }
-    });
 
-    // Limit concurrent requests
-    await Promise.all(
-      Array.from(
-        { length: MAX_CONCURRENT_REQUESTS },
-        async (_, i) => promises[i] ?? Promise.resolve(),
-      ),
-    );
+  for (const chunk of chunks) {
+    // Process each chunk in slices of MAX_CONCURRENT_REQUESTS
+    for (let i = 0; i < chunk.length; i += MAX_CONCURRENT_REQUESTS) {
+      const slice = chunk.slice(i, i + MAX_CONCURRENT_REQUESTS);
+
+      const promises = slice.map(async (task) => {
+        // Skip tasks that are already done
+        if (task.status === 'completed' || task.status === 'force_sync') return;
+
+        await updateSyncTaskStatus(task.id, 'processing', task.retry_count);
+
+        try {
+          await retry(async () => {
+            console.log('Process Type', task.type);
+            switch (task.type as SyncType) {
+              case SyncType.CASE:
+                console.log('CASE syncing Calling');
+                await processCaseTask(task, offlineItemsCount);
+                break;
+              case SyncType.SETTINGS:
+                console.log('SETTINGS syncing Calling');
+                await processSettingsTask(task, offlineItemsCount);
+                break;
+              case SyncType.CONTACTS:
+                console.log('CONTACTS syncing Calling');
+                await processContactsTask(task, offlineItemsCount);
+                break;
+              case SyncType.ADMIN_NOTES_FILE:
+                console.log('ADMIN_NOTES_FILE syncing Calling');
+                await processAdminNotesFileTask(task, offlineItemsCount);
+                break;
+              case SyncType.ADMIN_NOTES:
+                console.log('ADMIN_NOTES syncing Calling');
+                await processAdminNotesTask(task, offlineItemsCount);
+                break;
+              case SyncType.LICENSE:
+                console.log('LICENSE syncing Calling');
+                await processLicenseTask(task, offlineItemsCount);
+                break;
+              case SyncType.ATTACHMENT:
+                console.log('ATTACHMENT syncing Calling');
+                await processAttachmentTask(task, offlineItemsCount);
+                break;
+              case SyncType.ATTACHED_DOC:
+                console.log('ATTACHED_DOC syncing Calling');
+                await processAttachedDocTask(task, offlineItemsCount);
+                break;
+              case SyncType.FORM_FILE:
+                console.log('FORM_FILE syncing Calling');
+                await processFormFileTask(task, offlineItemsCount);
+                break;
+              case SyncType.FORM:
+                console.log('FORM syncing Calling');
+                await processFormTask(task, offlineItemsCount);
+                break;
+              case SyncType.EDITFORM:
+                console.log('EDITFORM syncing Calling');
+                await processEditedFormTask(task, offlineItemsCount);
+                break;
+              // case SyncType.COMMENT:
+              //   await processCommentTask(task, offlineItemsCount);
+              //   break;
+              default:
+                throw new Error(`Unsupported sync type: ${task.type}`);
+            }
+          });
+        } catch (error: any) {
+          recordCrashlyticsError(`Error processing task ${task.id}:`, error);
+          console.error(`Error processing task ${task.id}:`, error);
+          await updateSyncTaskStatus(task.id, 'failed', task.retry_count + 1);
+
+          if (task.retry_count >= MAX_RETRIES) {
+            ToastService.show(`Failed to sync ${task.type} after retries.`, COLORS.ERROR);
+          }
+        }
+      });
+      // Wait for this slice to finish before starting the next slice
+      await Promise.all(promises);
+    }
   }
+
+  console.log('------>processBatch completed successfully<----------');
 };
 
 export const getTotalPendingSyncItemCount = async (): Promise<number> => {

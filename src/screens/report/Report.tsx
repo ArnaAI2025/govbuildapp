@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import type { FunctionComponent} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Platform, View } from 'react-native';
 import Loader from '../../components/common/Loader';
 import { styles } from './reportStyles';
@@ -46,7 +47,7 @@ const ReportScreen: FunctionComponent<Props> = () => {
 
       setURL(newURL);
     } catch (error) {
-      recordCrashlyticsError('Error fetching URL:',error)
+      recordCrashlyticsError('Error fetching URL:', error);
       console.error('Error fetching URL:', error);
       setLoading(false);
     }

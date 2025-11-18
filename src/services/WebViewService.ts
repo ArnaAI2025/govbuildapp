@@ -1,10 +1,12 @@
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo';
+import type { NetInfoState } from '@react-native-community/netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import { getAccessToken, getBaseUrl } from '../session/SessionManager';
 import { constructWebViewUrl } from '../utils/params/webViewParams';
 import { URL } from '../constants/url';
 import { GET_DATA } from './ApiClient';
-import { WebViewContent } from '../utils/interfaces/IComponent';
-import { NavigationProp, StackActions } from '@react-navigation/native';
+import type { WebViewContent } from '../utils/interfaces/IComponent';
+import type { NavigationProp} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { COLORS } from '../theme/colors';
 import { recordCrashlyticsError } from './CrashlyticsService';

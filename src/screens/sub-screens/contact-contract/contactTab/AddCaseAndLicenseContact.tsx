@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
 import Checkbox from 'expo-checkbox';
-import { ResponsiblePartyFormData } from '../../../../utils/interfaces/ISubScreens';
+import type { ResponsiblePartyFormData } from '../../../../utils/interfaces/ISubScreens';
 import { convertDate, formatDate, normalizeBool } from '../../../../utils/helper/helpers';
 import { checkEmailValidation } from '../../../../utils/validations';
 import { TEXTS } from '../../../../constants/strings';
@@ -14,8 +13,8 @@ import ScreenWrapper from '../../../../components/common/ScreenWrapper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS } from '../../../../theme/colors';
 import FloatingInput from '../../../../components/common/FloatingInput';
-import { RootStackParamList } from '../../../../navigation/Types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FONT_FAMILY, FONT_SIZE } from '../../../../theme/fonts';
 import { ToastService } from '../../../../components/common/GlobalSnackbar';
 import { useNetworkStatus } from '../../../../utils/checkNetwork';
@@ -43,7 +42,6 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
   const [endDate, setEndDate] = useState<string | null>(null);
   const [notes, setNotes] = useState<string>('');
   const [endDatePickerOpen, setEndDatePickerOpen] = useState<boolean>(false);
-  const [, setIsOnline] = useState<boolean>(true);
   const [isPrimary, setPrimary] = useState<boolean>(false);
   const [isAllowAccess, setAllowAccess] = useState<boolean>(false);
   const [isLoadingAPI, setLoading] = useState<boolean>(false);
@@ -73,8 +71,6 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
   const [caseLicenseData] = useState<any>(route.params.caseLicenseData);
   const isStatusReadOnly = normalizeBool(caseLicenseData?.isStatusReadOnly);
   useEffect(() => {
-    NetInfo.fetch().then((state) => setIsOnline(state.isConnected ?? false));
-
     if (route.params.param) {
       const param = route.params.param;
       setContentItemId(
@@ -168,7 +164,7 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
         isNetworkAvailable,
       );
     } catch (error) {
-      recordCrashlyticsError('Error saving responsible party:',error);
+      recordCrashlyticsError('Error saving responsible party:', error);
       console.error('Error saving responsible party:', error);
     }
   };
@@ -203,10 +199,10 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
           onPress={callSaveApi}
         /> */}
         <KeyboardAwareScrollView
-          nestedScrollEnabled={true}
+          nestedScrollEnabled
           extraScrollHeight={150}
           contentContainerStyle={{ flexGrow: 1 }}
-          enableOnAndroid={true}
+          enableOnAndroid
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           style={{ paddingHorizontal: 10 }}
@@ -278,7 +274,7 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
               placeholder={TEXTS.subScreens.contactAndContract.phoneNumberPlaceholder}
               error={fieldErrors.phoneNumber}
               keyboardType="phone-pad"
-              isPhoneNumber={true}
+              isPhoneNumber
               hintText="The Phone Number of the party."
               disabled={isStatusReadOnly}
             />
@@ -397,7 +393,7 @@ const AddContacts: React.FC<AddContactsScreenProps> = ({ route, navigation }) =>
                 multiline
                 numberOfLines={3}
                 style={[styles.input, { height: inputHeight }]}
-                autoCorrect={true}
+                autoCorrect
                 activeOutlineColor={COLORS.APP_COLOR}
                 textAlignVertical="top"
                 onContentSizeChange={(event) => {

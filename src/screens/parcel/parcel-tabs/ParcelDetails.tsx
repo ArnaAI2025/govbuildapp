@@ -7,7 +7,7 @@ import { TEXTS } from '../../../constants/strings';
 import { COLORS } from '../../../theme/colors';
 import { fontSize, height } from '../../../utils/helper/dimensions';
 import { FONT_FAMILY } from '../../../theme/fonts';
-import { ParcelModel } from '../../../utils/interfaces/ISubScreens';
+import type { ParcelModel } from '../../../utils/interfaces/ISubScreens';
 import HTMLView from 'react-native-htmlview';
 import { ParcelService } from '../ParcelService';
 import { show2Decimals } from '../../../utils/helper/helpers';

@@ -1,6 +1,6 @@
 import { URL } from '../../../constants/url';
 import { GET_DATA } from '../../../services/ApiClient';
-import { SubLicenseResponse } from '../../../utils/interfaces/ISubScreens';
+import type { SubLicenseResponse } from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 

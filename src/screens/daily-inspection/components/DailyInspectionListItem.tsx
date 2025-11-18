@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View, Text, FlatList, Animated } from 're
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HTMLView from 'react-native-htmlview';
 
-import { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
+import type { DailyInspectionModel } from '../../../utils/interfaces/ISubScreens';
 
 import {
   fontSize,
@@ -123,7 +123,7 @@ const DailyInspectionListItem: React.FC<DailyInspectionListItemProps> = ({
     try {
       return rowData.advancedFormLinksJson ? JSON.parse(rowData.advancedFormLinksJson) : [];
     } catch (error) {
-      recordCrashlyticsError('Invalid JSON in advancedFormLinksJson:',error)
+      recordCrashlyticsError('Invalid JSON in advancedFormLinksJson:', error);
       console.warn('Invalid JSON in advancedFormLinksJson:', error);
       return [];
     }

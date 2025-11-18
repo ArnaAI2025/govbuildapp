@@ -6,7 +6,7 @@ import { TEXTS } from '../../constants/strings';
 import IMAGES from '../../theme/images';
 import DeviceInfo from 'react-native-device-info';
 import { fontSize, height } from '../../utils/helper/dimensions';
-import { ListCaseLicenseHeaderProps } from '../../utils/interfaces/IComponent';
+import type { ListCaseLicenseHeaderProps } from '../../utils/interfaces/IComponent';
 import CaseLicenseFilterDialog from '../dialogs/CaseLicenseFilterDialog';
 import { FONT_FAMILY } from '../../theme/fonts';
 import { useUnifiedCaseStore } from '../../store/caseStore';

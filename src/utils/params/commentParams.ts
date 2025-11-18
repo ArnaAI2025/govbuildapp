@@ -1,4 +1,4 @@
-import { SyncModel } from '../interfaces/ISubScreens';
+import type { SyncModel } from '../interfaces/ISubScreens';
 
 export interface AdminCommentParams {
   FileNames: string;

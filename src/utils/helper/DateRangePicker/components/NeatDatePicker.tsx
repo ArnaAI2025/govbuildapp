@@ -1,11 +1,11 @@
 import React from 'react';
-import { Output } from './Key';
+import type { Output } from './Key';
 import { useState, useEffect } from 'react';
 import { StyleSheet, I18nManager, Modal, View } from 'react-native';
 import Content from './Content';
 import useDaysOfMonth from '../hooks/useDaysOfMonth';
 import format from '../dateformat';
-import { NeatDatePickerProps } from './NeatDatePicker.d';
+import type { NeatDatePickerProps } from './NeatDatePicker.d';
 import { COLORS } from '../../../../theme/colors';
 
 I18nManager.allowRTL(false);

@@ -1,6 +1,6 @@
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { COLORS } from '../theme/colors';
-import { CaseData } from './interfaces/ICase';
+import type { CaseData } from './interfaces/ICase';
 
 export const checkEmailValidation = (text: string): boolean => {
   const reg =

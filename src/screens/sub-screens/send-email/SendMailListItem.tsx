@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { SentEmail } from '../../../utils/interfaces/ISubScreens';
+import type { SentEmail } from '../../../utils/interfaces/ISubScreens';
 import { Card } from 'react-native-paper';
 import { height } from '../../../utils/helper/dimensions';
 import ExpandableView from '../../../components/common/ExpandableView';

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { RelatedCase } from '../../../utils/interfaces/ISubScreens';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RelatedCase } from '../../../utils/interfaces/ISubScreens';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { fetchRelatedCases } from './RelatedService';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import NoData from '../../../components/common/NoData';
@@ -50,7 +50,7 @@ const RelatedScreen: React.FC<RelatedScreenProps> = ({ route, navigation }) => {
         <Loader loading={isLoadingAPI} />
         <View style={{ flex: 1 }}>
           <KeyboardAwareScrollView
-            nestedScrollEnabled={true}
+            nestedScrollEnabled
             style={{ paddingBottom: 20, flex: 1 }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}

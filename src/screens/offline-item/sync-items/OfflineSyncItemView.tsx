@@ -1,4 +1,5 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   fetchFormForByLocalId,
@@ -180,7 +181,7 @@ const OfflineSyncItemView: React.FC<OfflineSyncItemViewProps> = ({
         }
       }
     } catch (err) {
-      recordCrashlyticsError('Error performing action:',err)
+      recordCrashlyticsError('Error performing action:', err);
       console.error('Error performing action:', err);
       setSubMenuVisible(false);
       setModalVisible(false);
@@ -234,7 +235,7 @@ const OfflineSyncItemView: React.FC<OfflineSyncItemViewProps> = ({
         }
       }
     } catch (error) {
-      recordCrashlyticsError('Error handling edit:',error)
+      recordCrashlyticsError('Error handling edit:', error);
       console.error('Error handling edit:', error);
     }
   };

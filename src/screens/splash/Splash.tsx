@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react';
+import type { FunctionComponent} from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Animated, useWindowDimensions, Easing } from 'react-native';
 import styles from './splashStyles';
 import IMAGES from '../../theme/images';

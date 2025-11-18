@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../../theme/colors';
 import { fontSize, iconSize } from '../../utils/helper/dimensions';
-import { AddFormItemViewProps } from '../../utils/interfaces/ISubScreens';
+import type { AddFormItemViewProps } from '../../utils/interfaces/ISubScreens';
 import IMAGES from '../../theme/images';
 import { FONT_FAMILY } from '../../theme/fonts';
 import globalStyles from '../../theme/globalStyles';

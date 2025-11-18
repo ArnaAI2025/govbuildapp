@@ -2,7 +2,7 @@ import React from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { fontSize, height, iconSize, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
 import { COLORS } from '../../../theme/colors';
-import { AttechedItemsRowViewProps } from '../../../utils/interfaces/ISubScreens';
+import type { AttechedItemsRowViewProps } from '../../../utils/interfaces/ISubScreens';
 import { formatDate, getTimeAgo } from '../../../utils/helper/helpers';
 import { TEXTS } from '../../../constants/strings';
 import { ToastService } from '../../../components/common/GlobalSnackbar';

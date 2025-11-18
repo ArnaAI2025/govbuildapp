@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { FilterOptionsResponse, ItemType, LicenseData } from '../utils/interfaces/zustand/ILicense';
+import type { FilterOptionsResponse, ItemType, LicenseData } from '../utils/interfaces/zustand/ILicense';
 import { DEFAULT_ADVANCED_FILTERS } from '../constants/data';
-import { DefaultAdvancedFiltersInterface } from '../utils/interfaces/IComponent';
+import type { DefaultAdvancedFiltersInterface } from '../utils/interfaces/IComponent';
 
 interface LicenseState {
   // List license
@@ -103,7 +103,7 @@ export const useLicenseStore = create<LicenseState>((set) => ({
     set((state) => {
       const newFilters = { ...state.filters, ...filters };
       const filterCount = (
-        Object.keys(newFilters) as (keyof DefaultAdvancedFiltersInterface)[]
+        Object.keys(newFilters) as Array<keyof DefaultAdvancedFiltersInterface>
       ).reduce((count, key) => {
         if (key === 'search' || key === 'isMyLicenseOnly') {
           return count; // Ignore search and toggle fields

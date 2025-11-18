@@ -123,10 +123,10 @@ const AllOfflineView: React.FC<AllOfflineViewScreenProps> = ({ isActive }) => {
       setData(itemToSyncData);
     } catch (error) {
       if (error instanceof Error) {
-        recordCrashlyticsError('Error loading offline data:',error)
+        recordCrashlyticsError('Error loading offline data:', error);
         console.error('Error loading offline data:', error.message);
       } else {
-        recordCrashlyticsError('Error loading offline data:',error)
+        recordCrashlyticsError('Error loading offline data:', error);
         console.error('Error loading offline data:', error);
       }
     } finally {
@@ -141,7 +141,7 @@ const AllOfflineView: React.FC<AllOfflineViewScreenProps> = ({ isActive }) => {
       setBtnLoad(false);
     } catch (error) {
       setLoading(false);
-      recordCrashlyticsError('Error fetching case/license:',error)
+      recordCrashlyticsError('Error fetching case/license:', error);
       console.error('Error fetching case/license:', error);
     }
   };

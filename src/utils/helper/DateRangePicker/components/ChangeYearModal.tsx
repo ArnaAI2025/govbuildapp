@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import type {
+  ColorValue} from 'react-native';
 import {
-  ColorValue,
   Image,
   StyleSheet,
   Text,

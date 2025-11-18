@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Payment } from '../../../../utils/interfaces/ISubScreens';
+import type { Payment } from '../../../../utils/interfaces/ISubScreens';
 import {
   convertDate,
   formatDate,

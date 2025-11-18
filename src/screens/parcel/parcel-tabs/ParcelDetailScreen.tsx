@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TabBar, TabView } from 'react-native-tab-view';
-import { TabRoute } from '../../../utils/interfaces/ISubScreens';
+import type { TabRoute } from '../../../utils/interfaces/ISubScreens';
 import { fontSize, height, WINDOW_WIDTH } from '../../../utils/helper/dimensions';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { COLORS } from '../../../theme/colors';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';

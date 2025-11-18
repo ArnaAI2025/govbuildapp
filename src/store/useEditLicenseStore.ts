@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FilterOptionsResponse, ItemType, LicenseData } from '../utils/interfaces/zustand/ILicense';
+import type { FilterOptionsResponse, ItemType, LicenseData } from '../utils/interfaces/zustand/ILicense';
 
 // EDIT LICENSE STATES
 export interface EditLicenseState {

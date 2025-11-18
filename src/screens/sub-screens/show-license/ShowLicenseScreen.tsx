@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, useWindowDimensions } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
-import { RootStackParamList } from '../../../navigation/Types';
+import type { RootStackParamList } from '../../../navigation/Types';
 import { COLORS } from '../../../theme/colors';
 import NoData from '../../../components/common/NoData';
 import Loader from '../../../components/common/Loader';

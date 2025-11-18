@@ -7,7 +7,7 @@ import { ContractorTabItem } from './ContractorTabItem';
 import { COLORS } from '../../../../theme/colors';
 import { fontSize, height, iconSize } from '../../../../utils/helper/dimensions';
 import FloatingActionButton from '../../../../components/common/FloatingActionButton';
-import {
+import type {
   CaseAndLicenseContractorTabProps,
   Contractor,
 } from '../../../../utils/interfaces/ISubScreens';

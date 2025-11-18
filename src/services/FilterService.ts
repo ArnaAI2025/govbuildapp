@@ -2,7 +2,7 @@ import { GET_DATA } from './ApiClient';
 import { FILTER_TYPE, LICENSE_SORT, SORT_OPTIONS } from '../constants/data';
 import { URL } from '../constants/url';
 import { getBaseUrl } from '../session/SessionManager';
-import {
+import type {
   DefaultAdvancedFiltersResponseInterface,
   FilterItemInterface,
 } from '../utils/interfaces/IComponent';
