@@ -2,6 +2,7 @@ import { URL } from '../../../constants/url';
 import { GET_DATA, POST_DATA_WITH_TOKEN, UPLOAD_API } from '../../../services/ApiClient';
 import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 import { getBaseUrl } from '../../../session/SessionManager';
+import { isNetworkAvailable } from '../../../utils/checkNetwork';
 import { saveUpdateAttachedDocsFormData } from '../../../utils/params/commonParams';
 import { updateSyncTaskStatus } from '../../../utils/syncUtils';
 import { CASE, LICENSE, TAB, TABLES } from '../../DatabaseConstants';
@@ -21,7 +22,6 @@ import {
   updateSyncDocURL,
   updateSyncDocURLReady,
 } from './attachedDocsDAO';
-import NetInfo from '@react-native-community/netinfo';
 
 export const syncAllCaseFoldersFilesAPI = async (
   contentItemId: string,
@@ -70,8 +70,7 @@ export const upsertAttachedDocsByCaseIdExist = async (data: any, isCase: boolean
 
 export const syncFileExtensionData = async () => {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       console.warn('No internet connection');
       return;
     }

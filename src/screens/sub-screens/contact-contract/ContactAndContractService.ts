@@ -43,14 +43,15 @@ export const contactService = {
         const response = await GET_DATA({
           url: `${url}${endpoint}${contentItemId}`,
         });
-        return response.status ? response?.data?.data : [];
-      } else {
-        const response = await fetchContactsFromDB(contentItemId);
-        // console.log('response------>>>>>',response);
-        // @ts-ignore
-        //  return Array.isArray(response) ? [...response].reverse() : response;
-        return response;
+        const contacts = response?.status ? (response?.data?.data ?? []) : [];
+        return Array.isArray(contacts) ? contacts : [];
       }
+
+      const response = await fetchContactsFromDB(contentItemId);
+      // console.log('response------>>>>>',response);
+      // @ts-ignore
+      //  return Array.isArray(response) ? [...response].reverse() : response;
+      return response;
     } catch (error) {
       recordCrashlyticsError('Error fetching contacts:--->', error);
       console.error('Error fetching contacts:--->', error);
@@ -70,12 +71,13 @@ export const contactService = {
         const response = await GET_DATA({
           url: `${url}${URL.CONTRACT_BY_CASE_LICENSE}${caseAndLicenseId}${contentItemId}`,
         });
-        return response.status ? response?.data?.data : [];
-      } else {
-        const Response = await fetchContractorFromDb(contentItemId);
-        // @ts-ignore
-        return Response;
+        const contractors = response?.status ? (response?.data?.data ?? []) : [];
+        return Array.isArray(contractors) ? contractors : [];
       }
+
+      const Response = await fetchContractorFromDb(contentItemId);
+      // @ts-ignore
+      return Response;
     } catch (error) {
       recordCrashlyticsError('Error fetching contractors:', error);
       console.error('Error fetching contractors:', error);
@@ -85,16 +87,17 @@ export const contactService = {
 
   async fetchLicenseTypes(isNetworkAvailable?: boolean): Promise<any[]> {
     try {
-      if (isNetworkAvailable) {
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.LICENSE_TYPE_LIST}`,
-        });
-        return response?.status ? response?.data?.data : [];
+      if (!isNetworkAvailable) {
+        // handle when network is not available
+        return [];
       }
 
-      // handle when network is not available
-      return [];
+      const url = getBaseUrl();
+      const response = await GET_DATA({
+        url: `${url}${URL.LICENSE_TYPE_LIST}`,
+      });
+      const types = response?.status ? (response?.data?.data ?? []) : [];
+      return Array.isArray(types) ? types : [];
     } catch (error) {
       recordCrashlyticsError('Error fetching license types:', error);
       console.error('Error fetching license types:', error);
@@ -124,19 +127,20 @@ export const contactService = {
 
   async fetchLicensesByType(typeIds: string, isNetworkAvailable?: boolean): Promise<License[]> {
     try {
-      if (isNetworkAvailable) {
-        const url = getBaseUrl();
-        const response = await GET_DATA({
-          url: `${url}${URL.LICENSE_BY_TYPE}${typeIds}`,
-        });
-        if (response?.status && response?.data) {
-          return response?.data?.data?.filter(
-            (item: License) => item.number || item.businessName || item.licenseDescriptor,
-          );
-        }
+      if (!isNetworkAvailable) {
         return [];
       }
-      return [];
+      const url = getBaseUrl();
+      const response = await GET_DATA({
+        url: `${url}${URL.LICENSE_BY_TYPE}${typeIds}`,
+      });
+      const licenses = response?.status ? (response?.data?.data ?? []) : [];
+      if (!Array.isArray(licenses)) {
+        return [];
+      }
+      return licenses.filter(
+        (item: License) => item.number || item.businessName || item.licenseDescriptor,
+      );
     } catch (error) {
       recordCrashlyticsError('Error fetching licenses:', error);
       console.error('Error fetching licenses:', error);
@@ -266,7 +270,6 @@ export const contactService = {
           body: payload,
         });
 
-        setLoading(false);
         if (response?.status) {
           ToastService.show(TEXTS.subScreens.contactAndContract.saveSuccess, COLORS.SUCCESS_GREEN);
           navigation.goBack(null);
@@ -352,7 +355,8 @@ export const contactService = {
         }
       }
     } catch (error) {
-      console.log('Error---->>>', error);
+      console.error('Error---->>>', error);
+    } finally {
       setLoading(false);
     }
   },

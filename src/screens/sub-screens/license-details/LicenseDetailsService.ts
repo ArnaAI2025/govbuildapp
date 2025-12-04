@@ -20,7 +20,11 @@ export const LicenseDetailsService = {
         const response = await GET_DATA({
           url: `${url}${URL.LICENSE_DETAILS_API}${contentItemId}`,
         });
-        return response?.data?.status ? response?.data?.data : [];
+        if (!response?.data?.status) {
+          return [];
+        }
+        const licenseDetails = response?.data?.data;
+        return Array.isArray(licenseDetails) ? licenseDetails : [];
       } else {
         const response = await getLicenseDetailsDataById(contentItemId);
         return response;
@@ -94,7 +98,8 @@ export const LicenseDetailsService = {
         const response = await GET_DATA({
           url: `${url}${URL.GET_TEAM_MEMBER}`,
         });
-        return sortByKey(response?.data?.data || [], 'firstName', 'lastName');
+        const teamMembers = response?.status ? (response?.data?.data ?? []) : [];
+        return sortByKey(teamMembers, 'firstName', 'lastName');
       } else {
         const result = await fetchTeamMembers();
         return sortByKey(result || [], 'firstName', 'lastName');
@@ -113,7 +118,11 @@ export const LicenseDetailsService = {
         const response = await GET_DATA({
           url: `${url}${URL.USERNAME_SEARCH_LIST}${searchString}`,
         });
-        return response?.data?.data || [];
+        if (!response?.status) {
+          return [];
+        }
+        const data = response?.data?.data;
+        return Array.isArray(data) ? data : [];
       }
       return [];
     } catch (error) {

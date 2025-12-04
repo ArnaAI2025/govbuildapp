@@ -43,20 +43,21 @@ export class InspectionService {
         const response = await GET_DATA({
           url: `${url}${endpoint}${contentItemId}`,
         });
-        setLoading(false);
-        if (response.status) {
-          return response?.data?.data;
+        if (!response?.status) {
+          return [];
         }
-        return [];
+        const data = response?.data?.data;
+        return Array.isArray(data) ? (data as InspectionModel[]) : [];
       } else {
         const offlineData = await fetchInspectionData(contentItemId, type);
         return (offlineData as InspectionModel[]) ?? [];
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error fetching inspections:', error);
       console.error('Error fetching inspections:', error);
       return [];
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -116,10 +117,11 @@ export class InspectionService {
         const response = await GET_DATA({
           url: fullUrl,
         });
-        if (response?.status && response?.data) {
-          return response?.data?.data;
+        if (!response?.status) {
+          return [];
         }
-        return [];
+        const data = response?.data?.data;
+        return Array.isArray(data) ? (data as InspectionType[]) : [];
       } else {
         return [];
       }
@@ -161,7 +163,8 @@ export class InspectionService {
         console.log('fetchInspectionTypeList URL:--->', fullUrl);
 
         const response = await GET_DATA({ url: fullUrl });
-        return response?.status && Array.isArray(response?.data?.data) ? response.data.data : [];
+        const apiData = response?.status ? response?.data?.data : null;
+        return Array.isArray(apiData) ? apiData : [];
       } catch (error) {
         recordCrashlyticsError(' Error in fetchInspectionTypeList:---->', error);
         console.error(' Error in fetchInspectionTypeList:---->', error);
@@ -183,10 +186,8 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.DEPARTMENT_MEMBER_LIST}${caseOrLicenseData.schedulingDepartments}&inspectionTypeIds=${typeIds}`,
       });
-      if (response?.status && response?.data) {
-        return sortByKey(response?.data?.data, 'displayText');
-      }
-      return [];
+      const members = response?.status ? (response?.data?.data ?? []) : [];
+      return sortByKey(members, 'displayText');
     } catch (error) {
       recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
@@ -201,10 +202,8 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.DEPARTMENT_MEMBER_LIST}`,
       });
-      if (response?.status && response?.data) {
-        return sortByKey(response?.data?.data, 'displayText');
-      }
-      return [];
+      const members = response?.status ? (response?.data?.data ?? []) : [];
+      return sortByKey(members, 'displayText');
     } catch (error) {
       recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
@@ -219,10 +218,8 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.APPOINTMENT_STATUS_WITH_LABEL}`,
       });
-      if (response?.status && response?.data) {
-        return sortByKey(response?.data?.data, 'displayText');
-      }
-      return [];
+      const statuses = response?.status ? (response?.data?.data ?? []) : [];
+      return sortByKey(statuses, 'displayText');
     } catch (error) {
       recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
@@ -240,10 +237,10 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.INSPECTION_BY_ID}${inspectionId}`,
       });
-      if (response?.status && response?.data) {
-        return response?.data?.data;
+      if (!response?.status) {
+        return null;
       }
-      return null;
+      return (response?.data?.data as InspectionModel | null) ?? null;
     } catch (error) {
       recordCrashlyticsError('Error fetching inspection by ID:', error);
       console.error('Error fetching inspection by ID:', error);
@@ -263,12 +260,12 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.INSPECTION_DEFAULT_TIME_BY_TYPE}${typeIds}`,
       });
-      if (response?.status) {
-        const defaultTime = response?.data?.data || 0;
-        const timeDifference = getTimeDifference(startTime, endTime, defaultTime);
-        return { defaultTime, timeDifference };
+      if (!response?.status) {
+        return { defaultTime: 0, timeDifference: 0 };
       }
-      return { defaultTime: 0, timeDifference: 0 };
+      const defaultTime = Number(response?.data?.data ?? 0);
+      const timeDifference = getTimeDifference(startTime, endTime, defaultTime);
+      return { defaultTime, timeDifference };
     } catch (error) {
       recordCrashlyticsError('Error fetching inspection default time:', error);
       console.error('Error fetching inspection default time:', error);
@@ -283,10 +280,10 @@ export class InspectionService {
       const response = await GET_DATA({
         url: `${url}${URL.TEAM_MEMBER_SIGNATURE}`,
       });
-      if (response?.status && response?.data) {
-        return response?.data?.data;
+      if (!response?.status) {
+        return null;
       }
-      return null;
+      return (response?.data?.data as string | null) ?? null;
     } catch (error) {
       recordCrashlyticsError('Error fetching team member signature:', error);
       console.error('Error fetching team member signature:', error);
@@ -308,10 +305,10 @@ export class InspectionService {
         date,
       )}&startTime=${startTime}&endTime=${endTime}`;
       const response = await GET_DATA({ url: fullUrl });
-      if (response?.status) {
-        return response?.data?.data;
+      if (!response?.status) {
+        return { bookedTeamMembers: [] };
       }
-      return { bookedTeamMembers: [] };
+      return response?.data?.data ?? { bookedTeamMembers: [] };
     } catch (error) {
       recordCrashlyticsError('Error verifying team member schedule:', error);
       console.error('Error verifying team member schedule:', error);
@@ -325,10 +322,10 @@ export class InspectionService {
       const url = getBaseUrl();
       const fullUrl = `${url}${URL.INSPECTION_TITLE_BY_TYPE}${typeIds}`;
       const response = await GET_DATA({ url: fullUrl });
-      if (response?.status) {
-        return response?.data?.data;
+      if (!response?.status) {
+        return '';
       }
-      return '';
+      return (response?.data?.data as string | null) ?? '';
     } catch (error) {
       recordCrashlyticsError('Error fetching inspection title:', error);
       console.error('Error fetching inspection title:', error);
@@ -367,7 +364,6 @@ export class InspectionService {
         url: `${url}${fullUrl}`,
         body: params,
       });
-      setLoading(false);
       if (response?.status) {
         if (response.data && ['error', 'failed'].includes(response.data.status)) {
           return false; // Handle failure case in component
@@ -381,7 +377,6 @@ export class InspectionService {
       }
       return false;
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error saving inspection:', error);
       console.error('Error saving inspection:', error);
       if (
@@ -395,6 +390,8 @@ export class InspectionService {
         return true;
       }
       return false;
+    } finally {
+      setLoading(false);
     }
   }
 

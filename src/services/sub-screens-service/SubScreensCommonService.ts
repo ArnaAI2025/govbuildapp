@@ -18,8 +18,7 @@ import {
 } from '../../utils/params/commonParams';
 import useAuthStore from '../../store/useAuthStore';
 import { fetchAdminAndPublicCommentsFromOffline } from '../../database/sub-screens/subScreensSync';
-import type {
-  AdminNote} from '../../database/sub-screens/subScreenDAO';
+import type { AdminNote } from '../../database/sub-screens/subScreenDAO';
 import {
   storeAdminNotesWithDocsOffline,
   updateAdminNoteAlert,
@@ -619,7 +618,6 @@ export const fetchSentEmails = async (
         : `${url}${URL.SEND_EMAIL_LIST_LICENSE}${contentItemId}`;
 
       const response = await GET_DATA({ url: endpoint });
-      setLoading(false);
       if (response?.status) {
         return response?.data?.data || [];
       }
@@ -629,7 +627,6 @@ export const fetchSentEmails = async (
       return [];
     }
   } catch (error) {
-    setLoading(false);
     if (error instanceof Error) {
       recordCrashlyticsError('Error in fetchSentEmails:', error);
       console.error('Error in fetchSentEmails:', error.message);
@@ -638,6 +635,8 @@ export const fetchSentEmails = async (
       console.error('Error in fetchSentEmails:', error);
     }
     return [];
+  } finally {
+    setLoading(false);
   }
 };
 export const fetchTaskList = async (
@@ -652,18 +651,18 @@ export const fetchTaskList = async (
       const endpoint = { url: `${url}${URL.TASK_LIST}${contentItemId}` };
 
       const response = await GET_DATA(endpoint);
-      setLoading(false);
 
-      if (response.status) {
-        return response?.data?.data || [];
+      if (!response?.status) {
+        return [];
       }
-      return [];
+
+      const apiData = response?.data?.data;
+      return Array.isArray(apiData) ? apiData : [];
     } else {
       console.warn('No internet connection');
       return [];
     }
   } catch (error) {
-    setLoading(false);
     if (error instanceof Error) {
       recordCrashlyticsError('Error in fetchTasks:', error);
       console.error('Error in fetchTasks:', error.message);
@@ -672,5 +671,7 @@ export const fetchTaskList = async (
       console.error('Error in fetchTasks:', error);
     }
     return [];
+  } finally {
+    setLoading(false);
   }
 };

@@ -5,16 +5,16 @@ import { constructWebViewUrl } from '../utils/params/webViewParams';
 import { URL } from '../constants/url';
 import { GET_DATA } from './ApiClient';
 import type { WebViewContent } from '../utils/interfaces/IComponent';
-import type { NavigationProp} from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 import { StackActions } from '@react-navigation/native';
 import { ToastService } from '../components/common/GlobalSnackbar';
 import { COLORS } from '../theme/colors';
 import { recordCrashlyticsError } from './CrashlyticsService';
+import { isNetworkAvailable } from '../utils/checkNetwork';
 
 export const loadWebViewContent = async (path: string): Promise<WebViewContent | null> => {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       return null;
     }
 
@@ -84,44 +84,48 @@ export const fetchCaseOrLicenseById = async (
     const apiUrl = `${url}${urlEndPoint}${contentId}`;
     const response = await GET_DATA({ url: apiUrl });
 
-    if (response?.status && response.data) {
-      if (type === 'Case') {
-        if (!isNotSkipScreen) {
-          navigation.dispatch(StackActions.pop(1));
-          navigation.dispatch(
-            StackActions.replace('EditCaseScreen', {
-              caseId: response?.data?.data?.contentItemId ?? '',
-              myCaseData: response?.data?.data,
-              refreshAttechedItems: true,
-            }),
-          );
-        } else {
-          navigation.navigate('EditCaseScreen', {
-            caseId: response?.data?.data?.contentItemId ?? '',
-            myCaseData: response?.data?.data,
+    if (!response?.status || !response?.data?.data) {
+      ToastService.show('Unexpected response from server.', COLORS.ERROR);
+      throw new Error('Failed to fetch data from API');
+    }
+
+    const entityData = response.data.data;
+    const contentItemId = entityData?.contentItemId ?? '';
+
+    if (type === 'Case') {
+      if (!isNotSkipScreen) {
+        navigation.dispatch(StackActions.pop(1));
+        navigation.dispatch(
+          StackActions.replace('EditCaseScreen', {
+            caseId: contentItemId,
+            myCaseData: entityData,
             refreshAttechedItems: true,
-          });
-        }
+          }),
+        );
       } else {
-        if (!isNotSkipScreen) {
-          navigation.dispatch(StackActions.pop(1));
-          navigation.dispatch(
-            StackActions.replace('EditLicenseScreen', {
-              contentItemId: response?.data?.data?.contentItemId ?? '',
-              licenseData: response?.data?.data,
-              refreshAttechedItems: true,
-            }),
-          );
-        } else {
-          navigation.navigate('EditLicenseScreen', {
-            contentItemId: response?.data?.data?.contentItemId ?? '',
-            licenseData: response?.data?.data,
-            refreshAttechedItems: true,
-          });
-        }
+        navigation.navigate('EditCaseScreen', {
+          caseId: contentItemId,
+          myCaseData: entityData,
+          refreshAttechedItems: true,
+        });
       }
     } else {
-      throw new Error('Failed to fetch data from API');
+      if (!isNotSkipScreen) {
+        navigation.dispatch(StackActions.pop(1));
+        navigation.dispatch(
+          StackActions.replace('EditLicenseScreen', {
+            contentItemId,
+            licenseData: entityData,
+            refreshAttechedItems: true,
+          }),
+        );
+      } else {
+        navigation.navigate('EditLicenseScreen', {
+          contentItemId,
+          licenseData: entityData,
+          refreshAttechedItems: true,
+        });
+      }
     }
   } catch (error) {
     recordCrashlyticsError(`Error fetching ${type} data:`, error);

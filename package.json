@@ -15,7 +15,7 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.6",
     "@kesha-antonov/react-native-background-downloader": "^3.2.6",
-    "@mcci/govbuilt-client": "^3.0.2",
+    "@mcci/govbuilt-client": "^3.0.3",
     "@react-native-community/datetimepicker": "^8.3.0",
     "@react-native-community/netinfo": "11.4.1",
     "@react-native-firebase/app": "^23.4.1",

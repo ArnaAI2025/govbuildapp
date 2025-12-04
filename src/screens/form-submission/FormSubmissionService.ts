@@ -42,7 +42,6 @@ export const FormSubmissionService = {
         ];
       }
     } catch (error) {
-      // setLoading(false);
       recordCrashlyticsError('Error in fetchFormStatus:', error);
       console.error('Error in fetchFormStatus:', error);
       return [{ id: '', displayText: TEXTS.subScreens.advanceFormSubmission.placeholder.dropdown }];

@@ -57,6 +57,7 @@ const NewFormDetailsScreen: React.FC<NewFormDetailsScreenProps> = ({ route }) =>
       setURL(finalUrl);
     } catch (error) {
       console.error('Error fetching URL:', error);
+    } finally {
       setLoading(false);
     }
   };

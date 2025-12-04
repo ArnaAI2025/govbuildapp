@@ -22,7 +22,6 @@ export const ParcelService = {
             URL.GET_ALL_PARCEL
           }ParcelNumber=${parcelNumber}&Address=${encodeURIComponent(address)}`,
         });
-        setLoading(false);
         if (response?.status && Array.isArray(response?.data?.data)) {
           const parcels = response.data.data;
           const sortedParcels = parcels.sort((a, b) => {
@@ -41,11 +40,12 @@ export const ParcelService = {
         return [];
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error fetching parcels', error);
       ToastService.show('Error fetching parcels', COLORS.ERROR);
       console.error('Error in fetchParcels:', error);
       return [];
+    } finally {
+      setLoading(false);
     }
   },
 

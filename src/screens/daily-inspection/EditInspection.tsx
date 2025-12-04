@@ -157,7 +157,10 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
     try {
       if (isNetworkAvailable) {
         setLoading(true);
-        const inspectionData = await InspectionService.fetchInspectionById(inspectionId, isNetworkAvailable);
+        const inspectionData = await InspectionService.fetchInspectionById(
+          inspectionId,
+          isNetworkAvailable,
+        );
         if (inspectionData) {
           setInspectionDate(inspectionData.appointmentDate);
           setSelectPreferredTime(
@@ -189,12 +192,12 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
             setSelectedTeamMember(inspectionData?.selectedInspectionBy);
           }
         }
-        setLoading(false);
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in fetchInspectionData:', error);
       console.error('Error in fetchInspectionData:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -278,7 +281,6 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
           url: `${url}${URL.UPDATE_INSPECTION_FROM_REPORT}`,
           body: requestData,
         });
-        setLoading(false);
         if (response?.status && response?.data?.status) {
           setIsInspectionUpdated(true);
           ToastService.show('Inspection updated successfully', COLORS.SUCCESS_GREEN);
@@ -290,9 +292,10 @@ const EditInspection: React.FC<EditInspectionScreenProps> = ({ route, navigation
         Alert.alert('Please check your internet connection');
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in saveInspection:', error);
       console.error('Error in saveInspection:', error);
+    } finally {
+      setLoading(false);
     }
   };
   function deleteInspectionType(index) {

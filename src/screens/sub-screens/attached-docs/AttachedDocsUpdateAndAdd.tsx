@@ -162,9 +162,7 @@ const AttachedDocsUpdateAndAdd: React.FC<AttachedDocsUpdateAndAddProps> = ({
       folderId,
       fileType: originalTypes[index] || fileTypes[index],
     }));
-    console.log('docDataArray --->', fileTypes);
     setLoading(true);
-
     try {
       const uploadPromises = docDataArray.map(async (docData, index) => {
         try {

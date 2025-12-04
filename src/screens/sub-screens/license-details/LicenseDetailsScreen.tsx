@@ -26,8 +26,10 @@ import Checkbox from 'expo-checkbox';
 import useAuthStore from '../../../store/useAuthStore';
 import { recordCrashlyticsError } from '../../../services/CrashlyticsService';
 
-interface LicenseDetailsScreenProps
-  extends NativeStackScreenProps<RootStackParamList, 'LicenseDetailsScreen'> {}
+interface LicenseDetailsScreenProps extends NativeStackScreenProps<
+  RootStackParamList,
+  'LicenseDetailsScreen'
+> {}
 const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) => {
   const { isNetworkAvailable } = useNetworkStatus();
   const [loading, setLoading] = useState(false);
@@ -119,11 +121,12 @@ const LicenseDetailsScreen: React.FC<LicenseDetailsScreenProps> = ({ route }) =>
         userId,
         isNetworkAvailable,
       );
-      setLoading(false);
     } catch (error) {
       recordCrashlyticsError('Error saveLicenseData:---->>>', error);
       console.error('Error saving:---->>>', error);
       ToastService.show(TEXTS.subScreens.contactAndContract.savingError, COLORS.ERROR);
+    } finally {
+      setLoading(false);
     }
   };
   const dateFields = [

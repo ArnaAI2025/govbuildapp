@@ -1,4 +1,3 @@
-import NetInfo from '@react-native-community/netinfo';
 import { getDatabase } from '../DatabaseService';
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
@@ -18,11 +17,11 @@ import {
 } from './dropDownlistDAO';
 import { TABLES } from '../DatabaseConstants';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 export const syncDropdownListData = async (): Promise<void> => {
   try {
-    const netInfo = await NetInfo.fetch();
-    if (!netInfo.isConnected) {
+    if (!isNetworkAvailable()) {
       console.log('Offline: Skipping dropdown list sync');
       return;
     }

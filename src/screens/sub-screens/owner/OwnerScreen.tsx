@@ -119,10 +119,11 @@ const OwnerScreen: React.FC<OwnerScreenProps> = ({ route }) => {
     try {
       setLoading(true);
       await OwnerService.saveOwnerDetails(formData, param?.contentItemId, isNetworkAvailable);
-      setLoading(false);
     } catch (error) {
       recordCrashlyticsError('Error saveOwnerDetails:', error);
       console.error('Error saving:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

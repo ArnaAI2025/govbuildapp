@@ -1,11 +1,9 @@
 import { TABLES } from '../DatabaseConstants';
 import { URL } from '../../constants/url';
-import NetInfo from '@react-native-community/netinfo';
 import { getDatabase } from '../DatabaseService';
 import { GET_DATA } from '../../services/ApiClient';
 import { getAccessToken, getBaseUrl } from '../../session/SessionManager';
-import type {
-  AdminNote} from './subScreenDAO';
+import type { AdminNote } from './subScreenDAO';
 import {
   insertInspectionRecord,
   storeAttachedItems,
@@ -25,6 +23,7 @@ import type { InspectionData } from '../types/inpection';
 import { OwnerService } from '../../screens/sub-screens/owner/OwnerService';
 import { LicenseDetailsService } from '../../screens/sub-screens/license-details/LicenseDetailsService';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 // Custom error class for sync operations
 class SyncError extends Error {
@@ -36,8 +35,7 @@ class SyncError extends Error {
 
 export const syncSubScreenData = async (contentItemId: string): Promise<void> => {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       throw new SyncError('No internet connection or offline mode.');
     }
 
@@ -95,8 +93,7 @@ export const syncSubScreenData = async (contentItemId: string): Promise<void> =>
 
 export const syncLicenseSubScreenData = async (contentItemId: string): Promise<void> => {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       throw new SyncError('No internet connection or offline mode.');
     }
     const url = getBaseUrl();
@@ -254,8 +251,6 @@ export const syncContractorWithDatabase = async (
   type: 'Case' | 'License',
 ): Promise<void> => {
   try {
-    const netState = await NetInfo.fetch();
-    const isNetworkAvailable: boolean = !!netState.isConnected;
     const data = await contactService.fetchContractors(contentItemId, type, isNetworkAvailable);
     for (const item of data) {
       await updateContractorListIfExist(item, type === 'Case', contentItemId);
@@ -271,9 +266,6 @@ export const syncLicenseOwnerWithDatabase = async (
   type: 'Case' | 'License',
 ): Promise<void> => {
   try {
-    const netState = await NetInfo.fetch();
-    const isNetworkAvailable: boolean = !!netState.isConnected;
-
     const data = await OwnerService.fetchOwnerData(contentItemId, isNetworkAvailable);
     await updateLicenseOwnerIfExist(data, 'License', contentItemId);
   } catch (error: unknown) {
@@ -283,8 +275,6 @@ export const syncLicenseOwnerWithDatabase = async (
 
 export const syncLicenseDetailsDataWithDatabase = async (contentItemId: string): Promise<void> => {
   try {
-    const netState = await NetInfo.fetch();
-    const isNetworkAvailable: boolean = !!netState.isConnected;
     const data = await LicenseDetailsService.fetchLicenseData(contentItemId, isNetworkAvailable);
     await updateLicenseDetailsIfExist(data, 'License', contentItemId);
   } catch (error: unknown) {

@@ -140,9 +140,11 @@ const AllOfflineView: React.FC<AllOfflineViewScreenProps> = ({ isActive }) => {
       await getCaseByCidData(caseId, type, isNetworkAvailable);
       setBtnLoad(false);
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error fetching case/license:', error);
       console.error('Error fetching case/license:', error);
+    } finally {
+      setBtnLoad(false);
+      setLoading(false);
     }
   };
 

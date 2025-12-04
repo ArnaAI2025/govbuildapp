@@ -12,20 +12,19 @@ export const LogService = {
     isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      if (isNetworkAvailable) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const urlPath = {
-          url: `${url}${URL.CASE_CHANGE_LOG_STATUS}${contentItemId}&type=${type}`,
-        };
-        const response = await GET_DATA(urlPath);
-        setLoading(false);
-        return response.status ? response?.data?.data || [] : [];
+      if (!isNetworkAvailable) {
+        console.warn('No internet connection');
+        return [];
       }
-      console.warn('No internet connection');
-      return [];
+      setLoading(true);
+      const url = getBaseUrl();
+      const urlPath = {
+        url: `${url}${URL.CASE_CHANGE_LOG_STATUS}${contentItemId}&type=${type}`,
+      };
+      const response = await GET_DATA(urlPath);
+      const logs = response?.status ? (response?.data?.data ?? []) : [];
+      return Array.isArray(logs) ? logs : [];
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError(`Error in fetchStatusChangeLog (${type}):`, error);
         console.error(`Error in fetchStatusChangeLog (${type}):`, error.message);
@@ -34,6 +33,8 @@ export const LogService = {
         console.error(`Error in fetchStatusChangeLog (${type}):`, error);
       }
       return [];
+    } finally {
+      setLoading(false);
     }
   },
   async fetchInspectionHistory(
@@ -43,21 +44,20 @@ export const LogService = {
     isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      if (isNetworkAvailable) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const caseOrLicenseId = isCase ? `?caseId=${contentItemId}` : `?licenseId=${contentItemId}`;
-        const urlPath = {
-          url: `${url}${URL.INSPECTION_CHANGE_LOG}${caseOrLicenseId}`,
-        };
-        const response = await GET_DATA(urlPath);
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
+      if (!isNetworkAvailable) {
+        console.warn('No internet connection');
+        return [];
       }
-      console.warn('No internet connection');
-      return [];
+      setLoading(true);
+      const url = getBaseUrl();
+      const caseOrLicenseId = isCase ? `?caseId=${contentItemId}` : `?licenseId=${contentItemId}`;
+      const urlPath = {
+        url: `${url}${URL.INSPECTION_CHANGE_LOG}${caseOrLicenseId}`,
+      };
+      const response = await GET_DATA(urlPath);
+      const logs = response?.status ? (response?.data?.data ?? []) : [];
+      return Array.isArray(logs) ? logs : [];
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in fetchInspectionHistory:', error);
         console.error('Error in fetchInspectionHistory:', error.message);
@@ -66,6 +66,8 @@ export const LogService = {
         console.error('Error in fetchInspectionHistory:', error);
       }
       return [];
+    } finally {
+      setLoading(false);
     }
   },
   async fetchPaymentHistory(
@@ -75,22 +77,22 @@ export const LogService = {
     isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      if (isNetworkAvailable) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const urlPath = {
-          url: isCase
-            ? `${url}${URL.CASE_PAYMENT_HISTORY_LOG}${contentItemId}`
-            : `${url}${URL.LICENSE_PAYMENT_HISTORY_LOG}${contentItemId}`,
-        };
-        const response = await GET_DATA(urlPath);
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
+      if (!isNetworkAvailable) {
+        console.warn('No internet connection');
+        return [];
       }
-      console.warn('No internet connection');
-      return [];
+
+      setLoading(true);
+      const url = getBaseUrl();
+      const urlPath = {
+        url: isCase
+          ? `${url}${URL.CASE_PAYMENT_HISTORY_LOG}${contentItemId}`
+          : `${url}${URL.LICENSE_PAYMENT_HISTORY_LOG}${contentItemId}`,
+      };
+      const response = await GET_DATA(urlPath);
+      const logs = response?.status ? (response?.data?.data ?? []) : [];
+      return Array.isArray(logs) ? logs : [];
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in fetchPaymentHistory:', error);
         console.error('Error in fetchPaymentHistory:', error.message);
@@ -99,6 +101,8 @@ export const LogService = {
         console.error('Error in fetchPaymentHistory:', error);
       }
       return [];
+    } finally {
+      setLoading(false);
     }
   },
   async fetchLicenseStatus(
@@ -107,20 +111,20 @@ export const LogService = {
     isNetworkAvailable: boolean,
   ): Promise<StatusChangeLog[]> {
     try {
-      if (isNetworkAvailable) {
-        setLoading(true);
-        const url = getBaseUrl();
-        const urlPath = {
-          url: `${url}${URL.LICENSE_CHANGE_LOG_STATUS}${contentItemId}`,
-        };
-        const response = await GET_DATA(urlPath);
-        setLoading(false);
-        return response?.status ? response?.data?.data || [] : [];
+      if (!isNetworkAvailable) {
+        console.warn('No internet connection');
+        return [];
       }
-      console.warn('No internet connection');
-      return [];
+
+      setLoading(true);
+      const url = getBaseUrl();
+      const urlPath = {
+        url: `${url}${URL.LICENSE_CHANGE_LOG_STATUS}${contentItemId}`,
+      };
+      const response = await GET_DATA(urlPath);
+      const logs = response?.status ? (response?.data?.data ?? []) : [];
+      return Array.isArray(logs) ? logs : [];
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in fetchLicenseStatus:', error);
         console.error('Error in fetchLicenseStatus:', error.message);
@@ -129,6 +133,8 @@ export const LogService = {
         console.error('Error in fetchLicenseStatus:', error);
       }
       return [];
+    } finally {
+      setLoading(false);
     }
   },
 };

@@ -8,14 +8,17 @@ import { getEncryptionKey } from '../utils/secureStorage';
 let secureStorage: MMKV | null = null;
 
 export async function initializeSecureStorage() {
-  const key = await getEncryptionKey();
+  try {
+    const key = await getEncryptionKey();
 
-  secureStorage = new MMKV({
-    id: 'secure-storage',
-    encryptionKey: key,
-  });
-
-  console.log('Secure MMKV initialized with Keychain-managed key');
+    secureStorage = new MMKV({
+      id: 'secure-storage',
+      encryptionKey: key,
+    });
+  } catch (error) {
+    recordCrashlyticsError('Failed to initialize secure MMKV storage', error);
+    throw error;
+  }
 }
 
 export function getSecureStorage(): MMKV {
@@ -42,63 +45,97 @@ export const zustandMMKVStorage = createJSONStorage(() => ({
   },
 }));
 
+const safeSecureSet = (key: string, value: string | boolean) => {
+  try {
+    getSecureStorage().set(key, value as string | number | boolean);
+  } catch (error) {
+    recordCrashlyticsError(`Failed to write secure value for key: ${key}`, error);
+  }
+};
+
+const safeSecureGetString = (key: string, fallback: string | null = null): string | null => {
+  try {
+    return secureStorage?.getString(key) ?? fallback;
+  } catch (error) {
+    recordCrashlyticsError(`Failed to read secure string for key: ${key}`, error);
+    return fallback;
+  }
+};
+
 export const saveAccessToken = (value: string) => {
-  getSecureStorage().set(SESSION_STORAGE.access_token, value);
+  safeSecureSet(SESSION_STORAGE.access_token, value);
 };
 
 export const getAccessToken = (): string | null => {
-  const value = secureStorage?.getString(SESSION_STORAGE.access_token);
-  return getValueOrLog(value, 'access_token', null);
+  return safeSecureGetString(SESSION_STORAGE.access_token, null);
 };
 
 export const saveBaseUrl = (value: string) => {
-  secureStorage?.set(SESSION_STORAGE.base_url, value);
+  safeSecureSet(SESSION_STORAGE.base_url, value);
 };
 
 export const getBaseUrl = (): string | null => {
-  const value = secureStorage?.getString(SESSION_STORAGE.base_url);
-  return getValueOrLog(value, 'base_url', null);
+  return safeSecureGetString(SESSION_STORAGE.base_url, null);
 };
 
 export const saveUserRole = (value: string) => {
-  secureStorage?.set(SESSION_STORAGE.user_role, value);
+  safeSecureSet(SESSION_STORAGE.user_role, value);
 };
 
 export const getUserRole = (): string => {
-  const value = secureStorage?.getString(SESSION_STORAGE.user_role);
-  return getValueOrLog(value, 'user_role', '');
+  return safeSecureGetString(SESSION_STORAGE.user_role, '') ?? '';
 };
 
 export const saveLoggedInUserId = (value: string) => {
-  secureStorage?.set(SESSION_STORAGE.user_Id, value);
+  safeSecureSet(SESSION_STORAGE.user_Id, value);
 };
 
 export const getLoggedInUserId = (): string => {
-  return secureStorage?.getString(SESSION_STORAGE.user_Id) || '';
+  return safeSecureGetString(SESSION_STORAGE.user_Id, '') ?? '';
 };
 
 export const saveLicenseUserRole = (value: string) => {
-  secureStorage?.set(SESSION_STORAGE.LICENSE_USER_ROLE, value);
+  safeSecureSet(SESSION_STORAGE.LICENSE_USER_ROLE, value);
 };
 
 export const getLicenseUserRole = (): string => {
-  return secureStorage?.getString(SESSION_STORAGE.LICENSE_USER_ROLE) || '';
+  return safeSecureGetString(SESSION_STORAGE.LICENSE_USER_ROLE, '') ?? '';
 };
 
 export const saveIsUpdateLater = (value: boolean) => {
-  storage.set(SESSION_STORAGE.IS_UPDATE_LATER, value);
+  try {
+    storage.set(SESSION_STORAGE.IS_UPDATE_LATER, value);
+  } catch (error) {
+    recordCrashlyticsError('Error storing IS_UPDATE_LATER flag:', error);
+  }
 };
 
 export const getIsUpdateLater = (): boolean => {
-  return storage.getBoolean(SESSION_STORAGE.IS_UPDATE_LATER) || false;
+  try {
+    const stored = storage.getBoolean(SESSION_STORAGE.IS_UPDATE_LATER);
+    return stored ?? false;
+  } catch (error) {
+    recordCrashlyticsError('Error reading IS_UPDATE_LATER flag:', error);
+    return false;
+  }
 };
 
 export const saveIsVersionUpdateOffline = (value: boolean) => {
-  storage.set(SESSION_STORAGE.IS_OFFLINE_UPDATE, value);
+  try {
+    storage.set(SESSION_STORAGE.IS_OFFLINE_UPDATE, value);
+  } catch (error) {
+    recordCrashlyticsError('Error storing IS_OFFLINE_UPDATE flag:', error);
+  }
 };
 
 export const getIsVersionUpdateOffline = (): boolean => {
-  return storage.getBoolean(SESSION_STORAGE.IS_OFFLINE_UPDATE) || false;
+  try {
+    const stored = storage.getBoolean(SESSION_STORAGE.IS_OFFLINE_UPDATE);
+    return stored ?? false;
+  } catch (error) {
+    recordCrashlyticsError('Error reading IS_OFFLINE_UPDATE flag:', error);
+    return false;
+  }
 };
 
 export const saveOfflineUtcDate = (utcDate: string) => {
@@ -110,7 +147,12 @@ export const saveOfflineUtcDate = (utcDate: string) => {
 };
 
 export const getOfflineUtcDate = (): string | null => {
-  return storage.getString(SESSION_STORAGE.OFFLINE_UTC_DATE) || null;
+  try {
+    return storage.getString(SESSION_STORAGE.OFFLINE_UTC_DATE) ?? null;
+  } catch (error) {
+    recordCrashlyticsError('Error reading offline UTC time:', error);
+    return null;
+  }
 };
 
 export const setWasOnline = (isOnline: boolean) => {
@@ -122,28 +164,36 @@ export const setWasOnline = (isOnline: boolean) => {
 };
 
 export const getWasOnline = (): boolean => {
-  return storage.getBoolean(SESSION_STORAGE.WAS_ONLINE) ?? true;
+  try {
+    const stored = storage.getBoolean(SESSION_STORAGE.WAS_ONLINE);
+    return stored ?? true;
+  } catch (error) {
+    recordCrashlyticsError('Error reading wasOnline:', error);
+    return true;
+  }
 };
 
 export const saveNavigationState = (value: boolean) => {
-  storage.set(SESSION_STORAGE.NAV_STATE, String(value));
+  try {
+    storage.set(SESSION_STORAGE.NAV_STATE, String(value));
+  } catch (error) {
+    recordCrashlyticsError('Error storing navigation state:', error);
+  }
 };
 
 export const getNavigationState = (): boolean => {
-  return storage.getString(SESSION_STORAGE.NAV_STATE) === 'true';
+  try {
+    return storage.getString(SESSION_STORAGE.NAV_STATE) === 'true';
+  } catch (error) {
+    recordCrashlyticsError('Error reading navigation state:', error);
+    return false;
+  }
 };
 
 export const saveUserPassword = (password: string) => {
-  secureStorage?.set(SESSION_STORAGE.user_password, password);
+  safeSecureSet(SESSION_STORAGE.user_password, password);
 };
 
 export const getUserPassword = () => {
-  return secureStorage?.getString(SESSION_STORAGE.user_password) || '';
-};
-const getValueOrLog = (value: any, keyName: string, defaultValue: any = null) => {
-  if (value === null || value === undefined) {
-    console.warn(`Value for '${keyName}' is null or undefined`);
-    return defaultValue;
-  }
-  return value;
+  return safeSecureGetString(SESSION_STORAGE.user_password, '') ?? '';
 };

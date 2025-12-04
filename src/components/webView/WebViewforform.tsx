@@ -140,11 +140,12 @@ const WebViewForForm: React.FC<WebViewForFormProps> = ({ navigation, route }) =>
             onLoad={() => {
               try {
                 webViewRef.current?.injectJavaScript(offlineScript);
-                setLoading(false);
               } catch (error) {
                 recordCrashlyticsError('WebView onLoad error:', error);
                 console.error('WebView onLoad error:', error);
                 setError('Failed to load WebView');
+              } finally {
+                setLoading(false);
               }
             }}
             onMessage={handleWebViewMessage}

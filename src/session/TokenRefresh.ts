@@ -3,8 +3,8 @@ import { useBiometricStore } from '../store/biometricStore';
 import useAuthStore from '../store/useAuthStore';
 import { saveAccessToken } from './SessionManager';
 import type { AxiosError } from 'axios';
-import NetInfo from '@react-native-community/netinfo';
 import { recordCrashlyticsError } from '../services/CrashlyticsService';
+import { isNetworkAvailable } from '../utils/checkNetwork';
 
 let refreshPromise: Promise<boolean> | null = null;
 
@@ -62,8 +62,7 @@ const RETRY_DELAY_MS = 1000; // Initial delay, will use exponential backoff
 // Singleton lock for token refresh
 let isRefreshing = false;
 export const TokenRefreshGlobal = async (retryCount: number = 0): Promise<boolean> => {
-  const netInfo = await NetInfo.fetch();
-  if (netInfo.isConnected) {
+  if (isNetworkAvailable()) {
     if (isRefreshing) {
       return refreshPromise || false; // Wait for ongoing refresh
     }

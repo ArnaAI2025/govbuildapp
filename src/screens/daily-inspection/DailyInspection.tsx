@@ -264,7 +264,6 @@ const DailyInspection: React.FC<DailyInspectionScreenProps> = ({ navigation }) =
       setCaseOrLicenseNumber(result.isShowCaseOrLicenseNumber);
       setCaseOrLicenseType(result.isShowCaseOrLicenseType);
       setIsCreateRoute(DailyInspectionService.checkLocationForRouteCreate(result.data));
-      setLoading(false);
     } catch (error) {
       recordCrashlyticsError('Error fetching inspections:', error);
       console.error('Error fetching inspections:', error);

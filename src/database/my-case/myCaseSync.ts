@@ -1,5 +1,3 @@
-import NetInfo from '@react-native-community/netinfo';
-
 import {
   storeCaseData,
   updateCaseData,
@@ -28,14 +26,14 @@ import type { DefaultAdvancedFiltersInterface } from '../../utils/interfaces/ICo
 import { useUnifiedCaseStore } from '../../store/caseStore';
 import { syncAllCaseFoldersFilesAPI } from '../sub-screens/attached-docs/attachedDocsSync';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 export const myCaseAPICall = async (): Promise<void> => {
   const { setTotalCaseCount } = useUnifiedCaseStore.getState();
   let pageNo = 1;
   try {
     console.log('Case api PAGE NUMBER:', pageNo);
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       console.log('No internet connection or offline mode.');
       return;
     }

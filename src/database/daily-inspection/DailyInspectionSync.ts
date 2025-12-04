@@ -1,11 +1,10 @@
-import NetInfo from '@react-native-community/netinfo';
 import { fetchInspectionData } from './DailyInspectionDAO';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 export async function syncDailyInspections(): Promise<void> {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable()) {
       console.warn('No internet connection for sync');
       return;
     }

@@ -1,5 +1,4 @@
 import { URL } from './../../constants/url';
-import NetInfo from '@react-native-community/netinfo';
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { syncSubmissionData } from '../form-submission/formSubmissionSync';
@@ -7,6 +6,7 @@ import { deleteFormListData, updateFormListIfExist } from '../form-submission/fo
 import { syncFileExtensionData } from '../sub-screens/attached-docs/attachedDocsSync';
 import { updateDailyInspectionListIfExist } from './otherSectionDAO';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 // # Sync logic (optional, for syncing with server)
 export const getOtherScreenData = async () => {
   console.log('Fetch selection list starts');
@@ -25,8 +25,7 @@ export const getOtherScreenData = async () => {
 const getSubmissionDataAPI = async () => {
   try {
     // Check internet connection
-    const netInfoState = await NetInfo.fetch();
-    if (!netInfoState.isConnected) {
+    if (!isNetworkAvailable) {
       console.log('No internet connection. Unable to fetch submission data.');
       return;
     }
@@ -64,8 +63,7 @@ const getSubmissionDataAPI = async () => {
 const syncFormListForOffline = async () => {
   try {
     // Check internet connection
-    const netInfoState = await NetInfo.fetch();
-    if (!netInfoState.isConnected) {
+    if (!isNetworkAvailable) {
       console.log('No internet connection. Cannot fetch form list.');
       return;
     }
@@ -119,8 +117,7 @@ const syncFormListForOffline = async () => {
 
 const syncDailyInspectionData = async () => {
   try {
-    const netInfoState = await NetInfo.fetch();
-    if (!netInfoState.isConnected) {
+    if (!isNetworkAvailable) {
       console.log('No internet connection. Cannot fetch Daily Inspection Data.');
       return;
     }

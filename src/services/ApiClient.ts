@@ -1,3 +1,4 @@
+import { isNetworkAvailable } from './../utils/checkNetwork';
 import { handleError } from './../utils/handleError';
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import axios from 'axios';
@@ -6,7 +7,6 @@ import qs from 'qs';
 import { getAccessToken } from '../session/SessionManager';
 import { COLORS } from '../theme/colors';
 import { TokenRefreshGlobal } from '../session/TokenRefresh';
-import NetInfo from '@react-native-community/netinfo';
 import { recordCrashlyticsError } from './CrashlyticsService';
 
 const axiosInstance = axios.create();
@@ -15,7 +15,7 @@ const executeRequest = async <T>(
   config: AxiosRequestConfig,
   retry: boolean = true,
 ): Promise<AxiosResponse<T> | null> => {
-  const state = await NetInfo.fetch();
+  const state = isNetworkAvailable();
   try {
     config.headers = config.headers || {};
     // Add access token if not present
@@ -38,7 +38,7 @@ const executeRequest = async <T>(
     });
     if (axiosError.message === 'Network Error') {
       ToastService.show('Network error detected. Retrying...', COLORS.WARNING_ORANGE);
-      if (state?.isConnected && retry) {
+      if (state && retry) {
         // Optional: Add delay before retry
         await new Promise((res) => setTimeout(res, 2000));
         return executeRequest<T>(config, false);
@@ -62,14 +62,14 @@ const executeRequest = async <T>(
         throw new Error('Token refresh failed');
       }
     } else if (axiosError?.response?.status === 403) {
-      alert('You do not have permission to view this content.');
+      ToastService.show('You do not have permission to view this content.', COLORS.ERROR);
       return null;
     }
     if (
       Object.prototype.hasOwnProperty.call(axiosError?.response, 'statusCode') &&
       axiosError.response?.status === 403
     ) {
-      alert('You do not have permission to view this content.');
+      ToastService.show('You do not have permission to view this content.', COLORS.ERROR);
       return null;
     }
     handleError(axiosError);

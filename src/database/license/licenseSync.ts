@@ -3,7 +3,6 @@ import { GET_DATA } from '../../services/ApiClient';
 import { getBaseUrl } from '../../session/SessionManager';
 import { generateUniqueID, logBlue } from '../../utils/helper/helpers';
 import { TABLES } from '../DatabaseConstants';
-import NetInfo from '@react-native-community/netinfo';
 import { getDatabase } from '../DatabaseService';
 import type { LicenseData } from '../../utils/interfaces/zustand/ILicense';
 import {
@@ -26,6 +25,7 @@ import {
 } from '../sub-screens/subScreensSync';
 import { syncAllCaseFoldersFilesAPI } from '../sub-screens/attached-docs/attachedDocsSync';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 // Sync All license data on home screen
 export const licenseAPICall = async (): Promise<void> => {
@@ -33,8 +33,7 @@ export const licenseAPICall = async (): Promise<void> => {
   let pageNo = 1;
   try {
     console.log('LICENSE API PAGE NUMBER:', pageNo);
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable) {
       console.log('No internet connection or offline mode.');
       return;
     }

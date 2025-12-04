@@ -77,3 +77,17 @@ export const useNetworkStatus = () => {
 
   return { isNetworkAvailable };
 };
+
+export const getCurrentNetworkStatus = async () => {
+  try {
+    const state = await NetInfo.fetch();
+    return !!state.isConnected && !!state.isInternetReachable;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const isNetworkAvailable = () => {
+  const { isNetworkAvailable } = useNetworkStore.getState();
+  return isNetworkAvailable;
+};

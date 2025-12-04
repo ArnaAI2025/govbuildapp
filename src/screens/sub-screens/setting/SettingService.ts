@@ -1,4 +1,8 @@
-import type { SettingsFormData, SettingsModel, TeamMember } from '../../../utils/interfaces/ISubScreens';
+import type {
+  SettingsFormData,
+  SettingsModel,
+  TeamMember,
+} from '../../../utils/interfaces/ISubScreens';
 import { getBaseUrl } from '../../../session/SessionManager';
 import { GET_DATA, POST_DATA_WITH_TOKEN } from '../../../services/ApiClient';
 import { sortByKey } from '../../../utils/helper/helpers';
@@ -25,7 +29,10 @@ export const SettingsService = {
         const response = await GET_DATA({
           url: myURL,
         });
-        return response?.data?.data || null;
+        if (!response?.status) {
+          return null;
+        }
+        return response?.data?.data ?? null;
       } else {
         const settings = await fetchCaseSettingsDataFromDB(contentItemId);
         return settings || null;
@@ -47,17 +54,18 @@ export const SettingsService = {
         const response = await GET_DATA({
           url: `${url}${URL.GET_TEAM_MEMBER}`,
         });
-        setLoading(false);
-        return sortByKey(response?.data?.data || [], 'firstName', 'lastName');
+        const teamMembers = response?.status ? (response?.data?.data ?? []) : [];
+        return sortByKey(teamMembers, 'firstName', 'lastName');
       } else {
         const result = await fetchTeamMembers();
         return sortByKey(result || [], 'firstName', 'lastName');
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error fetching team members:', error);
       console.error('Error fetching team members:', error);
       return [];
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -68,7 +76,11 @@ export const SettingsService = {
         const response = await GET_DATA({
           url: `${url}${URL.USERNAME_SEARCH_LIST}${searchString}`,
         });
-        return response?.data?.data || [];
+        if (!response?.status) {
+          return [];
+        }
+        const data = response?.data?.data;
+        return Array.isArray(data) ? data : [];
       }
       return [];
     } catch (error) {
@@ -94,7 +106,6 @@ export const SettingsService = {
           body: formData,
         });
 
-        setLoading(false);
         if (response?.status && response?.data?.status) {
           const assignedUsers = formData.AssignedUsers.split(',').filter(Boolean);
           const userExists = assignedUsers.includes(userId);
@@ -140,11 +151,12 @@ export const SettingsService = {
         return false;
       }
     } catch (error) {
-      setLoading(false);
       ToastService.show(`Error saving settings`, COLORS.SUCCESS_GREEN);
       recordCrashlyticsError('Error saving settings:', error);
       console.error('Error saving settings:', error);
       return false;
+    } finally {
+      setLoading(false);
     }
   },
 };

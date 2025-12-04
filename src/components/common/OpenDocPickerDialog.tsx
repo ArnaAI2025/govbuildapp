@@ -12,11 +12,11 @@ import {
 import { getBaseUrl } from '../../session/SessionManager';
 import { GET_DATA } from '../../services/ApiClient';
 import { URL } from '../../constants/url';
-import NetInfo from '@react-native-community/netinfo';
 import type { FileItem, OpenDocPickerDialogProps } from '../../utils/interfaces/IComponent';
 import DocumentPicker from 'react-native-document-picker';
 import { fetchFileExtensionData } from '../../database/sub-screens/attached-docs/attachedDocsDAO';
 import { recordCrashlyticsError } from '../../services/CrashlyticsService';
+import { isNetworkAvailable } from '../../utils/checkNetwork';
 
 const OpenDocPickerDialog: React.FC<OpenDocPickerDialogProps> = ({ visible, onClose, config }) => {
   const { flag, comment, FileUploadApi, isEdit, index } = config;
@@ -309,8 +309,7 @@ async function commentOpenDocPicker() {
 
 export const fileExtensionDataAPI = async () => {
   try {
-    const state = await NetInfo.fetch();
-    if (!state.isConnected) {
+    if (!isNetworkAvailable()) {
       //  const fileExtentions = fetchFileExtensionData()
       return;
     }

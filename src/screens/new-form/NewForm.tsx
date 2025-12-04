@@ -1,4 +1,4 @@
-import type { FunctionComponent} from 'react';
+import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, View, FlatList, ActivityIndicator, Platform } from 'react-native';
 import Loader from '../../components/common/Loader';
@@ -107,6 +107,7 @@ const NewFormScreen: FunctionComponent<Props> = () => {
       console.error('Error in fetchTagData --->', error);
       NewFormApiCall(true);
     } finally {
+      setLoading(false);
     }
   };
 

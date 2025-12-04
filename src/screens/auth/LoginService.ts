@@ -7,7 +7,12 @@ import {
 import { getAuthToken, GovbuiltClientCaseService } from '@mcci/govbuilt-client';
 import { ToastService } from '../../components/common/GlobalSnackbar';
 import { TEXTS } from '../../constants/strings';
-import type { AuthPayload, Tenant, TenantData } from '../../utils/interfaces/IAuth';
+import type {
+  AuthPayload,
+  HandleLoginNavigationParams,
+  Tenant,
+  TenantData,
+} from '../../utils/interfaces/IAuth';
 import { COLORS } from '../../theme/colors';
 import {
   saveAccessToken,
@@ -73,8 +78,8 @@ export const fetchTenantList = async (): Promise<Tenant[]> => {
 export const handleOfflineLogin = async (
   email: string,
   password: string,
-  offlineAuthData: TenantData,
-): { success: boolean; authData?: TenantData; message?: string } => {
+  offlineAuthData: AuthPayload | null,
+): Promise<{ success: boolean; authData?: AuthPayload; message?: string }> => {
   if (!offlineAuthData || !offlineAuthData.username || !offlineAuthData.password) {
     return {
       success: false,
@@ -161,8 +166,6 @@ export const callLoginAPIService = async (
   setLoading(true);
   const response = await loginAndFetchToken(email.trim(), password, tenantData, biometricEnabled);
   if (response.success && response.data) {
-    setLoading(false);
-
     const { accessToken, tokenType, refreshToken, expireTime, username, password, value } =
       response.data;
     if (value?.uRL?.url && typeof value.uRL.url === 'string' && !value.uRL.url.endsWith('/')) {
@@ -205,7 +208,6 @@ export const callLoginAPIService = async (
       ToastService.show(TEXTS.alertMessages.accessMobileApplicationAlert, COLORS.ERROR);
     }
   } else {
-    setLoading(false);
     ToastService.show(response?.message, COLORS.ERROR);
   }
   setLoading(false);
@@ -276,19 +278,12 @@ export const loginAndFetchToken = async (
   }
 };
 
-type NavigateDashboardParams = {
-  loginData: AuthPayload;
-  setAuthData: (data: TenantData) => void;
-  setOfflineAuthData: (data: TenantData) => void;
-  setShowBiometricDialog: (visible: boolean) => void;
-};
-
 export const handleLoginNavigation = ({
   loginData,
   setAuthData,
   setOfflineAuthData,
   setShowBiometricDialog,
-}: NavigateDashboardParams) => {
+}: HandleLoginNavigationParams): void => {
   try {
     const {
       access_token,

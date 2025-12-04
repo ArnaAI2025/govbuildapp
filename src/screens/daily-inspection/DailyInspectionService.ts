@@ -113,21 +113,20 @@ export const DailyInspectionService = {
         const response = await GET_DATA({
           url: `${url}${URL.DEPARTMENT_TEAM_MEMBERS}`,
         });
-        setLoading(false);
         if (response?.status && response?.data?.data) {
           return sortByKey(response?.data?.data || [], 'displayText');
         }
         return [];
       } else {
-        setLoading(false);
         const localData = await fetchDepartmentMemberList();
         return sortByKey(localData || [], 'displayText');
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in fetchTeamMembers:', error);
       console.error('Error in fetchTeamMembers:', error);
       return [];
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -198,6 +197,7 @@ export const DailyInspectionService = {
   ): Promise<boolean> {
     try {
       if (isNetworkAvailable) {
+        setLoading(true);
         const url = getBaseUrl();
         const newId = generateUniqueID();
         const response = await POST_DATA_WITH_TOKEN({
@@ -207,16 +207,16 @@ export const DailyInspectionService = {
             SyncModel: SyncModelParam(false, false, getNewUTCDate(), newId, null),
           },
         });
-        setLoading(false);
         return Boolean(response?.status);
       }
       ToastService.show(TEXTS.alertMessages.noNetwork);
       return false;
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in updateOrder:', error);
       console.error('Error in updateOrder:', error);
       return false;
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -238,7 +238,6 @@ export const DailyInspectionService = {
         const response = await GET_DATA({
           url: `${url}${urlEndPoint}${caseId}`,
         });
-        setLoading(false);
         if (response?.status && response?.data?.data) {
           const { isAllowEditCase, isAllowEditLicense, isAllowViewInspection } =
             response?.data?.permissions || {};
@@ -308,7 +307,6 @@ export const DailyInspectionService = {
           Alert.alert('Access Restricted', response?.data?.message);
         }
       } else {
-        setLoading(false);
         if (flag === 1) {
           if (type === 'Case') {
             const caseData = await caseToForceSyncByID(caseId);
@@ -334,9 +332,10 @@ export const DailyInspectionService = {
         }
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in getCaseByCID:', error);
       console.error('Error in getCaseByCID:', error);
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -485,7 +484,6 @@ export const DailyInspectionService = {
           url: newURL,
           body: formData,
         });
-        setLoading(false);
         if (response?.status && response?.data?.status) {
           return true;
         } else {
@@ -496,10 +494,11 @@ export const DailyInspectionService = {
       console.warn('No internet connection');
       return false;
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error in saveOrUpdateInspection:', error);
       console.error('Error in saveOrUpdateInspection:', error);
       return false;
+    } finally {
+      setLoading(false);
     }
   },
 };

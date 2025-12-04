@@ -1,4 +1,4 @@
-import type { FunctionComponent} from 'react';
+import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, Image, ScrollView, TouchableOpacity, Keyboard, Alert } from 'react-native';
 import { Text, TextInput } from 'react-native-paper';
@@ -640,11 +640,11 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
         saveNavigationState(false);
         goBack();
       }
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('ERROR POST LICENSE RESPONSE --->', error);
       console.log('ERROR POST LICENSE RESPONSE --->', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -713,7 +713,6 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
         licenseEditData?.licenseDescriptor ?? '',
         isNetworkAvailable,
       );
-      setLoading(false);
       if (generateUniqueNumber?.status) {
         setLicenseEditData({
           ...licenseEditData,
@@ -721,9 +720,10 @@ const EditLicenseScreen: FunctionComponent<EditLicenseScreenProps> = ({ route, n
         });
       }
     } catch (error) {
-      setLoading(false);
       recordCrashlyticsError('Error fetching license number:', error);
       console.error('Error fetching license number:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

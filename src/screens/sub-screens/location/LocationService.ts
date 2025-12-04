@@ -24,15 +24,12 @@ export const LocationService = {
         const response = await GET_DATA({
           url: `${url}${URL.MULTI_LOCATION_LIST}${contentItemId}`,
         });
-        setLoading(false);
         return response.status ? response?.data?.data || [] : [];
       } else {
-        setLoading(false);
         const localData = await fetchLocationData(contentItemId);
         return localData || [];
       }
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in fetchLocations:', error);
         console.error('Error in fetchLocations:', error.message);
@@ -41,6 +38,8 @@ export const LocationService = {
         console.error('Error in fetchLocations:', error);
       }
       return [];
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -59,13 +58,11 @@ export const LocationService = {
             contentItemId: contentItemId,
           },
         });
-        setLoading(false);
         return true;
       }
       console.warn('No internet connection');
       return false;
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in deleteLocation:', error);
         console.error('Error in deleteLocation:', error.message);
@@ -74,6 +71,8 @@ export const LocationService = {
         console.error('Error in deleteLocation:', error);
       }
       return false;
+    } finally {
+      setLoading(false);
     }
   },
 
@@ -120,18 +119,16 @@ export const LocationService = {
           url: newURL,
           body: formData,
         });
-        setLoading(false);
-        if (response.status) {
+        if (response?.status) {
           return true;
         } else {
-          ToastService.show(response.message);
+          ToastService.show(response?.message);
           return false;
         }
       }
       console.warn('No internet connection');
       return false;
     } catch (error) {
-      setLoading(false);
       if (error instanceof Error) {
         recordCrashlyticsError('Error in saveOrUpdateLocation:', error);
         console.error('Error in saveOrUpdateLocation:', error.message);
@@ -140,6 +137,8 @@ export const LocationService = {
         console.error('Error in saveOrUpdateLocation:', error);
       }
       return false;
+    } finally {
+      setLoading(false);
     }
   },
 };

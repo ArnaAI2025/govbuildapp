@@ -82,7 +82,7 @@ const MyScheduleScreen: React.FC<MyScheduleScreenProps> = ({ route, navigation }
       paramData === 'All' ? start : convertDate(new Date().toISOString()),
       paramData === 'All' ? end : convertDate(new Date().toISOString()),
       setLoading,
-      isNetworkAvailable
+      isNetworkAvailable,
     );
     console.log('Fetched schedules:', result);
 

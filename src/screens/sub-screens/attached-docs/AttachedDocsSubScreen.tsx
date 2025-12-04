@@ -112,7 +112,6 @@ const AttachedDocsSubScreen: React.FC<AttachedDocsSubScreenProps> = ({ route, na
 
   const fetchData = async () => {
     setLoading(true);
-
     const result = await DocumentService.fetchFolderFilesByParent(
       contentItemId ?? '',
       route?.params?.param?.id,

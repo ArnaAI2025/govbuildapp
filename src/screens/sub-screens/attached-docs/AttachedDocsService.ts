@@ -155,9 +155,6 @@ export const DocumentService = {
           url: apiUrl,
           body: folderParam,
         });
-        console.log('isCase', response);
-
-        setLoading(false);
         if (response?.status && response?.data?.status) {
           ToastService.show(folderId ? 'Folder Updated' : 'Folder Added', COLORS.SUCCESS_GREEN);
           return true;
@@ -209,7 +206,6 @@ export const DocumentService = {
         return [];
       }
     } catch (error) {
-      setLoading(false);
       if (
         (typeof error === 'object' &&
           error !== null &&
@@ -264,6 +260,8 @@ export const DocumentService = {
       recordCrashlyticsError('Error adding folder:', error);
       console.error('Error adding folder:', error);
       return null;
+    } finally {
+      setLoading(false);
     }
   },
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Platform } from 'react-native';
-import type { DocumentPickerResponse} from 'react-native-document-picker';
+import type { DocumentPickerResponse } from 'react-native-document-picker';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import CustomAlertDialog from '../../components/dialogs/CustomAlertDialog';
@@ -149,7 +149,6 @@ async function cameraOpen(
       name: `${Date.now()}.${type[type.length - 1]}`,
       isMultipal,
     };
-    setLoading(true);
     if ((Platform.OS === 'android' || Platform.OS === 'ios') && isMulti) {
       await storeFormFiles(fileObject);
     } else {
@@ -160,6 +159,8 @@ async function cameraOpen(
     recordCrashlyticsError('Camera error:', error);
     console.error('Camera error:', error);
     throw error;
+  } finally {
+    setLoading(false);
   }
 }
 

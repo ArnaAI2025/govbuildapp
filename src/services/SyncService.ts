@@ -99,7 +99,7 @@ export const syncOfflineToServerDatabase = async (
   }
 
   // 2. Define tasks with names for better error reporting
-  const tasks: { name: string; run: () => Promise<void> }[] = [
+  const tasks: Array<{ name: string; run: () => Promise<void> }> = [
     { name: 'Cases', run: () => syncEditCase(OfflineItemsCount, isNetworkAvailable) },
     { name: 'Settings', run: () => syncSettings(OfflineItemsCount, isNetworkAvailable) },
     { name: 'Licenses', run: () => syncEditLicense(OfflineItemsCount, isNetworkAvailable) },

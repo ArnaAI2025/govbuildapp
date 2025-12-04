@@ -99,7 +99,6 @@ const CommentWithFileAttached: React.FC<CommentWithFileAttachedProps> = ({ route
       );
       setComment('');
       setFileArray([]);
-      setLoading(false);
       setSaveDisable(false);
       richTextRef.current?.setContentHTML('');
       ToastService.show(TEXTS.subScreens.commentWithFileAttached.saveSuccess, COLORS.SUCCESS_GREEN);
@@ -116,8 +115,8 @@ const CommentWithFileAttached: React.FC<CommentWithFileAttachedProps> = ({ route
     } catch (error: any) {
       recordCrashlyticsError('Error saving comment:', error);
       console.error('Error saving comment:', error);
-      setLoading(false);
       ToastService.show(TEXTS.subScreens.commentWithFileAttached.savingError, COLORS.ERROR);
+    } finally {
       setLoading(false);
     }
   };

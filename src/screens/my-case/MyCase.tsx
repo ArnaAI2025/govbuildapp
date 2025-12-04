@@ -69,7 +69,6 @@ const MyCaseScreen: React.FC<MyCaseScreenProps> = (route) => {
   };
 
   useEffect(() => {
-    // Initial load (on mount)
     (async () => {
       const state = getNavigationState();
       if (!state) {
